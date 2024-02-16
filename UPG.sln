@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayer", "Busin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{7A6618EE-8EDC-4813-B5E6-DC708180E57C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCLayer", "MVCLayer\MVCLayer.csproj", "{D23AAF77-A965-4965-8820-DDC84AADE854}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7A6618EE-8EDC-4813-B5E6-DC708180E57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A6618EE-8EDC-4813-B5E6-DC708180E57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A6618EE-8EDC-4813-B5E6-DC708180E57C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D23AAF77-A965-4965-8820-DDC84AADE854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D23AAF77-A965-4965-8820-DDC84AADE854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D23AAF77-A965-4965-8820-DDC84AADE854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D23AAF77-A965-4965-8820-DDC84AADE854}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
