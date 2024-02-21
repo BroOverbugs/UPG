@@ -1,5 +1,3 @@
-using Application.Interfaces;
-using Application.Services;
 using Infastructure.Data;
 using Infastructure.Interfaces;
 using Infastructure.Repositories;
@@ -12,12 +10,15 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddTransient<ICatalogCategoryInterface, CatalogcategoryRepository>();
-builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
