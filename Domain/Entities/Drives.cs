@@ -20,6 +20,4 @@ public class Drives : BaseEntity
     public string Drive_type { get; set;} = string.Empty;
     [Required]
     public string Volume { get; set; } = string.Empty;
-    [Required]
-    public string Description { get; set; } = string.Empty;
 }

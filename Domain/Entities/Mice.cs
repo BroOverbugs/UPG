@@ -35,7 +35,5 @@ public class Mice : BaseEntity
     public string Weight_without_cable { get; set; } = string.Empty;
     [Required]
     public string Dimensions { get; set; } = string.Empty;
-    [Required]
-    public string Description { get; set; } = string.Empty;
 
 }

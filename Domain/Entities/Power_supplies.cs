@@ -11,8 +11,6 @@ namespace Domain.Entities;
 public class Power_supplies : BaseEntity
 {
     [Required]
-    public string Description { get; set; } = string.Empty;
-    [Required]
     public string Form_factor { get; set;} = string.Empty;
     [Required]
     public string Power { get; set; } = string.Empty;

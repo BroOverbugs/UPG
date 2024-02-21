@@ -24,7 +24,4 @@ public class Armchairs : BaseEntity
     public string Rocking_mechanism {  get; set; } = string.Empty;
     public string Permissible_load {  get; set; } = string.Empty;//(kg)
     public string Frame_material { get; set; } = string.Empty;
-    [Required]
-    public string Description { get; set; } = string.Empty;
-
 }

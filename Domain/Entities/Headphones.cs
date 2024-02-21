@@ -33,6 +33,4 @@ public class Headphones : BaseEntity
     public string Backlight { get; set; } = string.Empty;
     [Required]
     public string Weight { get; set; } = string.Empty;
-    [Required]
-    public string Description { get; set; } = string.Empty;
 }

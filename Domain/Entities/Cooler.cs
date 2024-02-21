@@ -24,6 +24,4 @@ public class Cooler : BaseEntity
     public string Bearing_type {  get; set; } = string.Empty;
     [Required]
     public string Rotational_speed {  get; set; } = string.Empty;
-    [Required]
-    public string Description { get; set; } = string.Empty;
 }
