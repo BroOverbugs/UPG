@@ -10,4 +10,11 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mouse_pads\" />
+    <Folder Include="Tables_for_gamers\" />
+    <Folder Include="RAM\" />
+    <Folder Include="Power_supplies\" />
+  </ItemGroup>
+
 </Project>
