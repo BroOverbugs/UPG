@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Monitors : BaseEntity
+public class Monitor : BaseEntity
 {
     [Required]
     public string Diagonal {  get; set; } = string.Empty;

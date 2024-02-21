@@ -3,7 +3,7 @@ using Infastructure.Data;
 using Infastructure.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infastructure.Repository;
+namespace Infastructure.Repositories;
 
 public class Repository<T>(AppDBContext dBContext)
     : IRepository<T> where T : BaseEntity

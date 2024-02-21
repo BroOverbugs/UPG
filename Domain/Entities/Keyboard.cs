@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Keyboards : BaseEntity
+public class Keyboard : BaseEntity
 {
     [Required]
     public string Keyboard_type { get; set; } = string.Empty;

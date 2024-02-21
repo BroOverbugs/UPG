@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Laptops : BaseEntity
+public class Laptop : BaseEntity
 {
     [Required]
     public string Processor {  get; set; } = string.Empty;
