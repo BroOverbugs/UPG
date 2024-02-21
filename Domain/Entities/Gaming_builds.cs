@@ -26,6 +26,4 @@ public class Gaming_builds : BaseEntity
     public string PSU {  get; set; } = string.Empty;
     [Required]
     public string Case { get; set; } = string.Empty;
-    [Required]
-    public string Description { get; set; } = string.Empty;
 }

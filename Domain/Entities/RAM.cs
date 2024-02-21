@@ -12,8 +12,6 @@ namespace Domain.Entities;
 public class RAM : BaseEntity
 {
     [Required]
-    public string Description { get; set; } = string.Empty;
-    [Required]
     public string Capacity { get; set; } = string.Empty;
     [Required]
     public string Technologies { get; set; } = string.Empty;

@@ -36,7 +36,5 @@ public class Monitors : BaseEntity
     public string Adjustment { get; set; } = string.Empty;
     public string HDR { get; set; } = string.Empty;
     public string Guarantee_period { get; set; } = string.Empty;
-    [Required]
-    public string Description {  get; set; } = string.Empty;
 
 }

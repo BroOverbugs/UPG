@@ -25,7 +25,5 @@ public class Laptops : BaseEntity
     public string Wi_Fi { get; set; } = string.Empty;
     [Required]
     public string RTX_or_AMD { get; set; } = string.Empty;
-    [Required]
-    public string Description { get; set; } = string.Empty;
 
 }

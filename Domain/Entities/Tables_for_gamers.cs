@@ -10,8 +10,6 @@ namespace Domain.Entities;
 public class Tables_for_gamers : BaseEntity
 {
     [Required]
-    public string Description { get; set; } = string.Empty;
-    [Required]
     public string I_or_O_panel { get; set; } = string.Empty;
     [Required]
     public string Table_adjustment { get; set; } = string.Empty;
