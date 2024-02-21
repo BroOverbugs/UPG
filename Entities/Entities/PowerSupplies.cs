@@ -1,0 +1,16 @@
+﻿namespace Domain.Entities;
+
+public class PowerSupplies : BaseEntity
+{
+    public string Dimensions { get; set; } = string.Empty;
+    // 150 x 140 x 86 mm.......
+    public string ProtectionTechnologies { get; set; } = string.Empty;
+    // OOP/OVP/SCP......
+    public string Certificate80PLUS { get; set; } = string.Empty;
+    // 80 PLUS, GOLD......
+    public string Power { get; set; } = string.Empty;
+    // 1000W, 800W......
+    public string FormFactor { get; set; } = string.Empty;
+    // ATX .....
+
+}
