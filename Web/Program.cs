@@ -1,12 +1,23 @@
+using Application.Interfaces;
+using Application.Services;
+using Infastructure.Data;
+using Infastructure.Interfaces;
+using Infastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<AppDBContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("LocalSqlServer")));
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddTransient<ICatalogCategoryInterface, CatalogcategoryRepository>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
