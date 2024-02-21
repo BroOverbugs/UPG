@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infastructure", "Infastructure\Infastructure.csproj", "{D37A72DB-B389-4E7B-93DA-ABF8D250BDF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infastructure", "Infastructure\Infastructure.csproj", "{D37A72DB-B389-4E7B-93DA-ABF8D250BDF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{A5E32583-BBBC-4960-B167-7E0D129625C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{A5E32583-BBBC-4960-B167-7E0D129625C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{9090BCC2-B6DE-41BF-9CA0-C1F2EB62CACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{9090BCC2-B6DE-41BF-9CA0-C1F2EB62CACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCLayer", "MVCLayer\MVCLayer.csproj", "{CC0CE627-E840-4207-9829-7DA09D11F58C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCLayer", "MVCLayer\MVCLayer.csproj", "{CC0CE627-E840-4207-9829-7DA09D11F58C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{2F8A556E-1493-451D-A4F7-5E59744BAA4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web.csproj", "{2F8A556E-1493-451D-A4F7-5E59744BAA4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOS", "DTOS\DTOS.csproj", "{BC6330E4-4136-42ED-AEAC-3806DEF15F62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2F8A556E-1493-451D-A4F7-5E59744BAA4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F8A556E-1493-451D-A4F7-5E59744BAA4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F8A556E-1493-451D-A4F7-5E59744BAA4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC6330E4-4136-42ED-AEAC-3806DEF15F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC6330E4-4136-42ED-AEAC-3806DEF15F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC6330E4-4136-42ED-AEAC-3806DEF15F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC6330E4-4136-42ED-AEAC-3806DEF15F62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
