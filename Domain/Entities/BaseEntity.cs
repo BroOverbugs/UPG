@@ -15,4 +15,7 @@ public class BaseEntity
     public string Name { get; set; } = string.Empty;
     [Required]
     public double Price { get; set; }
+    [Required]
+    public string ImagesURL { get; set; } = string.Empty;
+    public int Count { get; set; }
 }
