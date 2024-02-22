@@ -11,7 +11,7 @@ namespace Application.Services;
 
 public class Tables_for_gamersService : ITables_for_gamersService
 {
-    public Task AddTablesForGamersAsync(AddTables_for_gamersDTO newCategory)
+    public Task AddTablesForGamersAsync(AddTables_for_gamersDTO tablesforgamers)
     {
         throw new NotImplementedException();
     }
@@ -41,7 +41,7 @@ public class Tables_for_gamersService : ITables_for_gamersService
         throw new NotImplementedException();
     }
 
-    public Task UpdateTablesForGamersAsync(UpdateTables_for_gamersDTO categoryDto)
+    public Task UpdateTablesForGamersAsync(UpdateTables_for_gamersDTO tablesforgamers)
     {
         throw new NotImplementedException();
     }

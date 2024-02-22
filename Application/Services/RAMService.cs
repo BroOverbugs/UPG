@@ -11,7 +11,7 @@ namespace Application.Services;
 
 public class RAMService : IRAMService
 {
-    public Task AddCategoryAsync(AddRAMDTO newCategory)
+    public Task AddCategoryAsync(AddRAMDTO ram)
     {
         throw new NotImplementedException();
     }
@@ -41,7 +41,7 @@ public class RAMService : IRAMService
         throw new NotImplementedException();
     }
 
-    public Task UpdateCategoryAsync(UpdateRAMDTO categoryDto)
+    public Task UpdateCategoryAsync(UpdateRAMDTO ram)
     {
         throw new NotImplementedException();
     }

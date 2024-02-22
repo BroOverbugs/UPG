@@ -10,7 +10,7 @@ public interface IRAMService
     Task<PagedList<RAMDTO>> GetPagetCategories(int pageSize, int pageNumber);
     Task<List<RAMDTO>> GetCategoriesAsync();
     Task<RAMDTO> GetCategoryByIdAsync(int id);
-    Task AddCategoryAsync(AddRAMDTO newCategory);
-    Task UpdateCategoryAsync(UpdateRAMDTO categoryDto);
+    Task AddCategoryAsync(AddRAMDTO ram);
+    Task UpdateCategoryAsync(UpdateRAMDTO ram);
     Task DeleteCategoryAsync(int id);
 }

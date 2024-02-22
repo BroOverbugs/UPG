@@ -1,3 +1,7 @@
+using Application.Helpers;
+using Application.Interfaces;
+using Application.Services;
+using AutoMapper;
 using Infastructure.Data;
 using Infastructure.Interfaces;
 using Infastructure.Repositories;
@@ -11,8 +15,25 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new AutoMapperProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<Mouse_padsInterface, Mouse_padsRepository>();
+builder.Services.AddTransient<Power_suppliesInterface,Power_SuppliesRepository>();
+builder.Services.AddTransient<RAMInterface,RAMRepository>();
+builder.Services.AddTransient<Tables_for_gamersInterface,Tables_for_gamersRepository>();
+builder.Services.AddTransient<IPower_suppliesService,Power_suppliesService>();
+builder.Services.AddTransient<IMousePadsService, MousePadsService>();
+builder.Services.AddTransient<IRAMService, RAMService>();
+builder.Services.AddTransient<ITables_for_gamersService, Tables_for_gamersService>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
