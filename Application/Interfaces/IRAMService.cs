@@ -7,10 +7,10 @@ namespace Application.Interfaces;
 public interface IRAMService
 {
     Task<PagedList<RAMDTO>> Filter(FilterParameters parametrs);
-    Task<PagedList<RAMDTO>> GetPagetCategories(int pageSize, int pageNumber);
-    Task<List<RAMDTO>> GetCategoriesAsync();
-    Task<RAMDTO> GetCategoryByIdAsync(int id);
-    Task AddCategoryAsync(AddRAMDTO ram);
-    Task UpdateCategoryAsync(UpdateRAMDTO ram);
-    Task DeleteCategoryAsync(int id);
+    Task<PagedList<RAMDTO>> GetPagedRAMs(int pageSize, int pageNumber);
+    Task<IEnumerable<RAMDTO>> GetRAMAsync();
+    Task<RAMDTO> GetRAMByIdAsync(int id);
+    Task AddRAMAsync(AddRAMDTO ram);
+    Task UpdateRAMAsync(UpdateRAMDTO ram);
+    Task DeleteRAMAsync(int id);
 }

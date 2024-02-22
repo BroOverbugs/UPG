@@ -10,7 +10,7 @@ public interface ITables_for_gamersService
     
     Task<PagedList<Tables_for_gamersDTO>> Filter(FilterParameters parametrs);
     Task<PagedList<Tables_for_gamersDTO>> GetPagedCategories(int pageSize, int pageNumber);
-    Task<List<Tables_for_gamersDTO>> GetTablesForGamersAsync();
+    Task<IEnumerable<Tables_for_gamersDTO>> GetTablesForGamersAsync();
     Task<Tables_for_gamersDTO> GetTablesForGamersByIdAsync(int id);
     Task AddTablesForGamersAsync(AddTables_for_gamersDTO tablesforgamers);
     Task UpdateTablesForGamersAsync(UpdateTables_for_gamersDTO tablesforgamers);
