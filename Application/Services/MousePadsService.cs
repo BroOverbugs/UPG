@@ -1,6 +1,6 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
-using DTOS.Power_supplies;
+using DTOS.Mouse_pads;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,39 +9,39 @@ using System.Threading.Tasks;
 
 namespace Application.Services;
 
-public class Power_suppliesService : IPower_suppliesService
+public class MousePadsService : IMousePadsService
 {
-    public Task AddPowerSuppliesAsync(AddPower_suppliesDTO newCategory)
+    public Task AddMousePadsAsync(AddMouse_padsDTO newCategory)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeletePowerSuppliesAsync(int id)
+    public Task DeleteMousePadsAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<PagedList<Power_suppliesDTO>> Filter(FilterParameters parametrs)
+    public Task<PagedList<Mouse_padsDTO>> Filter(FilterParameters parametrs)
     {
         throw new NotImplementedException();
     }
 
-    public Task<PagedList<Power_suppliesDTO>> GetPagedPowerSupplies(int pageSize, int pageNumber)
+    public Task<Mouse_padsDTO> GetMousePadByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Power_suppliesDTO>> GetPowerSuppliesAsync()
+    public Task<List<Mouse_padsDTO>> GetMousePadsAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<Power_suppliesDTO> GetPowerSuppliesByIdAsync(int id)
+    public Task<PagedList<Mouse_padsDTO>> GetPagetMousePads(int pageSize, int pageNumber)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdatePowerSuppliesAsync(UpdatePower_suppliesDTO categoryDto)
+    public Task UpdateMousePadsAsync(UpdateMouse_padsDTO categoryDto)
     {
         throw new NotImplementedException();
     }

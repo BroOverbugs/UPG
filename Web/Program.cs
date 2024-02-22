@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDBContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("LocalSqlServer")));
-// Add services to the container.
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
+
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();

@@ -1,6 +1,6 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
-using DTOS.Power_supplies;
+using DTOS.RAM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,39 +9,39 @@ using System.Threading.Tasks;
 
 namespace Application.Services;
 
-public class Power_suppliesService : IPower_suppliesService
+public class RAMService : IRAMService
 {
-    public Task AddPowerSuppliesAsync(AddPower_suppliesDTO newCategory)
+    public Task AddCategoryAsync(AddRAMDTO newCategory)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeletePowerSuppliesAsync(int id)
+    public Task DeleteCategoryAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<PagedList<Power_suppliesDTO>> Filter(FilterParameters parametrs)
+    public Task<PagedList<RAMDTO>> Filter(FilterParameters parametrs)
     {
         throw new NotImplementedException();
     }
 
-    public Task<PagedList<Power_suppliesDTO>> GetPagedPowerSupplies(int pageSize, int pageNumber)
+    public Task<List<RAMDTO>> GetCategoriesAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<Power_suppliesDTO>> GetPowerSuppliesAsync()
+    public Task<RAMDTO> GetCategoryByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Power_suppliesDTO> GetPowerSuppliesByIdAsync(int id)
+    public Task<PagedList<RAMDTO>> GetPagetCategories(int pageSize, int pageNumber)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdatePowerSuppliesAsync(UpdatePower_suppliesDTO categoryDto)
+    public Task UpdateCategoryAsync(UpdateRAMDTO categoryDto)
     {
         throw new NotImplementedException();
     }
