@@ -16,6 +16,8 @@ public class UnitOfWork(AppDBContext dBContext) : IUnitOfWork
     public IMiceInterface Mice => new MiceRepository(_dBContext);
 
     public IMonitorInterface Monitor => new MonitorRepository(_dBContext);
+    
+    public IAccessoriesInterface Accessories => new AccessoriesRepository(_dBContext);
 
     public RAMInterface RAM => new RAMRepository(_dBContext);
 
