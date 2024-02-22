@@ -11,7 +11,7 @@ public class Repository<T>(AppDBContext dBContext)
     private DbSet<T> _DbSet = dBContext.Set<T>();
 
     public void Add(T entity)
-        => _DbSet.Add(entity);
+        =>_DbSet.Add(entity);
 
     public void Delete(int id)
     {
