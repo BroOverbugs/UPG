@@ -15,7 +15,7 @@ public class Repository<T>(AppDBContext dBContext)
 
     public void Delete(int id)
     {
-        var entity = _DbSet.AsNoTracking().FirstOrDefault(c => c.ID == id);   
+        var entity = _DbSet.AsNoTracking().FirstOrDefault(c => c.Id == id);   
         _DbSet.Remove(entity!);
     }
 
@@ -23,7 +23,7 @@ public class Repository<T>(AppDBContext dBContext)
         => await _DbSet.AsNoTracking().ToListAsync();
 
     public async Task<T?> GetByIdAsync(int id)
-        => await _DbSet.AsNoTracking().FirstOrDefaultAsync(c => c.ID == id);
+        => await _DbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
 
     public void Update(T entity)
         => _DbSet.Update(entity);
