@@ -33,6 +33,7 @@ builder.Services.AddTransient<IPower_suppliesService,Power_suppliesService>();
 builder.Services.AddTransient<IMousePadsService, MousePadsService>();
 builder.Services.AddTransient<IRAMService, RAMService>();
 builder.Services.AddTransient<ITables_for_gamersService, Tables_for_gamersService>();
+builder.Services.AddTransient<IAccessoriesService, AccessoriesService>();
 
 
 builder.Services.AddEndpointsApiExplorer();
