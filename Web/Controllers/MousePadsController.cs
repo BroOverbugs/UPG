@@ -32,7 +32,7 @@ public class MousePadsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(AddMouse_padsDTO dto)
+    public async Task<IActionResult> Post(AddMousePadsDTO dto)
     {
         try
         {
@@ -46,7 +46,7 @@ public class MousePadsController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(UpdateMouse_padsDTO dto)
+    public async Task<IActionResult> Put(UpdateMousePadsDTO dto)
     {
         try
         {

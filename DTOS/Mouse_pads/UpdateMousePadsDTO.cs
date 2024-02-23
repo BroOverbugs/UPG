@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOS.Mouse_pads;
 
-public class UpdateMouse_padsDTO
+public class UpdateMousePadsDTO
 {
     public int ID { get; set; }
     public string Name { get; set; } = string.Empty;

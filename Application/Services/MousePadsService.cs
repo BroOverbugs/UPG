@@ -22,9 +22,9 @@ public class MousePadsService : IMousePadsService
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-     public async Task AddMousePadsAsync(AddMouse_padsDTO mousepads)
+     public async Task AddMousePadsAsync(AddMousePadsDTO mousepads)
     {
-        var config = _mapper.Map<Mouse_pads>(mousepads);
+        var config = _mapper.Map<MousePads>(mousepads);
         _unitOfWork.Mouse_pads.Add(config);
         await _unitOfWork.SaveAsync();
     }
@@ -35,7 +35,7 @@ public class MousePadsService : IMousePadsService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<PagedList<Mouse_padsDTO>> Filter(FilterParameters parametrs)
+    public async Task<PagedList<MousePadsDTO>> Filter(FilterParameters parametrs)
     {
         var list = await _unitOfWork.Power_supplies.GetAllAsync();
 
@@ -50,7 +50,7 @@ public class MousePadsService : IMousePadsService
         list = list.Where(book => book.Price >= parametrs.minPrice &&
                                       book.Price <= parametrs.maxPrice);
 
-        var dtos = list.Select(book => _mapper.Map<Mouse_padsDTO>(book)).ToList();
+        var dtos = list.Select(book => _mapper.Map<MousePadsDTO>(book)).ToList();
 
         // Order by title
         if (parametrs.orderByTitle)
@@ -62,38 +62,38 @@ public class MousePadsService : IMousePadsService
             dtos = dtos.OrderByDescending(book => book.Name).ToList();
         }
 
-        PagedList<Mouse_padsDTO> pagedList = new(dtos, dtos.Count,
+        PagedList<MousePadsDTO> pagedList = new(dtos, dtos.Count,
                                                           parametrs.PageNumber, parametrs.pageSize);
 
         return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
     }
 
-    public async Task<Mouse_padsDTO> GetMousePadByIdAsync(int id)
+    public async Task<MousePadsDTO> GetMousePadByIdAsync(int id)
     {
         var config = await _unitOfWork.Mouse_pads.GetByIdAsync(id);
-        return _mapper.Map<Mouse_padsDTO>(config);
+        return _mapper.Map<MousePadsDTO>(config);
     }
 
-    public async Task<IEnumerable<Mouse_padsDTO>> GetMousePadsAsync()
+    public async Task<IEnumerable<MousePadsDTO>> GetMousePadsAsync()
     {
         var config = await _unitOfWork.Mouse_pads.GetAllAsync();
-        var glaive = _mapper.Map<IEnumerable<Mouse_padsDTO>>(config);
+        var glaive = _mapper.Map<IEnumerable<MousePadsDTO>>(config);
         return glaive;
     }
 
-    public async Task<PagedList<Mouse_padsDTO>> GetPagetMousePads(int pageSize, int pageNumber)
+    public async Task<PagedList<MousePadsDTO>> GetPagetMousePads(int pageSize, int pageNumber)
     {
         var dtos = await GetMousePadsAsync();
-        PagedList<Mouse_padsDTO> pagedList = new(dtos,
+        PagedList<MousePadsDTO> pagedList = new(dtos,
                                                           dtos.Count(),
                                                           pageNumber,
                                                           pageSize);
         return pagedList.ToPagedList(dtos, pageSize, pageNumber);
     }
 
-    public async Task UpdateMousePadsAsync(UpdateMouse_padsDTO mousepads)
+    public async Task UpdateMousePadsAsync(UpdateMousePadsDTO mousepads)
     {
-        var config = _mapper.Map<Mouse_pads>(mousepads);
+        var config = _mapper.Map<MousePads>(mousepads);
         _unitOfWork.Mouse_pads.Update(config);
         await _unitOfWork.SaveAsync();
     }
