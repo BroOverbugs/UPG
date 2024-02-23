@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Infastructure.Interfaces;
 
-public interface Power_suppliesInterface : IRepository<Power_supplies>
+public interface PowerSuppliesInterface : IRepository<PowerSupplies>
 {
 }

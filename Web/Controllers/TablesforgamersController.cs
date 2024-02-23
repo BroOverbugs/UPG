@@ -12,8 +12,8 @@ namespace Web.Controllers;
 [ApiController]
 public class TablesforgamersController : ControllerBase
 {
-    private readonly ITables_for_gamersService _tables_for_gamersservice;
-    public TablesforgamersController(ITables_for_gamersService tables_for_gamersservice)
+    private readonly ITablesForGamersService _tables_for_gamersservice;
+    public TablesforgamersController(ITablesForGamersService tables_for_gamersservice)
     {
         _tables_for_gamersservice = tables_for_gamersservice;
     }
@@ -32,7 +32,7 @@ public class TablesforgamersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(AddTables_for_gamersDTO dto)
+    public async Task<IActionResult> Post(AddTablesForGamersDTO dto)
     {
         try
         {
@@ -46,7 +46,7 @@ public class TablesforgamersController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(UpdateTables_for_gamersDTO dto)
+    public async Task<IActionResult> Put(UpdateTablesForGamersDTO dto)
     {
         try
         {

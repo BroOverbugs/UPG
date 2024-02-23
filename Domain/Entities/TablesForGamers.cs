@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Tables_for_gamers : BaseEntity
+public class TablesForGamers : BaseEntity
 {
     [Required]
     public string I_or_O_panel { get; set; } = string.Empty;

@@ -14,18 +14,18 @@ using System.Threading.Tasks;
 
 namespace Application.Services;
 
-public class Tables_for_gamersService : ITables_for_gamersService
+public class TablesForGamersService : ITablesForGamersService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    public Tables_for_gamersService(IMapper mapper, IUnitOfWork unitOfWork)
+    public TablesForGamersService(IMapper mapper, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public async Task AddTablesForGamersAsync(AddTables_for_gamersDTO tablesforgamers)
+    public async Task AddTablesForGamersAsync(AddTablesForGamersDTO tablesforgamers)
     {
-        var config = _mapper.Map<Tables_for_gamers>(tablesforgamers);
+        var config = _mapper.Map<TablesForGamers>(tablesforgamers);
         _unitOfWork.Tables_For_Gamers.Add(config);
         await _unitOfWork.SaveAsync();
     }
@@ -36,7 +36,7 @@ public class Tables_for_gamersService : ITables_for_gamersService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<PagedList<Tables_for_gamersDTO>> Filter(FilterParameters parametrs)
+    public async Task<PagedList<TablesForGamersDTO>> Filter(FilterParameters parametrs)
     {
         var list = await _unitOfWork.Tables_For_Gamers.GetAllAsync();
 
@@ -51,7 +51,7 @@ public class Tables_for_gamersService : ITables_for_gamersService
         list = list.Where(book => book.Price >= parametrs.minPrice &&
                                       book.Price <= parametrs.maxPrice);
 
-        var dtos = list.Select(book => _mapper.Map<Tables_for_gamersDTO>(book)).ToList();
+        var dtos = list.Select(book => _mapper.Map<TablesForGamersDTO>(book)).ToList();
 
         // Order by title
         if (parametrs.orderByTitle)
@@ -63,38 +63,38 @@ public class Tables_for_gamersService : ITables_for_gamersService
             dtos = dtos.OrderByDescending(book => book.Name).ToList();
         }
 
-        PagedList<Tables_for_gamersDTO> pagedList = new(dtos, dtos.Count,
+        PagedList<TablesForGamersDTO> pagedList = new(dtos, dtos.Count,
                                                           parametrs.PageNumber, parametrs.pageSize);
 
         return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
     }
 
-    public async Task<PagedList<Tables_for_gamersDTO>> GetPagedCategories(int pageSize, int pageNumber)
+    public async Task<PagedList<TablesForGamersDTO>> GetPagedCategories(int pageSize, int pageNumber)
     {
         var dtos = await GetTablesForGamersAsync();
-        PagedList<Tables_for_gamersDTO> pagedList = new(dtos,
+        PagedList<TablesForGamersDTO> pagedList = new(dtos,
                                                           dtos.Count(),
                                                           pageNumber,
                                                           pageSize);
         return pagedList.ToPagedList(dtos, pageSize, pageNumber);
     }
 
-    public async Task<IEnumerable<Tables_for_gamersDTO>> GetTablesForGamersAsync()
+    public async Task<IEnumerable<TablesForGamersDTO>> GetTablesForGamersAsync()
     {
         var config = await _unitOfWork.Tables_For_Gamers.GetAllAsync();
-        var glaive = _mapper.Map<IEnumerable<Tables_for_gamersDTO>>(config);
+        var glaive = _mapper.Map<IEnumerable<TablesForGamersDTO>>(config);
         return glaive;
     }
 
-    public async Task<Tables_for_gamersDTO> GetTablesForGamersByIdAsync(int id)
+    public async Task<TablesForGamersDTO> GetTablesForGamersByIdAsync(int id)
     {
         var config = await _unitOfWork.Tables_For_Gamers.GetByIdAsync(id);
-        return _mapper.Map<Tables_for_gamersDTO>(config);
+        return _mapper.Map<TablesForGamersDTO>(config);
     }
 
-    public async Task UpdateTablesForGamersAsync(UpdateTables_for_gamersDTO tablesforgamers)
+    public async Task UpdateTablesForGamersAsync(UpdateTablesForGamersDTO tablesforgamers)
     {
-        var config = _mapper.Map<Tables_for_gamers>(tablesforgamers);
+        var config = _mapper.Map<TablesForGamers>(tablesforgamers);
         _unitOfWork.Tables_For_Gamers.Update(config);
         await _unitOfWork.SaveAsync();
     }
