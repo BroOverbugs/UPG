@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace Infastructure.Repositories;
 
-public class Mouse_padsRepository(AppDBContext dbContext) : Repository<Mouse_pads>(dbContext), Mouse_padsInterface
+public class MousePadsRepository(AppDBContext dbContext) : Repository<MousePads>(dbContext), MousePadsInterface
 {
 }

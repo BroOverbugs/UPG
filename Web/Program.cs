@@ -25,7 +25,7 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<Mouse_padsInterface, Mouse_padsRepository>();
+builder.Services.AddTransient<MousePadsInterface, MousePadsRepository>();
 builder.Services.AddTransient<Power_suppliesInterface,Power_SuppliesRepository>();
 builder.Services.AddTransient<RAMInterface,RAMRepository>();
 builder.Services.AddTransient<Tables_for_gamersInterface,Tables_for_gamersRepository>();

@@ -21,7 +21,7 @@ public class UnitOfWork(AppDBContext dBContext) : IUnitOfWork
 
     public RAMInterface RAM => new RAMRepository(_dBContext);
 
-    public Mouse_padsInterface Mouse_pads => new Mouse_padsRepository(_dBContext);
+    public MousePadsInterface Mouse_pads => new MousePadsRepository(_dBContext);
 
     public Power_suppliesInterface Power_supplies => new Power_SuppliesRepository(_dBContext);
 

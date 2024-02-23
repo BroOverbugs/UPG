@@ -16,9 +16,9 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<Mouse_pads, Mouse_padsDTO>().ReverseMap();
-        CreateMap<Mouse_pads, AddMouse_padsDTO>().ReverseMap();
-        CreateMap<UpdateMouse_padsDTO, Mouse_pads>();
+        CreateMap<MousePads, MousePadsDTO>().ReverseMap();
+        CreateMap<MousePads, AddMousePadsDTO>().ReverseMap();
+        CreateMap<UpdateMousePadsDTO, MousePads>();
 
         CreateMap<Power_supplies, Power_suppliesDTO>().ReverseMap();
         CreateMap<Power_supplies, AddPower_suppliesDTO>().ReverseMap();

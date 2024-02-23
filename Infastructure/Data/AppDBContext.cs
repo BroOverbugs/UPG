@@ -15,7 +15,7 @@ public class AppDBContext : DbContext
     public DbSet<Mice> Mices { get; set; }
     public DbSet<Accessories> Accessories { get; set; }
     public DbSet<Domain.Entities.Monitor> Monitors { get; set; }
-    public DbSet<Mouse_pads> Mouse_Pads { get; set; }
+    public DbSet<MousePads> Mouse_Pads { get; set; }
     public DbSet<RAM> RAMs { get; set; }
     public DbSet<Tables_for_gamers> Tables_For_Gamers { get; set; }
     public DbSet<Power_supplies> Power_Supplies { get; set; }
