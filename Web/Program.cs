@@ -28,10 +28,11 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<MousePadsInterface, MousePadsRepository>();
 builder.Services.AddTransient<PowerSuppliesInterface,PowerSuppliesRepository>();
 builder.Services.AddTransient<RAMInterface,RAMRepository>();
-builder.Services.AddTransient<Tables_for_gamersInterface,Tables_for_gamersRepository>();
+builder.Services.AddTransient<TablesForGamersInterface,TablesForGamersRepository>();
 builder.Services.AddTransient<IPowerSuppliesService,PowerSuppliesService>();
 builder.Services.AddTransient<IMousePadsService, MousePadsService>();
 builder.Services.AddTransient<IRAMService, RAMService>();
+builder.Services.AddTransient<IAccessoriesService, AccessoriesService>();
 builder.Services.AddTransient<ITablesForGamersService, TablesForGamersService>();
 
 

@@ -25,7 +25,7 @@ public class UnitOfWork(AppDBContext dBContext) : IUnitOfWork
 
     public PowerSuppliesInterface Power_supplies => new PowerSuppliesRepository(_dBContext);
 
-    public Tables_for_gamersInterface Tables_For_Gamers => new Tables_for_gamersRepository(_dBContext);
+    public TablesForGamersInterface Tables_For_Gamers => new TablesForGamersRepository(_dBContext);
 
     public void Dispose()
         => GC.SuppressFinalize(this);

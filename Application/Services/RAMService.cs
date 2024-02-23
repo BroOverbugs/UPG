@@ -62,7 +62,7 @@ public class RAMService : IRAMService
             dtos = dtos.OrderByDescending(book => book.Name).ToList();
         }
 
-        PagedList<RAMDTO> pagedList = new(dtos, dtos.Count,
+        PagedList<RAMDTO> pagedList = new(dtos, dtos.Count(),
                                                           parametrs.PageNumber, parametrs.pageSize);
 
         return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
