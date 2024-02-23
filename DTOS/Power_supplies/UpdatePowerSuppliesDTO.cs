@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOS.Power_supplies;
 
-public class UpdatePower_suppliesDTO
+public class UpdatePowerSuppliesDTO
 {
     public int ID { get; set; }
     public string Name { get; set; } = string.Empty;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DTOS.Tables_for_gamers;
 
-public class Tables_for_gamersDTO
+public class TablesForGamersDTO
 {
     public int ID { get; set; }
     public string Name { get; set; } = string.Empty;

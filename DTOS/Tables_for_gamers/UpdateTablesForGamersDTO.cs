@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace DTOS.Tables_for_gamers;
 
-public class AddTables_for_gamersDTO
+public class UpdateTablesForGamersDTO
 {
+    public int ID { get; set; }
     public string Name { get; set; } = string.Empty;
     public string I_or_O_panel { get; set; } = string.Empty;
     public string Table_adjustment { get; set; } = string.Empty;

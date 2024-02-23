@@ -11,8 +11,8 @@ namespace Web.Controllers;
 [ApiController]
 public class PowerSuppliesController : ControllerBase
 {
-    private readonly IPower_suppliesService _power_SuppliesService;
-    public PowerSuppliesController(IPower_suppliesService power_SuppliesService)
+    private readonly IPowerSuppliesService _power_SuppliesService;
+    public PowerSuppliesController(IPowerSuppliesService power_SuppliesService)
     {
         _power_SuppliesService = power_SuppliesService;
     }
@@ -31,7 +31,7 @@ public class PowerSuppliesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(AddPower_suppliesDTO dto)
+    public async Task<IActionResult> Post(AddPowerSuppliesDTO dto)
     {
         try
         {
@@ -45,7 +45,7 @@ public class PowerSuppliesController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(UpdatePower_suppliesDTO dto)
+    public async Task<IActionResult> Put(UpdatePowerSuppliesDTO dto)
     {
         try
         {
