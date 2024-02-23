@@ -19,6 +19,14 @@ public class UnitOfWork(AppDBContext dBContext) : IUnitOfWork
     
     public IAccessoriesInterface Accessories => new AccessoriesRepository(_dBContext);
 
+    public RAMInterface RAM => new RAMRepository(_dBContext);
+
+    public Mouse_padsInterface Mouse_pads => new Mouse_padsRepository(_dBContext);
+
+    public Power_suppliesInterface Power_supplies => new Power_SuppliesRepository(_dBContext);
+
+    public Tables_for_gamersInterface Tables_For_Gamers => new Tables_for_gamersRepository(_dBContext);
+
     public void Dispose()
         => GC.SuppressFinalize(this);
 
