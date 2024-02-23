@@ -6,11 +6,11 @@ namespace Application.Interfaces;
 
 public interface IMousePadsService
 {
-    Task<PagedList<Mouse_padsDTO>> Filter(FilterParameters parametrs);
-    Task<PagedList<Mouse_padsDTO>> GetPagetMousePads(int pageSize, int pageNumber);
-    Task<IEnumerable<Mouse_padsDTO>> GetMousePadsAsync();
-    Task<Mouse_padsDTO> GetMousePadByIdAsync(int id);
-    Task AddMousePadsAsync(AddMouse_padsDTO mousepads);
-    Task UpdateMousePadsAsync(UpdateMouse_padsDTO  mousepads);
+    Task<PagedList<MousePadsDTO>> Filter(FilterParameters parametrs);
+    Task<PagedList<MousePadsDTO>> GetPagetMousePads(int pageSize, int pageNumber);
+    Task<IEnumerable<MousePadsDTO>> GetMousePadsAsync();
+    Task<MousePadsDTO> GetMousePadByIdAsync(int id);
+    Task AddMousePadsAsync(AddMousePadsDTO mousepads);
+    Task UpdateMousePadsAsync(UpdateMousePadsDTO  mousepads);
     Task DeleteMousePadsAsync(int id);
 }

@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Mouse_pads : BaseEntity
+public class MousePads : BaseEntity
 {
     [Required]
     public string Material { get; set; } = string.Empty;
