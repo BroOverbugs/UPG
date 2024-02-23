@@ -62,7 +62,7 @@ public class MousePadsService : IMousePadsService
             dtos = dtos.OrderByDescending(book => book.Name).ToList();
         }
 
-        PagedList<MousePadsDTO> pagedList = new(dtos, dtos.Count,
+        PagedList<MousePadsDTO> pagedList = new(dtos, dtos.Count(),
                                                           parametrs.PageNumber, parametrs.pageSize);
 
         return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);

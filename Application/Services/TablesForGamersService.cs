@@ -63,7 +63,7 @@ public class TablesForGamersService : ITablesForGamersService
             dtos = dtos.OrderByDescending(book => book.Name).ToList();
         }
 
-        PagedList<TablesForGamersDTO> pagedList = new(dtos, dtos.Count,
+        PagedList<TablesForGamersDTO> pagedList = new(dtos, dtos.Count(),
                                                           parametrs.PageNumber, parametrs.pageSize);
 
         return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);

@@ -10,7 +10,7 @@ public interface IUnitOfWork : IDisposable
     RAMInterface RAM { get; }
     MousePadsInterface Mouse_pads { get; }
     PowerSuppliesInterface Power_supplies { get; }
-    Tables_for_gamersInterface Tables_For_Gamers { get; }
+    TablesForGamersInterface Tables_For_Gamers { get; }
     IAccessoriesInterface Accessories { get; }
     Task SaveAsync();
 }
