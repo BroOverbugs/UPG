@@ -61,7 +61,7 @@ public class PowerSuppliesService : IPowerSuppliesService
             dtos = dtos.OrderByDescending(book => book.Name).ToList();
         }
 
-        PagedList<PowerSuppliesDTO> pagedList = new(dtos, dtos.Count,
+        PagedList<PowerSuppliesDTO> pagedList = new(dtos, dtos.Count(),
                                                           parametrs.PageNumber, parametrs.pageSize);
 
         return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
