@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using DTOS.AccessoriesDtos;
 using DTOS.Mouse_pads;
 using DTOS.Power_supplies;
 using DTOS.RAM;
@@ -31,5 +32,9 @@ public class AutoMapperProfile : Profile
         CreateMap<Tables_for_gamers, Tables_for_gamersDTO>().ReverseMap();
         CreateMap<Tables_for_gamers, AddTables_for_gamersDTO>().ReverseMap();
         CreateMap<UpdateTables_for_gamersDTO, Tables_for_gamers>();
+
+        CreateMap<Accessories, AccessoriesDto>().ReverseMap();
+        CreateMap<Accessories, AddAccessoriesDto>().ReverseMap();
+        CreateMap<UpdateAccessoriesDto, Accessories>();
     }
 }
