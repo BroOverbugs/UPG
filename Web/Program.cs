@@ -32,6 +32,7 @@ builder.Services.AddTransient<Tables_for_gamersInterface,Tables_for_gamersReposi
 builder.Services.AddTransient<IPowerSuppliesService,PowerSuppliesService>();
 builder.Services.AddTransient<IMousePadsService, MousePadsService>();
 builder.Services.AddTransient<IRAMService, RAMService>();
+builder.Services.AddTransient<IAccessoriesService, AccessoriesService>();
 builder.Services.AddTransient<ITablesForGamersService, TablesForGamersService>();
 
 
