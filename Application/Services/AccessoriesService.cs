@@ -22,29 +22,37 @@ namespace Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Task AddAccessoriesAsync(AddAccessoriesDto addAccessoriesDto)
+        public async Task AddAccessoriesAsync(AddAccessoriesDto addAccessoriesDto)
         {
-            throw new NotImplementedException();
+            var config = _mapper.Map<Accessories>(addAccessoriesDto);
+            _unitOfWork.Accessories.Add(config);
+            await _unitOfWork.SaveAsync();
         }
 
-        public Task DeleteAccessoriesAsync(int id)
+        public async Task DeleteAccessoriesAsync(int id)
         {
-            throw new NotImplementedException();
+            _unitOfWork.Accessories.Delete(id);
+            await _unitOfWork.SaveAsync();
         }
 
-        public Task<List<AccessoriesDto>> GetAccessoriesAsync()
+        public async Task<IEnumerable<AccessoriesDto>> GetAccessoriesAsync()
         {
-            throw new NotImplementedException();
+            var config = await _unitOfWork.Accessories.GetAllAsync();
+            var glaive = _mapper.Map<IEnumerable<AccessoriesDto>>(config);
+            return glaive;
         }
 
-        public Task<AccessoriesDto> GetAccessoriesByIdAsync(int id)
+        public async Task<AccessoriesDto> GetAccessoriesByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var config = await _unitOfWork.Accessories.GetByIdAsync(id);
+            return _mapper.Map<AccessoriesDto>(config);
         }
 
-        public Task UpdateAccessoriesAsync(UpdateAccessoriesDto updateAccessoriesDto)
+        public async Task UpdateAccessoriesAsync(UpdateAccessoriesDto updateAccessoriesDto)
         {
-            throw new NotImplementedException();
+            var config = _mapper.Map<Accessories>(updateAccessoriesDto);
+            _unitOfWork.Accessories.Update(config);
+            await _unitOfWork.SaveAsync();
         }
     }
 }
