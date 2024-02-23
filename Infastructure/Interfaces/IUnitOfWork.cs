@@ -9,7 +9,7 @@ public interface IUnitOfWork : IDisposable
     IMonitorInterface Monitor { get; }
     RAMInterface RAM { get; }
     MousePadsInterface Mouse_pads { get; }
-    Power_suppliesInterface Power_supplies { get; }
+    PowerSuppliesInterface Power_supplies { get; }
     Tables_for_gamersInterface Tables_For_Gamers { get; }
     IAccessoriesInterface Accessories { get; }
     Task SaveAsync();

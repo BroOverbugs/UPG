@@ -23,7 +23,7 @@ public class UnitOfWork(AppDBContext dBContext) : IUnitOfWork
 
     public MousePadsInterface Mouse_pads => new MousePadsRepository(_dBContext);
 
-    public Power_suppliesInterface Power_supplies => new Power_SuppliesRepository(_dBContext);
+    public PowerSuppliesInterface Power_supplies => new PowerSuppliesRepository(_dBContext);
 
     public Tables_for_gamersInterface Tables_For_Gamers => new Tables_for_gamersRepository(_dBContext);
 

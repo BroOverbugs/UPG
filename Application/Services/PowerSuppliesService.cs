@@ -12,18 +12,18 @@ using System.Threading.Tasks;
 
 namespace Application.Services;
 
-public class Power_suppliesService : IPower_suppliesService
+public class PowerSuppliesService : IPowerSuppliesService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    public Power_suppliesService(IMapper mapper,IUnitOfWork unitOfWork)
+    public PowerSuppliesService(IMapper mapper,IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
-    public async Task AddPowerSuppliesAsync(AddPower_suppliesDTO Powersupplies)
+    public async Task AddPowerSuppliesAsync(AddPowerSuppliesDTO Powersupplies)
     {
-        var config = _mapper.Map<Power_supplies>(Powersupplies);
+        var config = _mapper.Map<PowerSupplies>(Powersupplies);
         _unitOfWork.Power_supplies.Add(config);
         await _unitOfWork.SaveAsync();
     }
@@ -34,7 +34,7 @@ public class Power_suppliesService : IPower_suppliesService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<PagedList<Power_suppliesDTO>> Filter(FilterParameters parametrs)
+    public async Task<PagedList<PowerSuppliesDTO>> Filter(FilterParameters parametrs)
     {
         var list = await _unitOfWork.Power_supplies.GetAllAsync();
 
@@ -49,7 +49,7 @@ public class Power_suppliesService : IPower_suppliesService
         list = list.Where(book => book.Price >= parametrs.minPrice &&
                                       book.Price <= parametrs.maxPrice);
 
-        var dtos = list.Select(book => _mapper.Map<Power_suppliesDTO>(book)).ToList();
+        var dtos = list.Select(book => _mapper.Map<PowerSuppliesDTO>(book)).ToList();
 
         // Order by title
         if (parametrs.orderByTitle)
@@ -61,38 +61,38 @@ public class Power_suppliesService : IPower_suppliesService
             dtos = dtos.OrderByDescending(book => book.Name).ToList();
         }
 
-        PagedList<Power_suppliesDTO> pagedList = new(dtos, dtos.Count,
+        PagedList<PowerSuppliesDTO> pagedList = new(dtos, dtos.Count,
                                                           parametrs.PageNumber, parametrs.pageSize);
 
         return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
     }
 
-    public async Task<PagedList<Power_suppliesDTO>> GetPagedPowerSupplies(int pageSize, int pageNumber)
+    public async Task<PagedList<PowerSuppliesDTO>> GetPagedPowerSupplies(int pageSize, int pageNumber)
     {
         var dtos = await GetPowerSuppliesAsync();
-        PagedList<Power_suppliesDTO> pagedList = new(dtos,
+        PagedList<PowerSuppliesDTO> pagedList = new(dtos,
                                                           dtos.Count(),
                                                           pageNumber,
                                                           pageSize);
         return pagedList.ToPagedList(dtos, pageSize, pageNumber);
     }
 
-    public async Task<IEnumerable<Power_suppliesDTO>> GetPowerSuppliesAsync()
+    public async Task<IEnumerable<PowerSuppliesDTO>> GetPowerSuppliesAsync()
     {
         var config =  await _unitOfWork.Power_supplies.GetAllAsync();
-        var glaive = _mapper.Map<IEnumerable<Power_suppliesDTO>>(config);
+        var glaive = _mapper.Map<IEnumerable<PowerSuppliesDTO>>(config);
         return glaive;
     }
 
-    public async Task<Power_suppliesDTO> GetPowerSuppliesByIdAsync(int id)
+    public async Task<PowerSuppliesDTO> GetPowerSuppliesByIdAsync(int id)
     {
         var config = await _unitOfWork.Power_supplies.GetByIdAsync(id);
-        return _mapper.Map<Power_suppliesDTO>(config);
+        return _mapper.Map<PowerSuppliesDTO>(config);
     }
 
-    public async Task UpdatePowerSuppliesAsync(UpdatePower_suppliesDTO Powersupplies)
+    public async Task UpdatePowerSuppliesAsync(UpdatePowerSuppliesDTO Powersupplies)
     {
-        var config = _mapper.Map<Power_supplies>(Powersupplies);
+        var config = _mapper.Map<PowerSupplies>(Powersupplies);
         _unitOfWork.Power_supplies.Update(config);
         await _unitOfWork.SaveAsync();
     }

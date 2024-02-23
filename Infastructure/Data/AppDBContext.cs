@@ -17,8 +17,8 @@ public class AppDBContext : DbContext
     public DbSet<Domain.Entities.Monitor> Monitors { get; set; }
     public DbSet<MousePads> Mouse_Pads { get; set; }
     public DbSet<RAM> RAMs { get; set; }
-    public DbSet<Tables_for_gamers> Tables_For_Gamers { get; set; }
-    public DbSet<Power_supplies> Power_Supplies { get; set; }
+    public DbSet<TablesForGamers> Tables_For_Gamers { get; set; }
+    public DbSet<PowerSupplies> Power_Supplies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
