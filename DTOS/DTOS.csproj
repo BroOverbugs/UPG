@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HousingDTOs\" />
     <Folder Include="KeyboardDTOs\" />
     <Folder Include="LaptopDTOs\" />
     <Folder Include="MiceDTOs\" />

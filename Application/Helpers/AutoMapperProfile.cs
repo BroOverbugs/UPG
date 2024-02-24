@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using DTOS.AccessoriesDtos;
 using DTOS.Mouse_pads;
 using DTOS.Power_supplies;
 using DTOS.RAM;
@@ -16,20 +17,24 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<Mouse_pads, Mouse_padsDTO>().ReverseMap();
-        CreateMap<Mouse_pads, AddMouse_padsDTO>().ReverseMap();
-        CreateMap<UpdateMouse_padsDTO, Mouse_pads>();
+        CreateMap<MousePads, MousePadsDTO>().ReverseMap();
+        CreateMap<MousePads, AddMousePadsDTO>().ReverseMap();
+        CreateMap<UpdateMousePadsDTO, MousePads>();
 
-        CreateMap<Power_supplies, Power_suppliesDTO>().ReverseMap();
-        CreateMap<Power_supplies, AddPower_suppliesDTO>().ReverseMap();
-        CreateMap<UpdatePower_suppliesDTO, Power_supplies>();
+        CreateMap<PowerSupplies, PowerSuppliesDTO>().ReverseMap();
+        CreateMap<PowerSupplies, AddPowerSuppliesDTO>().ReverseMap();
+        CreateMap<UpdatePowerSuppliesDTO, PowerSupplies>();
 
         CreateMap<RAM, RAMDTO>().ReverseMap();
         CreateMap<RAM, AddRAMDTO>().ReverseMap();
         CreateMap<UpdateRAMDTO, RAM>();
-
-        CreateMap<Tables_for_gamers, Tables_for_gamersDTO>().ReverseMap();
-        CreateMap<Tables_for_gamers, AddTables_for_gamersDTO>().ReverseMap();
-        CreateMap<UpdateTables_for_gamersDTO, Tables_for_gamers>();
+        
+        CreateMap<TablesForGamers, TablesForGamersDTO>().ReverseMap();
+        CreateMap<TablesForGamers, AddTablesForGamersDTO>().ReverseMap();
+        CreateMap<UpdateTablesForGamersDTO, TablesForGamers>();
+        
+        CreateMap<Accessories, AccessoriesDto>().ReverseMap();
+        CreateMap<Accessories, AddAccessoriesDto>().ReverseMap();
+        CreateMap<UpdateAccessoriesDto, Accessories>();
     }
 }

@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Infastructure.Interfaces;
 
-public interface Tables_for_gamersInterface : IRepository<Tables_for_gamers>
+public interface PowerSuppliesInterface : IRepository<PowerSupplies>
 {
 }

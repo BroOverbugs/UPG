@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Infastructure.Interfaces;
 
-public interface Mouse_padsInterface : IRepository<Mouse_pads>
+public interface MousePadsInterface : IRepository<MousePads>
 {
 }

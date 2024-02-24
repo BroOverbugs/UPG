@@ -1,6 +1,6 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
-using DTOS.Power_supplies;
+using DTOS.AccessoriesDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -9,33 +9,35 @@ namespace Web.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PowerSuppliesController : ControllerBase
+public class AccessoriesController : ControllerBase
 {
-    private readonly IPowerSuppliesService _power_SuppliesService;
-    public PowerSuppliesController(IPowerSuppliesService power_SuppliesService)
+    private readonly IAccessoriesService _accessoriesService;
+
+    public AccessoriesController(IAccessoriesService accessoriesService)
     {
-        _power_SuppliesService = power_SuppliesService;
+        _accessoriesService = accessoriesService;
     }
+
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var categories = await _power_SuppliesService.GetPowerSuppliesAsync();
+        var categories = await _accessoriesService.GetAccessoriesAsync();
         return Ok(categories);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var category = await _power_SuppliesService.GetPowerSuppliesByIdAsync(id);
+        var category = await _accessoriesService.GetAccessoriesByIdAsync(id);
         return Ok(category);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(AddPowerSuppliesDTO dto)
+    public async Task<IActionResult> Post(AddAccessoriesDto dto)
     {
         try
         {
-            await _power_SuppliesService.AddPowerSuppliesAsync(dto);
+            await _accessoriesService.AddAccessoriesAsync(dto);
             return Ok();
         }
         catch (Exception ex)
@@ -45,11 +47,11 @@ public class PowerSuppliesController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(UpdatePowerSuppliesDTO dto)
+    public async Task<IActionResult> Put(UpdateAccessoriesDto dto)
     {
         try
         {
-            await _power_SuppliesService.UpdatePowerSuppliesAsync(dto);
+            await _accessoriesService.UpdateAccessoriesAsync(dto);
             return Ok();
         }
         catch (Exception ex)
@@ -58,16 +60,17 @@ public class PowerSuppliesController : ControllerBase
         }
     }
 
-    [HttpDelete("{Id}")]
-    public async Task<IActionResult> Delete(int Id)
+    [HttpDelete]    
+    public async Task<IActionResult> Delete(int id)
     {
-        await _power_SuppliesService.DeletePowerSuppliesAsync(Id);
+        await _accessoriesService.DeleteAccessoriesAsync(id);
         return Ok();
     }
+
     [HttpGet("paged")]
-    public async Task<IActionResult> GetPaged(int pageSize = 10, int pageNumber = 1)
+    public async Task<IActionResult> GetPaget(int pageSize = 10, int pageNumber = 1)
     {
-        var paged = await _power_SuppliesService.GetPagedPowerSupplies(pageSize, pageNumber);
+        var paged = await _accessoriesService.GetPagetAccessories(pageSize, pageNumber);
 
         var metaData = new
         {
@@ -82,10 +85,11 @@ public class PowerSuppliesController : ControllerBase
 
         return Ok(paged.Data);
     }
+
     [HttpGet("filter")]
-    public async Task<IActionResult> Filter([FromQuery] FilterParameters parametrs)
+    public async Task<IActionResult> Filter([FromQuery] FilterParameters parameters)
     {
-        var books = await _power_SuppliesService.Filter(parametrs);
+        var books = await _accessoriesService.Filter(parameters);
         return Ok(books);
     }
 }

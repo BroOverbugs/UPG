@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Power_supplies : BaseEntity
+public class PowerSupplies : BaseEntity
 {
     [Required]
     public string Form_factor { get; set;} = string.Empty;

@@ -25,14 +25,15 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<Mouse_padsInterface, Mouse_padsRepository>();
-builder.Services.AddTransient<Power_suppliesInterface,Power_SuppliesRepository>();
+builder.Services.AddTransient<MousePadsInterface, MousePadsRepository>();
+builder.Services.AddTransient<PowerSuppliesInterface,PowerSuppliesRepository>();
 builder.Services.AddTransient<RAMInterface,RAMRepository>();
-builder.Services.AddTransient<Tables_for_gamersInterface,Tables_for_gamersRepository>();
-builder.Services.AddTransient<IPower_suppliesService,Power_suppliesService>();
+builder.Services.AddTransient<TablesForGamersInterface,TablesForGamersRepository>();
+builder.Services.AddTransient<IPowerSuppliesService,PowerSuppliesService>();
 builder.Services.AddTransient<IMousePadsService, MousePadsService>();
 builder.Services.AddTransient<IRAMService, RAMService>();
-builder.Services.AddTransient<ITables_for_gamersService, Tables_for_gamersService>();
+builder.Services.AddTransient<IAccessoriesService, AccessoriesService>();
+builder.Services.AddTransient<ITablesForGamersService, TablesForGamersService>();
 
 
 builder.Services.AddEndpointsApiExplorer();
