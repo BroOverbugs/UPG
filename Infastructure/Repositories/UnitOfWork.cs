@@ -7,6 +7,16 @@ public class UnitOfWork(AppDBContext dBContext) : IUnitOfWork
 {
     private readonly AppDBContext _dBContext = dBContext;
 
+    public IArmchairs Armchairs => new ArmchairsRepository(_dBContext);
+
+    public ICooler Cooler => new CoolerRepository(_dBContext);
+
+    public IDrives Drives => new DrivesRepository(_dBContext);
+
+    public IGamingBuilds GamingBuilds => new GamingBuildsRepository(_dBContext);
+    
+    public IHeadphones Headphones => new HeadphonesRepository(_dBContext);
+
     public IHousingInterface Housing => new HousingRepository(_dBContext);
 
     public IKeyboardInterface Keyboard => new KeyboardRepository(_dBContext);
