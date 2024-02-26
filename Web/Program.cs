@@ -1,3 +1,5 @@
+using Amazon.Runtime;
+using Amazon.S3;
 using Application.Helpers;
 using Application.Interfaces;
 using Application.Services;
@@ -9,11 +11,15 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+# region DbContext
+
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
-
-
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+#endregion
+
+#region Mapper
 
 var mapperConfig = new MapperConfiguration(mc =>
 {
@@ -22,6 +28,20 @@ var mapperConfig = new MapperConfiguration(mc =>
 
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
+#endregion
+
+#region AWS Configuration
+
+var accessKey = builder.Configuration["AWS:AccessKey"];
+var secretKey = builder.Configuration["AWS:SecretAccessKey"];
+
+var awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+builder.Services.AddSingleton<IAmazonS3>(new AmazonS3Client(awsCredentials, Amazon.RegionEndpoint.EUNorth1));
+
+builder.Services.AddScoped<IS3Interface, S3Service>();
+
+#endregion
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
