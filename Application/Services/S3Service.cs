@@ -74,4 +74,16 @@ public class S3Service(IAmazonS3 s3Client,
 
         await s3Client.DeleteObjectAsync(deleteObjectRequest);
     }
+
+    public async Task<List<string>> MultiUploadImage(List<IFormFile> files)
+    {
+        var fileNames = new List<string>();
+        foreach (var file in files)
+        {
+            var filename = await UploadFileAsync(file);
+            fileNames.Add(filename);
+        }
+
+        return fileNames;
+    }
 }
