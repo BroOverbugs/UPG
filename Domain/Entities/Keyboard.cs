@@ -24,5 +24,4 @@ public class Keyboard : BaseEntity
     public string Dimensions { get; set; } = string.Empty;
     [Required]
     public string Weight { get; set; } = string.Empty;
-
 }
