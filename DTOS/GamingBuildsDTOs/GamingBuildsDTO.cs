@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DTOS.DrivesDTOs;
+namespace DTOS.GamingBuildsDTOs;
 
-public class UpdateDriverDTO : AddDriverDTO
+public class GamingBuildsDTO : AddGamingBuildsDTO
 {
     public int ID { get; set; }
 }

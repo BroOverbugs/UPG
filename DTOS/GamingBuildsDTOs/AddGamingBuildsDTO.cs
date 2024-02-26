@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DTOS.Gaming_buildsDTOs;
+namespace DTOS.GamingBuildsDTOs;
 
 public class AddGamingBuildsDTO
 {

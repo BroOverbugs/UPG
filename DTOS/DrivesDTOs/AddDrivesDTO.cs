@@ -2,7 +2,7 @@
 
 namespace DTOS.DrivesDTOs;
 
-public class AddDriverDTO
+public class AddDrivesDTO
 {
     public string Name { get; set; } = string.Empty;
     public double Price { get; set; }

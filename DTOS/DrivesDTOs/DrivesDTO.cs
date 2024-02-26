@@ -2,7 +2,7 @@
 
 namespace DTOS.DrivesDTOs;
 
-public class DriverDTO : AddDriverDTO
+public class DrivesDTO : AddDrivesDTO
 {
     public int ID { get; set; }
 }
