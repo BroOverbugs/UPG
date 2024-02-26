@@ -11,13 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="KeyboardDTOs\" />
-    <Folder Include="LaptopDTOs\" />
-    <Folder Include="MiceDTOs\" />
-    <Folder Include="MonitorDTOs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
   </ItemGroup>
 
