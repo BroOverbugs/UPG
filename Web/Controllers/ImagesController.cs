@@ -10,6 +10,14 @@ public class ImagesController(IS3Interface s3Interface)
 {
     private readonly IS3Interface s3Interface = s3Interface;
 
+    [HttpPost("MultiUpload")]
+    public async Task<IActionResult> Uploads(List<IFormFile> files)
+    {
+        var fileKeys = await s3Interface.MultiUploadImage(files);
+        var result = fileKeys.Select(i => $"{Request.Scheme}://{Request.Host}{Request.PathBase}/api/Images/{i}");
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> UploadImageAsync(IFormFile file)
     {
