@@ -19,7 +19,6 @@ public class AppDBContext : DbContext
     public DbSet<RAM> RAMs { get; set; }
     public DbSet<TablesForGamers> Tables_For_Gamers { get; set; }
     public DbSet<PowerSupplies> Power_Supplies { get; set; }
-    public DbSet<Image> Images { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
