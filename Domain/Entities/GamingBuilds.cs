@@ -2,10 +2,10 @@
 
 namespace Domain.Entities;
 
-public class Gaming_builds : BaseEntity
+public class GamingBuilds : BaseEntity
 {
     [Required]
-    public string Mother_board {  get; set; } = string.Empty;
+    public string MotherBoard {  get; set; } = string.Empty;
     [Required]
     public string CPU {  get; set; } = string.Empty;
     [Required]

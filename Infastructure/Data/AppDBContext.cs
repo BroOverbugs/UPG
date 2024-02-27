@@ -8,6 +8,11 @@ public class AppDBContext : DbContext
     {
         Database.EnsureCreated();
     }
+    public DbSet<Armchairs> Armchairs { get; set; }
+    public DbSet<Cooler> Coolers { get; set; }
+    public DbSet<Drives> Drives { get; set; }
+    public DbSet<GamingBuilds> GamingBuilds { get; set; }
+    public DbSet<Headphones> Headphones { get; set; }
 
     public DbSet<Housing> Housings { get; set; }
     public DbSet<Keyboard> Keyboards { get; set; }

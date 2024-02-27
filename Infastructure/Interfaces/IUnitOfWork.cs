@@ -2,6 +2,11 @@
 
 public interface IUnitOfWork : IDisposable
 {
+    IArmchairs Armchairs { get; }
+    ICooler Cooler { get; }
+    IDrives Drives { get; }
+    IGamingBuilds GamingBuilds { get; }
+    IHeadphones Headphones { get; }
     IHousingInterface Housing { get; }
     IKeyboardInterface Keyboard { get; }
     ILaptopInterface Laptop { get; }
