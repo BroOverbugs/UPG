@@ -16,4 +16,5 @@ public class MousePadsDTO
     public string BrandName { get; set; } = "";
     public string Material { get; set; } = string.Empty;
     public string Dimensions { get; set; } = string.Empty;
+    public List<string> ImageUrls { get; set; } = new();
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTOS.Mouse_pads;
+﻿namespace DTOS.Mouse_pads;
 
 public class UpdateMousePadsDTO
 {
@@ -15,4 +9,5 @@ public class UpdateMousePadsDTO
     public string BrandName { get; set; } = "";
     public string Material { get; set; } = string.Empty;
     public string Dimensions { get; set; } = string.Empty;
+    public List<string> ImageUrls { get; set; } = new();
 }
