@@ -21,5 +21,6 @@ namespace DTOS.MiceDTOs
         public string Weight_with_cable { get; set; } = string.Empty;
         public string Weight_without_cable { get; set; } = string.Empty;
         public string Dimensions { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new();
     }
 }

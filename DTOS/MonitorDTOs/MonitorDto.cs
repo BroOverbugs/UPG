@@ -21,5 +21,6 @@
         public string Adjustment { get; set; } = string.Empty;
         public string HDR { get; set; } = string.Empty;
         public string Guarantee_period { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new();
     }
 }

@@ -17,5 +17,6 @@
         public int Number_of_keys { get; set; }
         public string Dimensions { get; set; } = string.Empty;
         public string Weight { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new();
     }
 }

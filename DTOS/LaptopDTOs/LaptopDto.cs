@@ -15,5 +15,6 @@
         public string Extra { get; set; } = string.Empty;
         public string Wi_Fi { get; set; } = string.Empty;
         public string RTX_or_AMD { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new();
     }
 }
