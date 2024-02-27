@@ -8,5 +8,4 @@ public class MousePads : BaseEntity
     public string Material { get; set; } = string.Empty;
     [Required]
     public string Dimensions { get; set; } = string.Empty;
-
 }

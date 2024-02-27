@@ -23,5 +23,4 @@ public class Housing : BaseEntity
     public string Connectors_on_the_front_panel { get; set; } = string.Empty; 
     [Required]
     public string Case_color { get; set; } = string.Empty;
-
 }

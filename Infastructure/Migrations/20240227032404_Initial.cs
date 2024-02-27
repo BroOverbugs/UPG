@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -12,10 +13,27 @@ namespace Infastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Accessories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<double>(type: "double precision", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accessories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Housings",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Motherboard_form_factor = table.Column<string>(type: "text", nullable: false),
                     Size = table.Column<string>(type: "text", nullable: false),
@@ -30,18 +48,19 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Housings", x => x.ID);
+                    table.PrimaryKey("PK_Housings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Keyboards",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Keyboard_type = table.Column<string>(type: "text", nullable: false),
                     Switch_type = table.Column<string>(type: "text", nullable: false),
@@ -56,18 +75,19 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Keyboards", x => x.ID);
+                    table.PrimaryKey("PK_Keyboards", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Laptops",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Processor = table.Column<string>(type: "text", nullable: false),
                     RAM = table.Column<string>(type: "text", nullable: false),
@@ -80,18 +100,19 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Laptops", x => x.ID);
+                    table.PrimaryKey("PK_Laptops", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Mices",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Sensor_type = table.Column<string>(type: "text", nullable: false),
                     Maximum_resolution_DPI_or_CPI = table.Column<string>(type: "text", nullable: false),
@@ -109,18 +130,19 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mices", x => x.ID);
+                    table.PrimaryKey("PK_Mices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Monitors",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Diagonal = table.Column<string>(type: "text", nullable: false),
                     Screen_type = table.Column<string>(type: "text", nullable: false),
@@ -139,36 +161,38 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Monitors", x => x.ID);
+                    table.PrimaryKey("PK_Monitors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Mouse_Pads",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Material = table.Column<string>(type: "text", nullable: false),
                     Dimensions = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mouse_Pads", x => x.ID);
+                    table.PrimaryKey("PK_Mouse_Pads", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Power_Supplies",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Form_factor = table.Column<string>(type: "text", nullable: false),
                     Power = table.Column<string>(type: "text", nullable: false),
@@ -178,18 +202,19 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Power_Supplies", x => x.ID);
+                    table.PrimaryKey("PK_Power_Supplies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RAMs",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Capacity = table.Column<string>(type: "text", nullable: false),
                     Technologies = table.Column<string>(type: "text", nullable: false),
@@ -199,18 +224,19 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RAMs", x => x.ID);
+                    table.PrimaryKey("PK_RAMs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Tables_For_Gamers",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     I_or_O_panel = table.Column<string>(type: "text", nullable: false),
                     Table_adjustment = table.Column<string>(type: "text", nullable: false),
@@ -221,17 +247,21 @@ namespace Infastructure.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    BrandName = table.Column<string>(type: "text", nullable: false)
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    ImageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tables_For_Gamers", x => x.ID);
+                    table.PrimaryKey("PK_Tables_For_Gamers", x => x.Id);
                 });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Accessories");
+
             migrationBuilder.DropTable(
                 name: "Housings");
 
