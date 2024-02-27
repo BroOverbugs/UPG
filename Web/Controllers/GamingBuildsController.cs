@@ -1,12 +1,11 @@
 ﻿using Application.Interfaces;
 using DTOS.GamingBuildsDTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class GamingBuildsController : ControllerBase
 {
     private readonly IGamingBuildsService _gamingBuildsService;
@@ -16,7 +15,6 @@ public class GamingBuildsController : ControllerBase
         _gamingBuildsService = gamingBuildsService;
     }
 
-    // GET: api/GamingBuilds
     [HttpGet]
     public async Task<IActionResult> GetGamingBuilds()
     {
@@ -24,35 +22,53 @@ public class GamingBuildsController : ControllerBase
         return Ok(gamingBuilds);
     }
 
-    // GET: api/GamingBuilds/5
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetGamingBuildsById(int id)
+    public async Task<IActionResult> GetArmchairById(int id)
     {
-        var gamingBuilds = await _gamingBuildsService.GetGamingBuildsByIdAsync(id);
-        return Ok(gamingBuilds);
+        try
+        {
+            var armchair = await _gamingBuildsService.GetGamingBuildsByIdAsync(id);
+            return Ok(armchair);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // POST: api/GamingBuilds
     [HttpPost]
-    public async Task<IActionResult> CreateGamingBuilds([FromBody] AddGamingBuildsDTO gamingBuildsDTO)
+    public async Task<IActionResult> AddArmchair(AddGamingBuildsDTO dto)
     {
-        await _gamingBuildsService.AddGamingBuildsAsync(gamingBuildsDTO);
-        return Ok();
+        await _gamingBuildsService.AddGamingBuildsAsync(dto);
+        return Ok("Armchair added successfully.");
     }
 
-    // PUT: api/GamingBuilds/5
-    [HttpPut]
-    public async Task<IActionResult> UpdateGamingBuilds(UpdateGamingBuildsDTO gamingBuildsDTO)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateArmchair(int id, UpdateGamingBuildsDTO dto)
     {
-        await _gamingBuildsService.UpdateGamingBuildsAsync(gamingBuildsDTO);
-        return Ok();
+        try
+        {
+            dto.ID = id; // Set the ID from the route parameter
+            await _gamingBuildsService.UpdateGamingBuildsAsync(dto);
+            return Ok("Armchair updated successfully.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // DELETE: api/GamingBuilds/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteGamingBuilds(int id)
+    public async Task<IActionResult> DeleteArmchair(int id)
     {
-        await _gamingBuildsService.DeleteGamingBuildsAsync(id);
-        return Ok();
+        try
+        {
+            await _gamingBuildsService.DeleteGamingBuildsAsync(id);
+            return Ok("Armchair deleted successfully.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

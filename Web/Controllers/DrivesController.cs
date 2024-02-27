@@ -1,67 +1,74 @@
 ﻿using Application.Interfaces;
 using DTOS.DrivesDTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class DrivesController : ControllerBase
 {
-    private readonly IDrivesService _coolerService;
+    private readonly IDrivesService _drivesService;
 
-    public DrivesController(IDrivesService coolerService)
+    public DrivesController(IDrivesService drivesService)
     {
-        _coolerService = coolerService;
+        _drivesService = drivesService;
     }
 
-    // GET: api/Drives
     [HttpGet]
     public async Task<IActionResult> GetDrives()
     {
-        var coolers = await _coolerService.GetDrivesAllAsync();
-        return Ok(coolers);
+        var drives = await _drivesService.GetDrivesAllAsync();
+        return Ok(drives);
     }
 
-    // GET: api/Drives/5
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetDrivesById(int id)
+    public async Task<IActionResult> GetArmchairById(int id)
     {
-        var cooler = await _coolerService.GetDrivesByIdAsync(id);
-        if (cooler == null)
+        try
         {
-            return NotFound();
+            var armchair = await _drivesService.GetDrivesByIdAsync(id);
+            return Ok(armchair);
         }
-        return Ok(cooler);
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // POST: api/Drives
     [HttpPost]
-    public async Task<IActionResult> AddDrives(AddDrivesDTO coolerDTO)
+    public async Task<IActionResult> AddArmchair(AddDrivesDTO dto)
     {
-        await _coolerService.AddDrivesAsync(coolerDTO);
-        return Ok();
+        await _drivesService.AddDrivesAsync(dto);
+        return Ok("Armchair added successfully.");
     }
 
-    // PUT: api/Drives/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateDrives(int id, UpdateDrivesDTO coolerDTO)
+    public async Task<IActionResult> UpdateArmchair(int id, UpdateDrivesDTO dto)
     {
-        if (id != coolerDTO.ID)
+        try
         {
-            return BadRequest();
+            dto.ID = id; // Set the ID from the route parameter
+            await _drivesService.UpdateDrivesAsync(dto);
+            return Ok("Armchair updated successfully.");
         }
-
-        await _coolerService.UpdateDrivesAsync(coolerDTO);
-        return NoContent();
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // DELETE: api/Drives/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDrives(int id)
+    public async Task<IActionResult> DeleteArmchair(int id)
     {
-        await _coolerService.DeleteDrivesAsync(id);
-        return NoContent();
+        try
+        {
+            await _drivesService.DeleteDrivesAsync(id);
+            return Ok("Armchair deleted successfully.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

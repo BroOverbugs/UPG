@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class ArmchairsController : ControllerBase
 {
     private readonly IArmchairsService _armchairsService;
@@ -15,43 +15,60 @@ public class ArmchairsController : ControllerBase
         _armchairsService = armchairsService;
     }
 
-    // GET: api/Armchairs
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ArmchairsDTO>>> GetArmchairs()
+    public async Task<IActionResult> GetArmchairs()
     {
         var armchairs = await _armchairsService.GetArmchairsAsync();
         return Ok(armchairs);
     }
 
-    // GET: api/Armchairs/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<ArmchairsDTO>> GetArmchairs(int id)
+    public async Task<IActionResult> GetArmchairById(int id)
     {
-        var armchairs = await _armchairsService.GetArmchairsByIdAsync(id);
-        return Ok(armchairs);
+        try
+        {
+            var armchair = await _armchairsService.GetArmchairsByIdAsync(id);
+            return Ok(armchair);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // POST: api/Armchairs
     [HttpPost]
-    public async Task<ActionResult<ArmchairsDTO>> PostArmchairs(AddArmchairsDTO addArmchairsDTO)
+    public async Task<IActionResult> AddArmchair(AddArmchairsDTO dto)
     {
-        await _armchairsService.AddArmchairsAsync(addArmchairsDTO);
-        return Ok(addArmchairsDTO);
+        await _armchairsService.AddArmchairsAsync(dto);
+        return Ok("Armchair added successfully.");
     }
 
-    // PUT: api/Armchairs/5
-    [HttpPut]
-    public async Task<IActionResult> PutArmchairs(UpdateArmchairsDTO updateArmchairsDTO)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateArmchair(int id, UpdateArmchairsDTO dto)
     {
-        await _armchairsService.UpdateArmchairsAsync(updateArmchairsDTO);
-        return NoContent();
+        try
+        {
+            dto.ID = id; // Set the ID from the route parameter
+            await _armchairsService.UpdateArmchairsAsync(dto);
+            return Ok("Armchair updated successfully.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // DELETE: api/Armchairs/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteArmchairs(int id)
+    public async Task<IActionResult> DeleteArmchair(int id)
     {
-        await _armchairsService.DeleteArmchairsAsync(id);
-        return NoContent();
+        try
+        {
+            await _armchairsService.DeleteArmchairsAsync(id);
+            return Ok("Armchair deleted successfully.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

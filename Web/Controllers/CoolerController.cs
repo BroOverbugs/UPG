@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class CoolerController : ControllerBase
 {
     private readonly ICoolerService _coolerService;
@@ -15,47 +15,60 @@ public class CoolerController : ControllerBase
         _coolerService = coolerService;
     }
 
-    // GET: api/Cooler
     [HttpGet]
-    public async Task<IActionResult> GetCoolers()
+    public async Task<IActionResult> GetCooler()
     {
-        var coolers = await _coolerService.GetCoolersAsync();
-        return Ok(coolers);
-    }
-
-    // GET: api/Cooler/5
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetCoolerById(int id)
-    {
-        var cooler = await _coolerService.GetCoolerByIdAsync(id);
-        if (cooler == null)
-        {
-            return NotFound();
-        }
+        var cooler = await _coolerService.GetCoolersAsync();
         return Ok(cooler);
     }
 
-    // POST: api/Cooler
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetArmchairById(int id)
+    {
+        try
+        {
+            var armchair = await _coolerService.GetCoolerByIdAsync(id);
+            return Ok(armchair);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
     [HttpPost]
-    public async Task<IActionResult> AddCooler(AddCoolerDTO coolerDTO)
+    public async Task<IActionResult> AddArmchair(AddCoolerDTO dto)
     {
-        await _coolerService.AddCoolerAsync(coolerDTO);
-        return Ok();
+        await _coolerService.AddCoolerAsync(dto);
+        return Ok("Armchair added successfully.");
     }
 
-    // PUT: api/Cooler/5
-    [HttpPut]
-    public async Task<IActionResult> UpdateCooler(UpdateCoolerDTO coolerDTO)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateArmchair(int id, UpdateCoolerDTO dto)
     {
-        await _coolerService.UpdateCoolerAsync(coolerDTO);
-        return NoContent();
+        try
+        {
+            dto.ID = id; // Set the ID from the route parameter
+            await _coolerService.UpdateCoolerAsync(dto);
+            return Ok("Armchair updated successfully.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // DELETE: api/Cooler/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCooler(int id)
+    public async Task<IActionResult> DeleteArmchair(int id)
     {
-        await _coolerService.DeleteCoolerAsync(id);
-        return NoContent();
+        try
+        {
+            await _coolerService.DeleteCoolerAsync(id);
+            return Ok("Armchair deleted successfully.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }
