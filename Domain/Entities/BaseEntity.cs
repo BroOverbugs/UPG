@@ -12,4 +12,5 @@ public class BaseEntity
     public double Price { get; set; }
     public string Description { get; set; } = string.Empty;
     public string BrandName { get; set; } = "";
+    public List<string> ImageUrls { get; set; } = new();
 }

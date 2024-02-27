@@ -19,6 +19,7 @@ namespace DTOS.HousingDTOs
         public string Possibility_of_installing_liquid_cooling { get; set; } = string.Empty;
         public string Connectors_on_the_front_panel { get; set; } = string.Empty;
         public string Case_color { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new();
 
         public static implicit operator Housing(AddHousingDto housing)
         => new()
@@ -36,7 +37,8 @@ namespace DTOS.HousingDTOs
             Spaces_for_additional_coolers = housing.Spaces_for_additional_coolers,
             Possibility_of_installing_liquid_cooling = housing.Possibility_of_installing_liquid_cooling,
             Connectors_on_the_front_panel = housing.Connectors_on_the_front_panel,
-            Case_color = housing.Case_color
+            Case_color = housing.Case_color,
+            ImageUrls = housing.ImageUrls
         };
     }
 }

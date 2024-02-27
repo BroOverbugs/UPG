@@ -1,0 +1,235 @@
+
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+}
+body {
+    height: 100vh;
+    background-color: var(--site-bg-);
+    font-size: 1.6rem;
+    font-family: "Lato", sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--site-hd-bg-);
+    color: var(--site-font-);
+    height: 7vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+ Site Upper side start 
+.upper-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container {
+    width: 114rem;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: auto;
+    padding-right: auto;
+}
+
+.login-reg {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 23rem;
+}
+
+.login-reg a {
+    color: white;
+    text-decoration: none;
+}
+
+.order-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50rem;
+}
+
+    .order-side a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        color: var(--site-font-);
+        text-decoration: none;
+    }
+
+        .order-side a h4 {
+            margin: 0 0.5rem;
+        }
+
+.added {
+    display: none;
+    border-radius: 50%;
+    text-align: center;
+    font-weight: 800;
+    width: 2rem;
+    height: 2rem;
+}
+ Site Upper side end 
+ Site Main header start 
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.location {
+    display: flex;
+    justify-content: center;
+}
+
+    .location i {
+        font-size: 5.5rem;
+        margin-right: 1rem;
+    }
+
+    .location a {
+        color: var(--site-main-color-);
+        text-decoration: none;
+        font-size: 1.3rem;
+    }
+
+.phone-number {
+    width: 30%;
+    display: flex;
+    align-items: start;
+}
+
+    .phone-number i {
+        margin-top: 0.5rem;
+        font-size: 4rem;
+        margin-right: 1rem;
+    }
+
+.numbers {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-reg a:hover,
+.order-side a:hover,
+.location a:hover {
+    color: var(--site-color-);
+}
+ search side start 
+.search-side {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+    .search-side input {
+        height: 6vh;
+        width: 100%;
+        border-radius: 1.2rem 0 0 1.2rem;
+        border: none;
+        padding: 0 1.8rem;
+        transition: 0.3s ease-in-out;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    }
+
+.site-btn {
+    height: 6vh;
+    width: 15%;
+    border: none;
+    background-color: var(--site-color-);
+    color: var(--site-font-);
+    border-radius: 0 1.2rem 1.2rem 0;
+    font-size: 2rem;
+    font-weight: 500;
+    transition: 0.3s ease-in;
+}
+
+.search-side input:focus {
+    outline: 0.1rem solid var(--site-color-);
+}
+
+.site-btn:hover {
+    border: 2px solid var(--site-color-);
+    background: var(--site-bg-);
+    color: var(--site-color-);
+}
+ search side end 
+ footer side start 
+footer {
+    width: 100%;
+    background-color: var(--site-hd-bg-);
+    color: var(--site-font-);
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.main-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5rem 0;
+}
+
+.footer-side-item h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2.5rem;
+}
+
+.footer-side-item ul li {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+    .footer-side-item ul li a,
+    .footer-side-item a {
+        font-size: 1.4rem;
+        text-decoration: none;
+        color: var(--site-font-);
+    }
+
+        .footer-side-item a:not(:last-child) {
+            margin-right: 2rem;
+        }
+
+        .footer-side-item a i {
+            font-size: 2.5rem;
+        }
+
+.fa-instagram:hover {
+    color: #c13584;
+}
+
+.fa-telegram:hover {
+    color: #0088cc;
+}
+
+.fa-youtube:hover {
+    color: #ff0000;
+}
+
+.footer-side-item ul li a:hover,
+.footer-side-item a:hover {
+    color: var(--site-color-);
+}
+ footer side end 
+main {
+    flex-grow: 1;
+}
