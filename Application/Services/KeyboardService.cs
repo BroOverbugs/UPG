@@ -14,14 +14,16 @@ using FluentValidation.Results;
 namespace Application.Services;
 
 public class KeyboardService(IUnitOfWork unitOfWork,
-                             IDistributedCache distributed) : IKeyboardService
+                             IDistributedCache distributed,
+                             IS3Interface s3Interface) : IKeyboardService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IDistributedCache _distributed = distributed;
+    private readonly IS3Interface _s3Interface = s3Interface;
     private readonly IRedisService<Keyboard> _cache = new RedisService<Keyboard>(distributed);
     private const string CACHE_KEY = "keyboard";
 
-    public async void Create(AddKeyboardDto keyboardDto)
+    public async Task Create(AddKeyboardDto keyboardDto)
     {
         if (keyboardDto == null) throw new ArgumentNullException("Keyboard was null!");
 
@@ -30,12 +32,7 @@ public class KeyboardService(IUnitOfWork unitOfWork,
 
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
         }
 
         _unitOfWork.Keyboard.Add((Keyboard)keyboardDto);
@@ -43,10 +40,16 @@ public class KeyboardService(IUnitOfWork unitOfWork,
         _distributed.Remove(CACHE_KEY);
     }
 
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
         var keyboard = GetByIdAsync(id).Result;
         if (keyboard == null) throw new NotFoundException("Keyboard not found!");
+
+        var images = keyboard.ImageUrls.ToList();
+        foreach (var image in images)
+        {
+            await _s3Interface.DeleteFileAsync(image.Split("/")[^1]);
+        }
 
         _unitOfWork.Keyboard.Delete(id);
         await _unitOfWork.SaveAsync();
@@ -85,7 +88,7 @@ public class KeyboardService(IUnitOfWork unitOfWork,
         return keyboard;
     }
 
-    public async void Update(UpdateKeyboardDto keyboardDto)
+    public async Task Update(UpdateKeyboardDto keyboardDto)
     {
         var keyboard = GetByIdAsync(keyboardDto.Id).Result;
         if (keyboard == null) throw new NotFoundException("Keyboard not found!");
@@ -96,12 +99,14 @@ public class KeyboardService(IUnitOfWork unitOfWork,
 
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
+
+        var forDelete = keyboard.ImageUrls.Except(keyboardDto.ImageUrls).ToList();
+
+        foreach (var imageUrl in forDelete)
+        {
+            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
         }
 
         _unitOfWork.Keyboard.Update((Keyboard)keyboardDto);

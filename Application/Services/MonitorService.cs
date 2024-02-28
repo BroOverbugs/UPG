@@ -8,19 +8,20 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Application.Common.Validators.MonitorValidators;
-using FluentValidation.Results;
 
 namespace Application.Services;
 
 public class MonitorService(IUnitOfWork unitOfWork,
-                           IDistributedCache distributed) : IMonitorService
+                           IDistributedCache distributed,
+                           IS3Interface s3Interface) : IMonitorService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IDistributedCache _distributed = distributed;
+    private readonly IS3Interface _s3Interface = s3Interface;
     private readonly IRedisService<Domain.Entities.Monitor> _cache = new RedisService<Domain.Entities.Monitor>(distributed);
     private const string CACHE_KEY = "monitor";
 
-    public async void Create(AddMonitorDto monitorDto)
+    public async Task Create(AddMonitorDto monitorDto)
     {
         if (monitorDto == null) throw new ArgumentNullException("Monitor was null!");
 
@@ -29,12 +30,7 @@ public class MonitorService(IUnitOfWork unitOfWork,
 
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList()};
         }
 
         _unitOfWork.Monitor.Add((Domain.Entities.Monitor)monitorDto);
@@ -42,11 +38,16 @@ public class MonitorService(IUnitOfWork unitOfWork,
         _distributed.Remove(CACHE_KEY);
     }
 
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
-        var monitor = GetByIdAsync(id).Result;
+        var monitor = await _unitOfWork.Monitor.GetByIdAsync(id);
         if (monitor == null) throw new NotFoundException("Monitor not found!");
 
+        var images = monitor.ImageUrls.ToList();
+        foreach (var image in images)
+        {
+            await _s3Interface.DeleteFileAsync(image.Split("/")[^1]);
+        }
         _unitOfWork.Monitor.Delete(id);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
@@ -55,16 +56,16 @@ public class MonitorService(IUnitOfWork unitOfWork,
     public async Task<List<MonitorDto>> GetAllAsync()
     {
         var monitors = await _cache.GetFromCacheAsync(CACHE_KEY);
-        if (monitors == null)
+        if (monitors == null || monitors.Count() == 0)
         {
             monitors = await _unitOfWork.Monitor.GetAllAsync();
             await _cache.SaveToCacheAsync(JsonConvert.SerializeObject(monitors, Formatting.None, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            }), CACHE_KEY);
+            {   
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }), CACHE_KEY); 
         }
-        return monitors.Select(i => (MonitorDto)i).ToList();
+        var test = monitors.Select(i => (MonitorDto)i).ToList();
+        return test;
     }
 
     public async Task<MonitorDto> GetByIdAsync(int id)
@@ -84,9 +85,9 @@ public class MonitorService(IUnitOfWork unitOfWork,
         return monitor;
     }
 
-    public async void Update(UpdateMonitorDto monitorDto)
+    public async Task Update(UpdateMonitorDto monitorDto)
     {
-        var monitor = GetByIdAsync(monitorDto.Id).Result;
+        var monitor = await _unitOfWork.Monitor.GetByIdAsync(monitorDto.Id);
         if (monitor == null) throw new NotFoundException("Monitor not found!");
 
 
@@ -95,12 +96,14 @@ public class MonitorService(IUnitOfWork unitOfWork,
 
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
+
+        var forDelete = monitor.ImageUrls.Except(monitorDto.ImageUrls);
+
+        foreach (var url in forDelete)
+        {
+            await _s3Interface.DeleteFileAsync(url.Split('/')[^1]);
         }
 
         _unitOfWork.Monitor.Update((Domain.Entities.Monitor)monitorDto);

@@ -18,11 +18,11 @@ public class HousingsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] AddHousingDto housingDto)
+    public async Task<IActionResult> Create([FromBody] AddHousingDto housingDto)
     {
         try
         {
-            _housingService.Create(housingDto);
+            await _housingService.Create(housingDto);
             return Ok("Housing created successfully");
         }
         catch (ResponseErrors ex)
@@ -36,11 +36,11 @@ public class HousingsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _housingService.Delete(id);
+            await _housingService.Delete(id);
             return Ok("Housing deleted successfully");
         }
         catch (NotFoundException ex)
@@ -86,11 +86,11 @@ public class HousingsController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] UpdateHousingDto housingDto)
+    public async Task<IActionResult> Update([FromBody] UpdateHousingDto housingDto)
     {
         try
         {
-            _housingService.Update(housingDto);
+            await _housingService.Update(housingDto);
             return Ok("Housing updated successfully");
         }
         catch (NotFoundException ex)
