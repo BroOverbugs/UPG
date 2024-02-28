@@ -49,12 +49,19 @@ builder.Services.AddTransient<MousePadsInterface, MousePadsRepository>();
 builder.Services.AddTransient<PowerSuppliesInterface,PowerSuppliesRepository>();
 builder.Services.AddTransient<RAMInterface,RAMRepository>();
 builder.Services.AddTransient<TablesForGamersInterface,TablesForGamersRepository>();
+
+
 builder.Services.AddTransient<IPowerSuppliesService,PowerSuppliesService>();
 builder.Services.AddTransient<IMousePadsService, MousePadsService>();
 builder.Services.AddTransient<IRAMService, RAMService>();
 builder.Services.AddTransient<IAccessoriesService, AccessoriesService>();
 builder.Services.AddTransient<ITablesForGamersService, TablesForGamersService>();
 
+builder.Services.AddTransient<IArmchairsService,ArmchairsService>();
+builder.Services.AddTransient<ICoolerService,CoolerService>();
+builder.Services.AddTransient<IDrivesService,DrivesService>();
+builder.Services.AddTransient<IGamingBuildsService, GamingBuildsService>();
+builder.Services.AddTransient<IHeadphonesService, HeadphonesService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

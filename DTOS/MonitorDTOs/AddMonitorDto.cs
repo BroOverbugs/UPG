@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DTOS.MonitorDTOs
+﻿namespace DTOS.MonitorDTOs
 {
     public class AddMonitorDto
     {
@@ -22,5 +20,31 @@ namespace DTOS.MonitorDTOs
         public string Adjustment { get; set; } = string.Empty;
         public string HDR { get; set; } = string.Empty;
         public string Guarantee_period { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new();
+
+
+        public static implicit operator Domain.Entities.Monitor(AddMonitorDto monitorDto)
+            => new()
+            {
+                Name = monitorDto.Name,
+                Price = monitorDto.Price,
+                Description = monitorDto.Description,
+                BrandName = monitorDto.BrandName,
+                Diagonal = monitorDto.Diagonal,
+                Screen_type = monitorDto.Screen_type,
+                Matrix_type = monitorDto.Matrix_type,
+                Resolution_FHD = monitorDto.Resolution_FHD,
+                Aspect_ratio = monitorDto.Aspect_ratio,
+                Frame_rate = monitorDto.Frame_rate,
+                Response_time = monitorDto.Response_time,
+                Viewing_angle = monitorDto.Viewing_angle,
+                Interface = monitorDto.Interface,
+                VESA_Mount = monitorDto.VESA_Mount,
+                Technologies = monitorDto.Technologies,
+                Adjustment = monitorDto.Adjustment,
+                HDR = monitorDto.HDR,
+                Guarantee_period = monitorDto.Guarantee_period,
+                ImageUrls = monitorDto.ImageUrls
+            };
     }
 }

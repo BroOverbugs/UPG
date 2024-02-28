@@ -1,4 +1,6 @@
-﻿namespace DTOS.MiceDTOs
+﻿using Domain.Entities;
+
+namespace DTOS.MiceDTOs
 {
     public class MiceDto
     {
@@ -20,5 +22,30 @@
         public string Weight_with_cable { get; set; } = string.Empty;
         public string Weight_without_cable { get; set; } = string.Empty;
         public string Dimensions { get; set; } = string.Empty;
+        public List<string> ImageUrls { get; set; } = new();
+
+        public static implicit operator MiceDto(Mice miceDto)
+            => new()
+            {
+                Id = miceDto.Id,
+                Name = miceDto.Name,
+                Price = miceDto.Price,
+                Description = miceDto.Description,
+                BrandName = miceDto.BrandName,
+                Sensor_type = miceDto.Sensor_type,
+                Maximum_resolution_DPI_or_CPI = miceDto.Maximum_resolution_DPI_or_CPI,
+                Number_of_buttons = miceDto.Number_of_buttons,
+                Polling_rate = miceDto.Polling_rate,
+                Acceleration_max_acceleration = miceDto.Acceleration_max_acceleration,
+                Prism = miceDto.Prism,
+                Internal_memory = miceDto.Internal_memory,
+                Operating_mode = miceDto.Operating_mode,
+                Wire_type = miceDto.Wire_type,
+                Wire_length = miceDto.Wire_length,
+                Weight_without_cable = miceDto.Weight_without_cable,
+                Weight_with_cable = miceDto.Weight_with_cable,
+                Dimensions = miceDto.Dimensions,
+                ImageUrls = miceDto.ImageUrls,
+            };
     }
 }
