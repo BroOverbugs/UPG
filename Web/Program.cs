@@ -7,14 +7,17 @@ using AutoMapper;
 using Infastructure.Data;
 using Infastructure.Interfaces;
 using Infastructure.Repositories;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 # region DbContext
 
 builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")),
+    ServiceLifetime.Scoped);
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 #endregion
@@ -43,12 +46,34 @@ builder.Services.AddScoped<IS3Interface, S3Service>();
 
 #endregion
 
+#region Redis
+builder.Services.Configure<ConfigurationOptions>(builder.Configuration.GetSection("RedisCacheOptions"));
+builder.Services.AddStackExchangeRedisCache(setupAction =>
+{
+    setupAction.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
+});
+#endregion
+
+#region CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+        });
+});
+#endregion
+
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<MousePadsInterface, MousePadsRepository>();
 builder.Services.AddTransient<PowerSuppliesInterface,PowerSuppliesRepository>();
 builder.Services.AddTransient<RAMInterface,RAMRepository>();
 builder.Services.AddTransient<TablesForGamersInterface,TablesForGamersRepository>();
+builder.Services.AddTransient<IMonitorService, MonitorService>();
 
 
 builder.Services.AddTransient<IPowerSuppliesService,PowerSuppliesService>();
@@ -79,6 +104,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

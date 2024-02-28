@@ -10,18 +10,21 @@ using Infastructure.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Threading;
 
 namespace Application.Services;
 
 public class HousingService(IUnitOfWork unitOfWork,
-                            IDistributedCache distributed) : IHousingService
+                            IDistributedCache distributed,
+                            IS3Interface s3Interface) : IHousingService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IDistributedCache _distributed = distributed;
+    private readonly IS3Interface _s3Interface = s3Interface;
     private readonly IRedisService<Housing> _cache = new RedisService<Housing>(distributed);
     private const string CACHE_KEY = "housing";
 
-    public async void Create(AddHousingDto housingDto)
+    public async Task Create(AddHousingDto housingDto)
     {
         if (housingDto == null) throw new ArgumentNullException("Housing was null!");
 
@@ -30,12 +33,7 @@ public class HousingService(IUnitOfWork unitOfWork,
         
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
         }
 
         _unitOfWork.Housing.Add((Housing)housingDto);
@@ -43,10 +41,17 @@ public class HousingService(IUnitOfWork unitOfWork,
         _distributed.Remove(CACHE_KEY);
     }
 
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
         var housing = GetByIdAsync(id).Result;
         if (housing == null) throw new NotFoundException("Housing not found!");
+
+
+        var images = housing.ImageUrls.ToList();
+        foreach (var image in images)
+        {
+            await _s3Interface.DeleteFileAsync(image.Split("/")[^1]);
+        }
 
         _unitOfWork.Housing.Delete(id);
         await _unitOfWork.SaveAsync();
@@ -85,9 +90,9 @@ public class HousingService(IUnitOfWork unitOfWork,
         return housing;
     }
 
-    public async void Update(UpdateHousingDto housingDto)
+    public async Task Update(UpdateHousingDto housingDto)
     {
-        var housing = GetByIdAsync(housingDto.Id).Result;
+        var housing = await _unitOfWork.Housing.GetByIdAsync(housingDto.Id);
         if (housing == null) throw new NotFoundException("Housing not found!");
 
 
@@ -96,12 +101,14 @@ public class HousingService(IUnitOfWork unitOfWork,
 
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
+
+        var forDelete = housing.ImageUrls.Except(housingDto.ImageUrls);
+
+        foreach (var imageUrl in forDelete)
+        {
+            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
         }
 
         _unitOfWork.Housing.Update((Housing)housingDto);

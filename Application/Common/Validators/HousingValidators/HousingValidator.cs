@@ -9,7 +9,7 @@ public class AddHousingDtoValidator : AbstractValidator<AddHousingDto>
     {
         RuleFor(dto => dto.Name).NotEmpty().WithMessage("Name is required");
 
-        RuleFor(dto => dto.Price).GreaterThanOrEqualTo(0).WithMessage("Price must be a non-negative value");
+        RuleFor(dto => dto.Price).Must(i => i > 0).WithMessage("Price must be a non-negative value");
 
         RuleFor(dto => dto.BrandName).NotEmpty().WithMessage("Brand is required");
     }
@@ -21,7 +21,7 @@ public class UpdateHousingDtoValidator : AbstractValidator<UpdateHousingDto>
     {
         RuleFor(dto => dto.Name).NotEmpty().WithMessage("Name is required");
 
-        RuleFor(dto => dto.Price).GreaterThanOrEqualTo(0).WithMessage("Price must be a non-negative value");
+        RuleFor(dto => dto.Price).Must(i => i > 0).WithMessage("Price must be a non-negative value");
 
         RuleFor(dto => dto.BrandName).NotEmpty().WithMessage("Brand is required");
     }

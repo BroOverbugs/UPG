@@ -17,11 +17,11 @@ public class MonitorsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] AddMonitorDto monitorDto)
+    public async Task<IActionResult> Create([FromBody] AddMonitorDto monitorDto)
     {
         try
         {
-            _monitorService.Create(monitorDto);
+            await _monitorService.Create(monitorDto);
             return Ok("Monitor created successfully");
         }
         catch (ResponseErrors ex)
@@ -35,11 +35,11 @@ public class MonitorsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _monitorService.Delete(id);
+            await _monitorService.Delete(id);
             return Ok("Monitor deleted successfully");
         }
         catch (NotFoundException ex)
@@ -85,11 +85,11 @@ public class MonitorsController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] UpdateMonitorDto monitorDto)
+    public async Task<IActionResult> Update([FromBody] UpdateMonitorDto monitorDto)
     {
         try
         {
-            _monitorService.Update(monitorDto);
+            await _monitorService.Update(monitorDto);
             return Ok("Monitor updated successfully");
         }
         catch (NotFoundException ex)

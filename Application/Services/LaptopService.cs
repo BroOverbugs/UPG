@@ -10,18 +10,22 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Application.Common.Validators.LaptopValidators;
 using FluentValidation.Results;
+using System.Threading;
+using DTOS.KeyboardDTOs;
 
 namespace Application.Services;
 
 public class LaptopService(IUnitOfWork unitOfWork,
-                           IDistributedCache distributed) : ILaptopService
+                           IDistributedCache distributed,
+                           IS3Interface s3Interface) : ILaptopService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IDistributedCache _distributed = distributed;
+    private readonly IS3Interface _s3Interface = s3Interface;
     private readonly IRedisService<Laptop> _cache = new RedisService<Laptop>(distributed);
     private const string CACHE_KEY = "laptop";
 
-    public async void Create(AddLaptopDto laptopDto)
+    public async Task Create(AddLaptopDto laptopDto)
     {
         if (laptopDto == null) throw new ArgumentNullException("Laptop was null!");
 
@@ -30,12 +34,7 @@ public class LaptopService(IUnitOfWork unitOfWork,
 
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
         }
 
         _unitOfWork.Laptop.Add((Laptop)laptopDto);
@@ -43,10 +42,16 @@ public class LaptopService(IUnitOfWork unitOfWork,
         _distributed.Remove(CACHE_KEY);
     }
 
-    public async void Delete(int id)
+    public async Task Delete(int id)
     {
         var laptop = GetByIdAsync(id).Result;
         if (laptop == null) throw new NotFoundException("Laptop not found!");
+
+        var images = laptop.ImageUrls.ToList();
+        foreach (var image in images)
+        {
+            await _s3Interface.DeleteFileAsync(image.Split("/")[^1]);
+        }
 
         _unitOfWork.Laptop.Delete(id);
         await _unitOfWork.SaveAsync();
@@ -85,7 +90,7 @@ public class LaptopService(IUnitOfWork unitOfWork,
         return laptop;
     }
 
-    public async void Update(UpdateLaptopDto laptopDto)
+    public async Task Update(UpdateLaptopDto laptopDto)
     {
         var laptop = GetByIdAsync(laptopDto.Id).Result;
         if (laptop == null) throw new NotFoundException("Laptop not found!");
@@ -96,12 +101,14 @@ public class LaptopService(IUnitOfWork unitOfWork,
 
         if (!validationResult.IsValid)
         {
-            List<ValidationFailure> failures = new List<ValidationFailure>();
-            foreach (var error in validationResult.Errors)
-            {
-                failures.Add(error);
-            }
-            throw new ResponseErrors() { Errors = failures };
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
+
+        var forDelete = laptop.ImageUrls.Except(laptopDto.ImageUrls).ToList();
+
+        foreach (var imageUrl in forDelete)
+        {
+            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
         }
 
         _unitOfWork.Laptop.Update((Laptop)laptopDto);

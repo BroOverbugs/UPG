@@ -40,6 +40,6 @@ public class UnitOfWork(AppDBContext dBContext) : IUnitOfWork
     public void Dispose()
         => GC.SuppressFinalize(this);
 
-    public Task SaveAsync()
-        => _dBContext.SaveChangesAsync();
+    public async Task<int> SaveAsync()
+        => await _dBContext.SaveChangesAsync();
 }
