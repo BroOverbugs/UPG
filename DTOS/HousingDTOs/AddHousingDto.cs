@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace DTOS.HousingDTOs
 {
