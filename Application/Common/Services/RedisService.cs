@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using System.Text.Json;
 
 namespace Application.Common.Services;
@@ -13,7 +14,7 @@ public class RedisService<T>(IDistributedCache distributed) : IRedisService<T> w
         IEnumerable<T>? entities = null;
         var entitiesFromCache = await _cache.GetStringAsync(key);
         entities = (entitiesFromCache == null) ? null
-            : JsonSerializer.Deserialize<IEnumerable<T>>(entitiesFromCache);
+            : JsonConvert.DeserializeObject<IEnumerable<T>>(entitiesFromCache);
 
         return entities;
     }

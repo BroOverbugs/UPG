@@ -11,7 +11,7 @@ public class AddLaptopDtoValidator : AbstractValidator<AddLaptopDto>
             .NotEmpty().WithMessage("Name cannot be empty");
 
         RuleFor(dto => dto.Price)
-            .GreaterThan(0).WithMessage("Price must be greater than zero");
+            .Must(i => i > 0).WithMessage("Price must be greater than zero");
     }
 }
 
@@ -23,6 +23,6 @@ public class UpdateLaptopDtoValidator : AbstractValidator<UpdateLaptopDto>
             .NotEmpty().WithMessage("Name cannot be empty");
 
         RuleFor(dto => dto.Price)
-            .GreaterThan(0).WithMessage("Price must be greater than zero");
+            .Must(i => i > 0).WithMessage("Price must be greater than zero");
     }
 }

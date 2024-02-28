@@ -17,5 +17,5 @@ public interface IUnitOfWork : IDisposable
     PowerSuppliesInterface Power_supplies { get; }
     TablesForGamersInterface Tables_For_Gamers { get; }
     IAccessoriesInterface Accessories { get; }
-    Task SaveAsync();
+    Task<int> SaveAsync();
 }
