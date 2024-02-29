@@ -1,9 +1,16 @@
-﻿using Application.Helpers;
+﻿using Application.Common.Exceptions;
+using Application.Common.Validators.ElyorbekModels.MousePadsValidators;
+using Application.Common.Validators.HousingValidators;
+using Application.Common.Validators.MonitorValidators;
+using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using DTOS.HousingDTOs;
+using DTOS.MonitorDTOs;
 using DTOS.Mouse_pads;
 using DTOS.Power_supplies;
+using FluentValidation;
 using Infastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,13 +24,24 @@ public class MousePadsService : IMousePadsService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    public MousePadsService(IMapper mapper, IUnitOfWork unitOfWork)
+    private readonly IS3Interface _s3Interface;
+    public MousePadsService(IMapper mapper, IUnitOfWork unitOfWork,IS3Interface s3Interface)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _s3Interface = s3Interface;
     }
      public async Task AddMousePadsAsync(AddMousePadsDTO mousepads)
     {
+        if (mousepads == null) throw new ArgumentNullException("MousePads was null!");
+
+        var validator = new AddMousePadsDtoValidator();
+        var validationResult = validator.Validate(mousepads);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
         var config = _mapper.Map<MousePads>(mousepads);
         _unitOfWork.Mouse_pads.Add(config);
         await _unitOfWork.SaveAsync();
@@ -31,13 +49,22 @@ public class MousePadsService : IMousePadsService
 
     public async Task DeleteMousePadsAsync(int id)
     {
+        var mousepads = GetMousePadByIdAsync(id).Result;
+        if (mousepads == null) throw new NotFoundException("Mousepad not found!");
+
+
+        var images = mousepads.ImageUrls.ToList();
+        foreach (var image in images)
+        {
+            await _s3Interface.DeleteFileAsync(image.Split("/")[^1]);
+        }
         _unitOfWork.Mouse_pads.Delete(id);
         await _unitOfWork.SaveAsync();
     }
 
     public async Task<PagedList<MousePadsDTO>> Filter(FilterParameters parametrs)
     {
-        var list = await _unitOfWork.Power_supplies.GetAllAsync();
+        var list = await _unitOfWork.Mouse_pads.GetAllAsync();
 
         // Filter by title
         if (parametrs.title is not "")
@@ -71,6 +98,8 @@ public class MousePadsService : IMousePadsService
     public async Task<MousePadsDTO> GetMousePadByIdAsync(int id)
     {
         var config = await _unitOfWork.Mouse_pads.GetByIdAsync(id);
+
+        if (config == null) throw new NotFoundException("MousePads Not Found!");
         return _mapper.Map<MousePadsDTO>(config);
     }
 
@@ -93,6 +122,26 @@ public class MousePadsService : IMousePadsService
 
     public async Task UpdateMousePadsAsync(UpdateMousePadsDTO mousepads)
     {
+        var mouse = await _unitOfWork.Mouse_pads.GetByIdAsync(mousepads.ID);
+        if (mouse == null) throw new NotFoundException("Mouse Pad not found!");
+
+
+        var validator = new UpdateMousePadsDtoValidator();
+        var validationResult = validator.Validate(mousepads);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
+
+        var forDelete = mouse.ImageUrls.Except(mousepads.ImageUrls);
+
+        foreach (var url in forDelete)
+        {
+            await _s3Interface.DeleteFileAsync(url.Split('/')[^1]);
+        }
+
+
         var config = _mapper.Map<MousePads>(mousepads);
         _unitOfWork.Mouse_pads.Update(config);
         await _unitOfWork.SaveAsync();
