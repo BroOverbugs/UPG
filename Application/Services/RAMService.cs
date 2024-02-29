@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Validators.ElyorbekModels.PowerSuppliesValidators;
 using Application.Common.Validators.ElyorbekModels.RAMValidators;
 using Application.Common.Validators.HousingValidators;
 using Application.Helpers;
@@ -8,6 +9,7 @@ using Domain.Entities;
 using DTOS.HousingDTOs;
 using DTOS.Power_supplies;
 using DTOS.RAM;
+using FluentValidation;
 using Infastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -118,8 +120,8 @@ public class RAMService : IRAMService
 
     public async Task UpdateRAMAsync(UpdateRAMDTO ram)
     {
-        var ramcha = await _unitOfWork.Housing.GetByIdAsync(ram.ID);
-        if (ramcha == null) throw new NotFoundException("RAM not found!");
+        var power = await _unitOfWork.RAM.GetByIdAsync(ram.ID);
+        if (power == null) throw new NotFoundException("RAM not found!");
 
 
         var validator = new UpdateRAMDTOValidator();
@@ -130,11 +132,11 @@ public class RAMService : IRAMService
             throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
         }
 
-        var forDelete = ramcha.ImageUrls.Except(ram.ImageUrls);
+        var forDelete = power.ImageUrls.Except(ram.ImageUrls);
 
-        foreach (var imageUrl in forDelete)
+        foreach (var url in forDelete)
         {
-            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
+            await _s3Interface.DeleteFileAsync(url.Split('/')[^1]);
         }
         var config = _mapper.Map<RAM>(ram);
         _unitOfWork.RAM.Update(config);

@@ -1,11 +1,13 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Validators.ElyorbekModels.MousePadsValidators;
 using Application.Common.Validators.HousingValidators;
+using Application.Common.Validators.MonitorValidators;
 using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using DTOS.HousingDTOs;
+using DTOS.MonitorDTOs;
 using DTOS.Mouse_pads;
 using DTOS.Power_supplies;
 using FluentValidation;
@@ -62,7 +64,7 @@ public class MousePadsService : IMousePadsService
 
     public async Task<PagedList<MousePadsDTO>> Filter(FilterParameters parametrs)
     {
-        var list = await _unitOfWork.Power_supplies.GetAllAsync();
+        var list = await _unitOfWork.Mouse_pads.GetAllAsync();
 
         // Filter by title
         if (parametrs.title is not "")
@@ -120,8 +122,8 @@ public class MousePadsService : IMousePadsService
 
     public async Task UpdateMousePadsAsync(UpdateMousePadsDTO mousepads)
     {
-        var Mousepads = await _unitOfWork.Housing.GetByIdAsync(mousepads.ID);
-        if (Mousepads == null) throw new NotFoundException("MousePads not found!");
+        var mouse = await _unitOfWork.Mouse_pads.GetByIdAsync(mousepads.ID);
+        if (mouse == null) throw new NotFoundException("Mouse Pad not found!");
 
 
         var validator = new UpdateMousePadsDtoValidator();
@@ -132,12 +134,13 @@ public class MousePadsService : IMousePadsService
             throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
         }
 
-        var forDelete = Mousepads.ImageUrls.Except(mousepads.ImageUrls);
+        var forDelete = mouse.ImageUrls.Except(mousepads.ImageUrls);
 
-        foreach (var imageUrl in forDelete)
+        foreach (var url in forDelete)
         {
-            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
+            await _s3Interface.DeleteFileAsync(url.Split('/')[^1]);
         }
+
 
         var config = _mapper.Map<MousePads>(mousepads);
         _unitOfWork.Mouse_pads.Update(config);

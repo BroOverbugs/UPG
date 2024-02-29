@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Validators.ElyorbekModels.MousePadsValidators;
 using Application.Common.Validators.ElyorbekModels.PowerSuppliesValidators;
 using Application.Common.Validators.HousingValidators;
 using Application.Helpers;
@@ -118,8 +119,8 @@ public class PowerSuppliesService : IPowerSuppliesService
 
     public async Task UpdatePowerSuppliesAsync(UpdatePowerSuppliesDTO Powersupplies)
     {
-        var power = await _unitOfWork.Housing.GetByIdAsync(Powersupplies.ID);
-        if (power == null) throw new NotFoundException("Housing not found!");
+        var power = await _unitOfWork.Power_supplies.GetByIdAsync(Powersupplies.ID);
+        if (power == null) throw new NotFoundException("Power Supply not found!");
 
 
         var validator = new UpdatePowerSuppliesDTOValidator();
@@ -132,9 +133,9 @@ public class PowerSuppliesService : IPowerSuppliesService
 
         var forDelete = power.ImageUrls.Except(Powersupplies.ImageUrls);
 
-        foreach (var imageUrl in forDelete)
+        foreach (var url in forDelete)
         {
-            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
+            await _s3Interface.DeleteFileAsync(url.Split('/')[^1]);
         }
         var config = _mapper.Map<PowerSupplies>(Powersupplies);
         _unitOfWork.Power_supplies.Update(config);

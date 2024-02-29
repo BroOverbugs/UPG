@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Validators.ElyorbekModels.RAMValidators;
 using Application.Common.Validators.ElyorbekModels.TablesForGamersValidators;
 using Application.Common.Validators.HousingValidators;
 using Application.Helpers;
@@ -120,8 +121,8 @@ public class TablesForGamersService : ITablesForGamersService
 
     public async Task UpdateTablesForGamersAsync(UpdateTablesForGamersDTO tablesforgamers)
     {
-        var TFG = await _unitOfWork.Housing.GetByIdAsync(tablesforgamers.ID);
-        if (TFG == null) throw new NotFoundException("Table not found!");
+        var power = await _unitOfWork.Tables_For_Gamers.GetByIdAsync(tablesforgamers.ID);
+        if (power == null) throw new NotFoundException("RAM not found!");
 
 
         var validator = new UpdateTablesForGamersDTOValidator();
@@ -132,11 +133,11 @@ public class TablesForGamersService : ITablesForGamersService
             throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
         }
 
-        var forDelete = TFG.ImageUrls.Except(tablesforgamers.ImageUrls);
+        var forDelete = power.ImageUrls.Except(tablesforgamers.ImageUrls);
 
-        foreach (var imageUrl in forDelete)
+        foreach (var url in forDelete)
         {
-            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
+            await _s3Interface.DeleteFileAsync(url.Split('/')[^1]);
         }
         var config = _mapper.Map<TablesForGamers>(tablesforgamers);
         _unitOfWork.Tables_For_Gamers.Update(config);
