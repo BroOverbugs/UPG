@@ -1,16 +1,15 @@
 ﻿using Application.Common.Exceptions;
+using UPG.Core.Filters;
 using Application.Common.Interfaces;
 using Application.Common.Services;
 using Application.Common.Validators.HousingValidators;
 using Application.Interfaces;
 using Domain.Entities;
 using DTOS.HousingDTOs;
-using FluentValidation.Results;
 using Infastructure.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Threading;
 
 namespace Application.Services;
 
@@ -114,5 +113,11 @@ public class HousingService(IUnitOfWork unitOfWork,
         _unitOfWork.Housing.Update((Housing)housingDto);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<HousingDto>> FilterAsync(HousingFilter housingFilter)
+    {
+        var housings = await _unitOfWork.Housing.GetFilteredHousingsAsync(housingFilter);
+        return housings.Select(i => (HousingDto)i).ToList();
     }
 }
