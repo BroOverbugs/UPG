@@ -18,4 +18,5 @@ public class UpdateRAMDTO
     public string Timings { get; set; } = string.Empty;
     public string Memory_frequency { get; set; } = string.Empty;
     public string Backlight { get; set; } = string.Empty;
+    public List<string> ImageUrls { get; set; } = new();
 }
