@@ -3,6 +3,7 @@ using Application.Interfaces;
 using DTOS.HousingDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -104,6 +105,20 @@ public class HousingsController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] HousingFilter filter)
+    {
+        try
+        {
+            var housings = await _housingService.FilterAsync(filter);
+            return Ok(housings);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }

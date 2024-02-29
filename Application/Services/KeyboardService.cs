@@ -10,6 +10,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Application.Common.Validators.KeyboardValidators;
 using FluentValidation.Results;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -112,5 +113,12 @@ public class KeyboardService(IUnitOfWork unitOfWork,
         _unitOfWork.Keyboard.Update((Keyboard)keyboardDto);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<KeyboardDto>> FilterAsync(KeyboardFilter keyboardFilter)
+    {
+        var keyboards = await _unitOfWork.Keyboard.GetFilteredKeyboard(keyboardFilter);
+
+        return keyboards.Select(i => (KeyboardDto)i).ToList();
     }
 }

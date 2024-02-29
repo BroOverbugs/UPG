@@ -1,8 +1,10 @@
 ﻿using Application.Common.Exceptions;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.KeyboardDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -17,12 +19,12 @@ public class KeyboardsController : ControllerBase
         _keyboardService = keyboardService;
     }
 
-    [HttpPost]
-    public IActionResult Create([FromBody] AddKeyboardDto keyboardDto)
+    [HttpPost("create")]
+    public async Task<IActionResult> Create([FromBody] AddKeyboardDto keyboardDto)
     {
         try
         {
-            _keyboardService.Create(keyboardDto);
+            await _keyboardService.Create(keyboardDto);
             return Ok("Keyboard created successfully");
         }
         catch (ResponseErrors ex)
@@ -36,11 +38,11 @@ public class KeyboardsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _keyboardService.Delete(id);
+            await _keyboardService.Delete(id);
             return Ok("Keyboard deleted successfully");
         }
         catch (NotFoundException ex)
@@ -86,11 +88,11 @@ public class KeyboardsController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] UpdateKeyboardDto keyboardDto)
+    public async Task<IActionResult> Update([FromBody] UpdateKeyboardDto keyboardDto)
     {
         try
         {
-            _keyboardService.Update(keyboardDto);
+            await _keyboardService.Update(keyboardDto);
             return Ok("Keyboard updated successfully");
         }
         catch (NotFoundException ex)
@@ -104,6 +106,20 @@ public class KeyboardsController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] KeyboardFilter filter)
+    {
+        try
+        {
+            var keyboards = await _keyboardService.FilterAsync(filter);
+            return Ok(keyboards);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }
