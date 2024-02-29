@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Common.Exceptions;
+using Application.Helpers;
 using Application.Interfaces;
 using DTOS.Power_supplies;
 using DTOS.RAM;
@@ -20,15 +21,33 @@ public class RAMController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var categories = await _ramservice.GetRAMAsync();
-        return Ok(categories);
+        try
+        {
+            var categories = await _ramservice.GetRAMAsync();
+            return Ok(categories);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var category = await _ramservice.GetRAMByIdAsync(id);
-        return Ok(category);
+        try
+        {
+            var category = await _ramservice.GetRAMByIdAsync(id);
+            return Ok(category);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
     }
 
     [HttpPost]
@@ -39,9 +58,13 @@ public class RAMController : ControllerBase
             await _ramservice.AddRAMAsync(dto);
             return Ok();
         }
+        catch (ResponseErrors ex)
+        {
+            return BadRequest(ex.Errors);
+        }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }
 
@@ -53,17 +76,36 @@ public class RAMController : ControllerBase
             await _ramservice.UpdateRAMAsync(dto);
             return Ok();
         }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ResponseErrors ex)
+        {
+            return BadRequest(ex.Errors);
+        }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }
 
     [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(int Id)
     {
-        await _ramservice.DeleteRAMAsync(Id);
-        return Ok();
+        try
+        {
+            await _ramservice.DeleteRAMAsync(Id);
+            return Ok();
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
     }
     [HttpGet("paged")]
     public async Task<IActionResult> GetPaged(int pageSize = 10, int pageNumber = 1)

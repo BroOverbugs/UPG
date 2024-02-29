@@ -18,4 +18,5 @@ public class UpdatePowerSuppliesDTO
     public string Security_technologies { get; set; } = string.Empty;
     public string Dimensions { get; set; } = string.Empty;
     public string Certificate { get; set; } = string.Empty;
+    public List<string> ImageUrls { get; set; } = new();
 }

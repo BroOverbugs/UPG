@@ -1,7 +1,11 @@
-﻿ using Application.Helpers;
+﻿using Application.Common.Exceptions;
+using Application.Common.Validators.ElyorbekModels.RAMValidators;
+using Application.Common.Validators.HousingValidators;
+using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using DTOS.HousingDTOs;
 using DTOS.Power_supplies;
 using DTOS.RAM;
 using Infastructure.Interfaces;
@@ -17,13 +21,24 @@ public class RAMService : IRAMService
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    public RAMService(IMapper mapper, IUnitOfWork unitOfWork)
+    private readonly IS3Interface _s3Interface;
+    public RAMService(IMapper mapper, IUnitOfWork unitOfWork, IS3Interface s3Interface)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _s3Interface = s3Interface;
     }
     public async Task AddRAMAsync(AddRAMDTO ram)
     {
+        if (ram == null) throw new ArgumentNullException("RAM was null!");
+
+        var validator = new AddRAMDTOValidator();
+        var validationResult = validator.Validate(ram);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
         var config = _mapper.Map<RAM>(ram);
         _unitOfWork.RAM.Add(config);
         await _unitOfWork.SaveAsync();
@@ -31,6 +46,15 @@ public class RAMService : IRAMService
 
     public async Task DeleteRAMAsync(int id)
     {
+        var ramcha = GetRAMByIdAsync(id).Result;
+        if (ramcha == null) throw new NotFoundException("RAM not found!");
+
+
+        var images = ramcha.ImageUrls.ToList();
+        foreach (var image in images)
+        {
+            await _s3Interface.DeleteFileAsync(image.Split("/")[^1]);
+        }
         _unitOfWork.RAM.Delete(id);
         await _unitOfWork.SaveAsync();
     }
@@ -78,6 +102,7 @@ public class RAMService : IRAMService
     public async Task<RAMDTO> GetRAMByIdAsync(int id)
     {
         var config = await _unitOfWork.RAM.GetByIdAsync(id);
+        if (config == null) throw new NotFoundException("RAM Not Found!");
         return _mapper.Map<RAMDTO>(config);
     }
 
@@ -93,6 +118,24 @@ public class RAMService : IRAMService
 
     public async Task UpdateRAMAsync(UpdateRAMDTO ram)
     {
+        var ramcha = await _unitOfWork.Housing.GetByIdAsync(ram.ID);
+        if (ramcha == null) throw new NotFoundException("RAM not found!");
+
+
+        var validator = new UpdateRAMDTOValidator();
+        var validationResult = validator.Validate(ram);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ResponseErrors() { Errors = validationResult.Errors.ToList() };
+        }
+
+        var forDelete = ramcha.ImageUrls.Except(ram.ImageUrls);
+
+        foreach (var imageUrl in forDelete)
+        {
+            await _s3Interface.DeleteFileAsync(imageUrl.Split('/')[^1]);
+        }
         var config = _mapper.Map<RAM>(ram);
         _unitOfWork.RAM.Update(config);
         await _unitOfWork.SaveAsync();
