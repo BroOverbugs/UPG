@@ -9,9 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Application.Common.Validators.LaptopValidators;
-using FluentValidation.Results;
-using System.Threading;
-using DTOS.KeyboardDTOs;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -114,5 +112,12 @@ public class LaptopService(IUnitOfWork unitOfWork,
         _unitOfWork.Laptop.Update((Laptop)laptopDto);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<LaptopDto>> FilterAsync(LaptopFilter laptopFilter)
+    {
+        var laptops = await _unitOfWork.Laptop.GetFilteredLaptop(laptopFilter);
+
+        return laptops.Select(i => (LaptopDto)i).ToList();
     }
 }

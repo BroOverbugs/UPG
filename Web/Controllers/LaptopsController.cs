@@ -1,7 +1,9 @@
 ﻿using Application.Common.Exceptions;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.LaptopDTOs;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -17,11 +19,11 @@ public class LaptopsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] AddLaptopDto laptopDto)
+    public async Task<IActionResult> Create([FromBody] AddLaptopDto laptopDto)
     {
         try
         {
-            _laptopService.Create(laptopDto);
+            await _laptopService.Create(laptopDto);
             return Ok("Laptop created successfully");
         }
         catch (ResponseErrors ex)
@@ -35,11 +37,11 @@ public class LaptopsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _laptopService.Delete(id);
+            await _laptopService.Delete(id);
             return Ok("Laptop deleted successfully");
         }
         catch (NotFoundException ex)
@@ -85,11 +87,11 @@ public class LaptopsController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] UpdateLaptopDto laptopDto)
+    public async Task<IActionResult> Update([FromBody] UpdateLaptopDto laptopDto)
     {
         try
         {
-            _laptopService.Update(laptopDto);
+            await _laptopService.Update(laptopDto);
             return Ok("Laptop updated successfully");
         }
         catch (NotFoundException ex)
@@ -103,6 +105,20 @@ public class LaptopsController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] LaptopFilter filter)
+    {
+        try
+        {
+            var keyboards = await _laptopService.FilterAsync(filter);
+            return Ok(keyboards);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }

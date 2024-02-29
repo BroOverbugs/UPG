@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Application.Common.Validators.MonitorValidators;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -109,5 +110,12 @@ public class MonitorService(IUnitOfWork unitOfWork,
         _unitOfWork.Monitor.Update((Domain.Entities.Monitor)monitorDto);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<MonitorDto>> FilterAsync(MonitorFilter monitorFilter)
+    {
+        var monitors = await _unitOfWork.Monitor.GetFilteredMonitor(monitorFilter);
+
+        return monitors.Select(i => (MonitorDto)i).ToList();
     }
 }
