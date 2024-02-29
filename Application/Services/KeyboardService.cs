@@ -9,7 +9,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Application.Common.Validators.KeyboardValidators;
-using FluentValidation.Results;
 using UPG.Core.Filters;
 
 namespace Application.Services;
