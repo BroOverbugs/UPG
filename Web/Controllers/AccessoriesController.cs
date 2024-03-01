@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Common.Exceptions;
+using Application.Helpers;
 using Application.Interfaces;
 using Application.Services;
 using DTOS.AccessoriesDtos;
@@ -42,6 +43,14 @@ public class AccessoriesController : ControllerBase
             await _accessoriesService.AddAccessoriesAsync(dto);
             return Ok();
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (ResponseErrors ex)
+        {
+            return BadRequest(ex.Errors);
+        }
         catch (Exception ex)
         {
             return StatusCode(500, ex.Message);
@@ -55,6 +64,14 @@ public class AccessoriesController : ControllerBase
         {
             await _accessoriesService.UpdateAccessoriesAsync(dto);
             return Ok();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (ResponseErrors ex)
+        {
+            return BadRequest(ex.Errors);
         }
         catch (Exception ex)
         {

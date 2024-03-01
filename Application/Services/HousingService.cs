@@ -42,7 +42,7 @@ public class HousingService(IUnitOfWork unitOfWork,
 
     public async Task Delete(int id)
     {
-        var housing = GetByIdAsync(id).Result;
+        var housing = await GetByIdAsync(id);
         if (housing == null) throw new NotFoundException("Housing not found!");
 
 
@@ -86,7 +86,7 @@ public class HousingService(IUnitOfWork unitOfWork,
         }
         var housing =  housings.FirstOrDefault(i => i.Id == id);
         if (housing == null) throw new NotFoundException("Housing Not Found!");
-        return housing;
+        return (HousingDto)housing;
     }
 
     public async Task Update(UpdateHousingDto housingDto)
