@@ -1,9 +1,11 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.AccessoriesDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -86,10 +88,17 @@ public class AccessoriesController : ControllerBase
         return Ok(paged.Data);
     }
 
-    [HttpGet("filter")]
-    public async Task<IActionResult> Filter([FromQuery] FilterParameters parameters)
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] AccessoriesFilter filter)
     {
-        var books = await _accessoriesService.Filter(parameters);
-        return Ok(books);
+        try
+        {
+            var accessories = await _accessoriesService.FilterAsync(filter);
+            return Ok(accessories);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

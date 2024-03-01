@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UPG.Core.Filters;
 
 namespace Application.Services
 {
@@ -67,6 +68,12 @@ namespace Application.Services
                                                                 parameters.PageNumber, parameters.pageSize);
 
             return pagedList.ToPagedList(dtos, parameters.PageSize, parameters.PageNumber);
+        }
+
+        public async Task<List<AccessoriesDto>> FilterAsync(AccessoriesFilter accessoriesFilter)
+        {
+            var accessories = await _unitOfWork.Accessories.GetFilteredAccessoriesAsync(accessoriesFilter);
+            return accessories.Select(i => _mapper.Map<AccessoriesDto>(i)).ToList();
         }
 
         public async Task<IEnumerable<AccessoriesDto>> GetAccessoriesAsync()

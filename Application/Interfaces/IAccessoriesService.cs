@@ -1,10 +1,6 @@
 ﻿using Application.Helpers;
 using DTOS.AccessoriesDtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UPG.Core.Filters;
 
 namespace Application.Interfaces
 {
@@ -16,6 +12,7 @@ namespace Application.Interfaces
         Task<AccessoriesDto> GetAccessoriesByIdAsync(int id);
         Task AddAccessoriesAsync(AddAccessoriesDto addAccessoriesDto);
         Task UpdateAccessoriesAsync(UpdateAccessoriesDto updateAccessoriesDto);
+        Task<List<AccessoriesDto>> FilterAsync(AccessoriesFilter accessoriesFilter);
         Task DeleteAccessoriesAsync(int id);
     }
 }
