@@ -4,11 +4,18 @@ using Application.Helpers;
 using Application.Interfaces;
 using Application.Services;
 using AutoMapper;
+using DTOS.IdentitiesDTO;
 using Infastructure.Data;
 using Infastructure.Interfaces;
 using Infastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +26,40 @@ builder.Services.AddDbContext<AppDBContext>(options =>
     ServiceLifetime.Scoped);
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+#endregion
+
+#region Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    // Password requirements settings
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+}).AddEntityFrameworkStores<AppDBContext>()
+              .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
 #endregion
 
 #region Mapper
@@ -64,7 +105,7 @@ builder.Services.AddCors(options =>
 });
 #endregion
 
-#region DI Container
+#region Application Services
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
@@ -73,11 +114,13 @@ builder.Services.AddTransient<PowerSuppliesInterface,PowerSuppliesRepository>();
 builder.Services.AddTransient<RAMInterface,RAMRepository>();
 builder.Services.AddTransient<TablesForGamersInterface,TablesForGamersRepository>();
 
+
 builder.Services.AddTransient<IPowerSuppliesService,PowerSuppliesService>();
 builder.Services.AddTransient<IMousePadsService, MousePadsService>();
 builder.Services.AddTransient<IRAMService, RAMService>();
 builder.Services.AddTransient<IAccessoriesService, AccessoriesService>();
 builder.Services.AddTransient<ITablesForGamersService, TablesForGamersService>();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
 
 
 builder.Services.AddTransient<IArmchairsService,ArmchairsService>();
@@ -94,12 +137,34 @@ builder.Services.AddTransient<IKeyboardService, KeyboardService>();
 builder.Services.AddTransient<ILaptopService, LaptopService>();
 builder.Services.AddScoped<IS3Interface, S3Service>();
 
-
 #endregion
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "UPG API", Version = "v1" });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme.",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+});
 
 var app = builder.Build();
 

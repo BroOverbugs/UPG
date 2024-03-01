@@ -1,8 +1,10 @@
 ﻿using Domain.Entities;
+using DTOS.IdentitiesDTO;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 namespace Infastructure.Data;
 
-public class AppDBContext : DbContext
+public class AppDBContext : IdentityDbContext<ApplicationUser>
 {
     public AppDBContext(DbContextOptions<AppDBContext> dbContextOptions) : base(dbContextOptions)
     {
