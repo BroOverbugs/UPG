@@ -4,12 +4,17 @@ using Application.Helpers;
 using Application.Interfaces;
 using Application.Services;
 using AutoMapper;
+using DTOS.IdentitiesDTO;
 using Infastructure.Data;
 using Infastructure.Interfaces;
 using Infastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +26,39 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 #endregion
+#region Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    // Password requirements settings
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+}).AddEntityFrameworkStores<AppDBContext>()
+              .AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
+#endregion
 #region Mapper
 
 var mapperConfig = new MapperConfiguration(mc =>
@@ -67,6 +104,7 @@ builder.Services.AddCors(options =>
 });
 #endregion
 
+#region Application Services
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<MousePadsInterface, MousePadsRepository>();
@@ -80,12 +118,14 @@ builder.Services.AddTransient<IMousePadsService, MousePadsService>();
 builder.Services.AddTransient<IRAMService, RAMService>();
 builder.Services.AddTransient<IAccessoriesService, AccessoriesService>();
 builder.Services.AddTransient<ITablesForGamersService, TablesForGamersService>();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
 
 builder.Services.AddTransient<IArmchairsService,ArmchairsService>();
 builder.Services.AddTransient<ICoolerService,CoolerService>();
 builder.Services.AddTransient<IDrivesService,DrivesService>();
 builder.Services.AddTransient<IGamingBuildsService, GamingBuildsService>();
 builder.Services.AddTransient<IHeadphonesService, HeadphonesService>();
+#endregion
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
