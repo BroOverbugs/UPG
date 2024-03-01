@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Infastructure.Interface;
+﻿using Infastructure.Interface;
+using UPG.Core.Filters;
 
-namespace Infastructure.Interfaces
+namespace Infastructure.Interfaces;
+
+public interface IMonitorInterface : IRepository<Domain.Entities.Monitor>
 {
-    public interface IMonitorInterface : IRepository<Domain.Entities.Monitor>
-    {
-    }
+    Task<List<Domain.Entities.Monitor>> GetFilteredMonitor(MonitorFilter filter);
 }

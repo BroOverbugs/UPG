@@ -28,6 +28,6 @@ public class Monitor : BaseEntity
     public string Technologies { get; set; } = string.Empty;
     [Required]
     public string Adjustment { get; set; } = string.Empty;
-    public string HDR { get; set; } = string.Empty;
-    public string Guarantee_period { get; set; } = string.Empty;
+    public bool HDR { get; set; }
+    public bool Guarantee_period { get; set; }
 }

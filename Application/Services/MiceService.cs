@@ -9,8 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Application.Common.Validators.MiceValidators;
-using FluentValidation.Results;
-using DTOS.KeyboardDTOs;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -114,5 +113,12 @@ public class MiceService(IUnitOfWork unitOfWork,
         _unitOfWork.Mice.Update((Mice)miceDto);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<MiceDto>> FilterAsync(MiceFilter miceFilter)
+    {
+        var mices = await _unitOfWork.Mice.GetFilteredMice(miceFilter);
+
+        return mices.Select(i => (MiceDto)i).ToList();
     }
 }

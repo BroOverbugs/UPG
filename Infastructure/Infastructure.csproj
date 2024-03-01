@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\UPG.Core\UPG.Core.csproj" />
     <ProjectReference Include="..\DTOS\DTOS.csproj" />
   </ItemGroup>
 

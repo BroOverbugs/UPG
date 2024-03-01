@@ -19,8 +19,8 @@
         public string VESA_Mount { get; set; } = string.Empty;
         public string Technologies { get; set; } = string.Empty;
         public string Adjustment { get; set; } = string.Empty;
-        public string HDR { get; set; } = string.Empty;
-        public string Guarantee_period { get; set; } = string.Empty;
+        public bool HDR { get; set; }
+        public bool Guarantee_period { get; set; }
         public List<string> ImageUrls { get; set; } = new();
 
 

@@ -1,7 +1,9 @@
 ﻿using Application.Common.Exceptions;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.MonitorDTOs;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -103,6 +105,20 @@ public class MonitorsController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] MonitorFilter filter)
+    {
+        try
+        {
+            var monitors = await _monitorService.FilterAsync(filter);
+            return Ok(monitors);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }

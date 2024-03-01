@@ -1,8 +1,10 @@
 ﻿using Application.Common.Exceptions;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.MiceDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -18,11 +20,11 @@ public class MicesController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] AddMiceDto miceDto)
+    public async Task<IActionResult> Create([FromBody] AddMiceDto miceDto)
     {
         try
         {
-            _miceService.Create(miceDto);
+            await _miceService.Create(miceDto);
             return Ok("Mice created successfully");
         }
         catch (ResponseErrors ex)
@@ -36,11 +38,11 @@ public class MicesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _miceService.Delete(id);
+            await _miceService.Delete(id);
             return Ok("Mice deleted successfully");
         }
         catch (NotFoundException ex)
@@ -86,11 +88,11 @@ public class MicesController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] UpdateMiceDto miceDto)
+    public async Task<IActionResult> Update([FromBody] UpdateMiceDto miceDto)
     {
         try
         {
-            _miceService.Update(miceDto);
+            await _miceService.Update(miceDto);
             return Ok("Mice updated successfully");
         }
         catch (NotFoundException ex)
@@ -104,6 +106,20 @@ public class MicesController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] MiceFilter filter)
+    {
+        try
+        {
+            var mices = await _miceService.FilterAsync(filter);
+            return Ok(mices);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }

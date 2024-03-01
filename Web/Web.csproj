@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infastructure\Infastructure.csproj" />
+    <ProjectReference Include="..\UPG.Core\UPG.Core.csproj" />
   </ItemGroup>
 
 </Project>
