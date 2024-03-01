@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.Text;
 
@@ -26,6 +27,7 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 #endregion
+
 #region Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -59,6 +61,7 @@ builder.Services.AddAuthentication(options =>
         };
     });
 #endregion
+
 #region Mapper
 
 var mapperConfig = new MapperConfiguration(mc =>
@@ -103,12 +106,14 @@ builder.Services.AddCors(options =>
 #endregion
 
 #region Application Services
+
 builder.Services.AddControllers();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<MousePadsInterface, MousePadsRepository>();
 builder.Services.AddTransient<PowerSuppliesInterface,PowerSuppliesRepository>();
 builder.Services.AddTransient<RAMInterface,RAMRepository>();
 builder.Services.AddTransient<TablesForGamersInterface,TablesForGamersRepository>();
+
 
 builder.Services.AddTransient<IPowerSuppliesService,PowerSuppliesService>();
 builder.Services.AddTransient<IMousePadsService, MousePadsService>();
@@ -123,7 +128,6 @@ builder.Services.AddTransient<ICoolerService,CoolerService>();
 builder.Services.AddTransient<IDrivesService,DrivesService>();
 builder.Services.AddTransient<IGamingBuildsService, GamingBuildsService>();
 builder.Services.AddTransient<IHeadphonesService, HeadphonesService>();
-#endregion
 
 
 builder.Services.AddTransient<IMonitorService, MonitorService>();
@@ -133,12 +137,34 @@ builder.Services.AddTransient<IKeyboardService, KeyboardService>();
 builder.Services.AddTransient<ILaptopService, LaptopService>();
 builder.Services.AddScoped<IS3Interface, S3Service>();
 
-
 #endregion
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "UPG API", Version = "v1" });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme.",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+});
 
 var app = builder.Build();
 
