@@ -56,5 +56,6 @@ public class AutoMapperProfile : Profile
         CreateMap<Accessories, AccessoriesDto>().ReverseMap();
         CreateMap<Accessories, AddAccessoriesDto>().ReverseMap();
         CreateMap<UpdateAccessoriesDto, Accessories>();
+        
     }
 }
