@@ -12,7 +12,6 @@ public class RAM : BaseEntity
     public string Timings { get; set; } = string.Empty;
     [Required]
     public string Memory_frequency { get; set; } = string.Empty;
-    [Required]
-    public string Backlight { get; set; } = string.Empty;
+    public bool Backlight { get; set; }
 
 }

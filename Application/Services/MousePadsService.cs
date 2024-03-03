@@ -1,22 +1,12 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Validators.ElyorbekModels.MousePadsValidators;
-using Application.Common.Validators.HousingValidators;
-using Application.Common.Validators.MonitorValidators;
-using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using DTOS.HousingDTOs;
 using DTOS.MonitorDTOs;
 using DTOS.Mouse_pads;
-using DTOS.Power_supplies;
-using FluentValidation;
 using Infastructure.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -62,37 +52,11 @@ public class MousePadsService : IMousePadsService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<PagedList<MousePadsDTO>> Filter(FilterParameters parametrs)
+    public async Task<List<MousePadsDTO>> Filter(MousePadsFilter mousepadsfilter)
     {
-        var list = await _unitOfWork.Mouse_pads.GetAllAsync();
+        var monitors = await _unitOfWork.Mouse_pads.GetFilteredMousePads(mousepadsfilter);
 
-        // Filter by title
-        if (parametrs.title is not "")
-        {
-            list = list.Where(book => book.Name.ToLower()
-                       .Contains(parametrs.Title.ToLower()));
-        }
-
-        // Filter by Price
-        list = list.Where(book => book.Price >= parametrs.minPrice &&
-                                      book.Price <= parametrs.maxPrice);
-
-        var dtos = list.Select(book => _mapper.Map<MousePadsDTO>(book)).ToList();
-
-        // Order by title
-        if (parametrs.orderByTitle)
-        {
-            dtos = dtos.OrderBy(book => book.Name).ToList();
-        }
-        else
-        {
-            dtos = dtos.OrderByDescending(book => book.Name).ToList();
-        }
-
-        PagedList<MousePadsDTO> pagedList = new(dtos, dtos.Count(),
-                                                          parametrs.PageNumber, parametrs.pageSize);
-
-        return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
+        return monitors.Select(i => (MousePadsDTO)i).ToList();
     }
 
     public async Task<MousePadsDTO> GetMousePadByIdAsync(int id)
@@ -108,16 +72,6 @@ public class MousePadsService : IMousePadsService
         var config = await _unitOfWork.Mouse_pads.GetAllAsync();
         var glaive = _mapper.Map<IEnumerable<MousePadsDTO>>(config);
         return glaive;
-    }
-
-    public async Task<PagedList<MousePadsDTO>> GetPagetMousePads(int pageSize, int pageNumber)
-    {
-        var dtos = await GetMousePadsAsync();
-        PagedList<MousePadsDTO> pagedList = new(dtos,
-                                                          dtos.Count(),
-                                                          pageNumber,
-                                                          pageSize);
-        return pagedList.ToPagedList(dtos, pageSize, pageNumber);
     }
 
     public async Task UpdateMousePadsAsync(UpdateMousePadsDTO mousepads)

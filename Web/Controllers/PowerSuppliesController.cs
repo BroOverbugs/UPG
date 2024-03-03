@@ -1,10 +1,12 @@
 ﻿using Application.Common.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.Power_supplies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -105,28 +107,17 @@ public class PowerSuppliesController : ControllerBase
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }
-    [HttpGet("paged")]
-    public async Task<IActionResult> GetPaged(int pageSize = 10, int pageNumber = 1)
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] PowerSuppliesFIlter filter)
     {
-        var paged = await _power_SuppliesService.GetPagedPowerSupplies(pageSize, pageNumber);
-
-        var metaData = new
+        try
         {
-            paged.TotalCount,
-            paged.PageSize,
-            paged.CurrentPage,
-            paged.HasNext,
-            paged.HasPrevious
-        };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData));
-
-        return Ok(paged.Data);
-    }
-    [HttpGet("filter")]
-    public async Task<IActionResult> Filter([FromQuery] FilterParameters parametrs)
-    {
-        var books = await _power_SuppliesService.Filter(parametrs);
-        return Ok(books);
+            var monitors = await _power_SuppliesService.Filter(filter);
+            return Ok(monitors);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

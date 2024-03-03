@@ -17,6 +17,6 @@ public class AddRAMDTO
     public string Technologies { get; set; } = string.Empty;
     public string Timings { get; set; } = string.Empty;
     public string Memory_frequency { get; set; } = string.Empty;
-    public string Backlight { get; set; } = string.Empty;
+    public bool Backlight { get; set; }
     public List<string> ImageUrls { get; set; } = new();
 }

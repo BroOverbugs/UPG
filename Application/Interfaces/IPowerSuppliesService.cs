@@ -1,13 +1,14 @@
 ﻿using Application.Helpers;
 using Domain.Entities;
+using DTOS.Mouse_pads;
 using DTOS.Power_supplies;
+using UPG.Core.Filters;
 
 namespace Application.Interfaces;
 
 public interface IPowerSuppliesService
 {
-    Task<PagedList<PowerSuppliesDTO>> Filter(FilterParameters parametrs);
-    Task<PagedList<PowerSuppliesDTO>> GetPagedPowerSupplies(int pageSize, int pageNumber);
+    Task<List<PowerSuppliesDTO>> Filter(PowerSuppliesFIlter powerSuppliesfilter);
     Task<IEnumerable<PowerSuppliesDTO>> GetPowerSuppliesAsync();
     Task<PowerSuppliesDTO> GetPowerSuppliesByIdAsync(int id);
     Task AddPowerSuppliesAsync(AddPowerSuppliesDTO Powersupplies);
