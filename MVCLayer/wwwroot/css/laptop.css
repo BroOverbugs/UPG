@@ -1,0 +1,293 @@
+main {
+    margin: 5rem 0;
+}
+
+.filtr {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+}
+
+.filtr {
+    border-top: 8px solid #ff0096;
+}
+
+    .filtr h2 {
+        border: 1px solid #cccccc;
+        padding: 1.2rem 1.6rem;
+    }
+
+.brends span label {
+    user-select: none;
+}
+
+.filter-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    padding-bottom: 1.4rem;
+}
+
+.filtr span div {
+    border: 0.1rem solid #cccccc;
+    padding: 1.2rem 1.8rem;
+    background: #f3f3f39c;
+}
+
+.brends {
+    display: flex;
+    flex-direction: column;
+    align-content: space-around;
+}
+
+    .brends span {
+        padding: 0.4rem 0;
+    }
+
+.checkbox {
+    display: flex;
+    align-items: center;
+}
+
+    .checkbox input {
+        width: 1.8rem;
+        height: 1.8rem;
+        margin-right: 1rem;
+    }
+
+.price {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-in-number {
+    display: flex;
+    justify-content: space-between;
+}
+
+.processer {
+    display: flex;
+    flex-direction: column;
+}
+
+    .processer form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .processer form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
+
+.storage {
+    display: flex;
+    flex-direction: column;
+}
+
+    .storage form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .storage form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
+
+.ram {
+    display: flex;
+    flex-direction: column;
+}
+
+    .ram form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .ram form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
+
+.video-card {
+    display: flex;
+    flex-direction: column;
+}
+
+    .video-card form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .video-card form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
+
+.screen {
+    display: flex;
+    flex-direction: column;
+}
+
+    .screen form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .screen form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
+
+.wifi {
+    display: flex;
+    flex-direction: column;
+}
+
+    .wifi form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .wifi form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
+
+.rtx-amd {
+    display: flex;
+    flex-direction: column;
+}
+
+    .rtx-amd form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .rtx-amd form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
+
+.buttons-of-filter {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+    .buttons-of-filter button {
+        padding: 0.4rem 1.2rem;
+        border: none;
+        width: 18rem;
+        font-size: 1.6rem;
+        font-weight: 500;
+        border-radius: 0.6rem;
+        transition: 80ms ease-in;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    }
+
+        .buttons-of-filter button:not(:last-child) {
+            margin-bottom: 4rem;
+            margin-top: 1rem;
+        }
+
+        .buttons-of-filter button:hover {
+            background: #ff0096;
+        }
+/* main side start */
+.main-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-side {
+    width: 70%;
+}
+
+.main-side-intro p a {
+    color: #ff0096;
+    text-decoration: none;
+}
+
+.main-side-intro span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 4rem;
+}
+
+    .main-side-intro span h1 {
+        padding-left: 2rem;
+        font-size: 5rem;
+    }
+
+.sort {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f1f1f1;
+    padding: 1.5rem 3rem;
+    margin-bottom: 3rem;
+    border: 0.1rem solid #cccccc;
+    border-radius: 0.6rem;
+}
+
+    .sort label {
+        font-size: 1.6rem;
+        font-weight: 600;
+    }
+
+    .sort select {
+        outline: none;
+        border: none;
+        padding: 0.8rem 1.4rem;
+        border-radius: 0.6rem;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    }
+
+/* main side end */
