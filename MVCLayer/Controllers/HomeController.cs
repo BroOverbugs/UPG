@@ -17,12 +17,10 @@ namespace MVCLayer.Controllers
         {
             return View();
         }
-
         public IActionResult Privacy()
         {
             return View();
         }
-
         public IActionResult Acsessories()
         {
             return View();
@@ -55,7 +53,6 @@ namespace MVCLayer.Controllers
         {
             return View();
         }
-
         public IActionResult Colons()
         {
             return View();
@@ -64,7 +61,6 @@ namespace MVCLayer.Controllers
         {
             return View();
         }
-
         public IActionResult Cases()
         {
             return View();
