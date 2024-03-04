@@ -1,21 +1,12 @@
 ﻿using Application.Common.Exceptions;
-using Application.Common.Validators.ElyorbekModels.PowerSuppliesValidators;
 using Application.Common.Validators.ElyorbekModels.RAMValidators;
-using Application.Common.Validators.HousingValidators;
-using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using DTOS.HousingDTOs;
-using DTOS.Power_supplies;
+using DTOS.MonitorDTOs;
 using DTOS.RAM;
-using FluentValidation;
 using Infastructure.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -61,37 +52,11 @@ public class RAMService : IRAMService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<PagedList<RAMDTO>> Filter(FilterParameters parametrs)
+    public async Task<List<RAMDTO>> Filter(RAMFilter ramfilter)
     {
-        var list = await _unitOfWork.RAM.GetAllAsync();
+        var monitors = await _unitOfWork.RAM.GetFilteredRAM(ramfilter);
 
-        // Filter by title
-        if (parametrs.title is not "")
-        {
-            list = list.Where(book => book.Name.ToLower()
-                       .Contains(parametrs.Title.ToLower()));
-        }
-
-        // Filter by Price
-        list = list.Where(book => book.Price >= parametrs.minPrice &&
-                                      book.Price <= parametrs.maxPrice);
-
-        var dtos = list.Select(book => _mapper.Map<RAMDTO>(book)).ToList();
-
-        // Order by title
-        if (parametrs.orderByTitle)
-        {
-            dtos = dtos.OrderBy(book => book.Name).ToList();
-        }
-        else
-        {
-            dtos = dtos.OrderByDescending(book => book.Name).ToList();
-        }
-
-        PagedList<RAMDTO> pagedList = new(dtos, dtos.Count(),
-                                                          parametrs.PageNumber, parametrs.pageSize);
-
-        return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
+        return monitors.Select(i => (RAMDTO)i).ToList();
     }
 
     public async Task<IEnumerable<RAMDTO>> GetRAMAsync()
@@ -106,16 +71,6 @@ public class RAMService : IRAMService
         var config = await _unitOfWork.RAM.GetByIdAsync(id);
         if (config == null) throw new NotFoundException("RAM Not Found!");
         return _mapper.Map<RAMDTO>(config);
-    }
-
-    public async Task<PagedList<RAMDTO>> GetPagedRAMs(int pageSize, int pageNumber)
-    {
-        var dtos = await GetRAMAsync();
-        PagedList<RAMDTO> pagedList = new(dtos,
-                                                          dtos.Count(),
-                                                          pageNumber,
-                                                          pageSize);
-        return pagedList.ToPagedList(dtos, pageSize, pageNumber);
     }
 
     public async Task UpdateRAMAsync(UpdateRAMDTO ram)

@@ -2,14 +2,14 @@
 using Domain.Entities;
 using DTOS.Mouse_pads;
 using DTOS.Tables_for_gamers;
+using UPG.Core.Filters;
 
 namespace Application.Interfaces;
 
 public interface ITablesForGamersService
 {
-    
-    Task<PagedList<TablesForGamersDTO>> Filter(FilterParameters parametrs);
-    Task<PagedList<TablesForGamersDTO>> GetPagedCategories(int pageSize, int pageNumber);
+
+    Task<List<TablesForGamersDTO>> Filter(TablesForGamersFilter tablesforgamersfilter);
     Task<IEnumerable<TablesForGamersDTO>> GetTablesForGamersAsync();
     Task<TablesForGamersDTO> GetTablesForGamersByIdAsync(int id);
     Task AddTablesForGamersAsync(AddTablesForGamersDTO tablesforgamers);

@@ -1,22 +1,12 @@
 ﻿using Application.Common.Exceptions;
-using Application.Common.Validators.ElyorbekModels.RAMValidators;
 using Application.Common.Validators.ElyorbekModels.TablesForGamersValidators;
-using Application.Common.Validators.HousingValidators;
-using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using DTOS.HousingDTOs;
-using DTOS.RAM;
+using DTOS.MonitorDTOs;
 using DTOS.Tables_for_gamers;
-using FluentValidation;
 using Infastructure.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Intrinsics.Arm;
-using System.Text;
-using System.Threading.Tasks;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -62,47 +52,11 @@ public class TablesForGamersService : ITablesForGamersService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<PagedList<TablesForGamersDTO>> Filter(FilterParameters parametrs)
+    public async Task<List<TablesForGamersDTO>> Filter(TablesForGamersFilter tablesforgamersfilter)
     {
-        var list = await _unitOfWork.Tables_For_Gamers.GetAllAsync();
+        var monitors = await _unitOfWork.Tables_For_Gamers.GetFilteredTablesForGamers(tablesforgamersfilter);
 
-        // Filter by title
-        if (parametrs.title is not "")
-        {
-            list = list.Where(book => book.Name.ToLower()
-                       .Contains(parametrs.Title.ToLower()));
-        }
-
-        // Filter by Price
-        list = list.Where(book => book.Price >= parametrs.minPrice &&
-                                      book.Price <= parametrs.maxPrice);
-
-        var dtos = list.Select(book => _mapper.Map<TablesForGamersDTO>(book)).ToList();
-
-        // Order by title
-        if (parametrs.orderByTitle)
-        {
-            dtos = dtos.OrderBy(book => book.Name).ToList();
-        }
-        else
-        {
-            dtos = dtos.OrderByDescending(book => book.Name).ToList();
-        }
-
-        PagedList<TablesForGamersDTO> pagedList = new(dtos, dtos.Count(),
-                                                          parametrs.PageNumber, parametrs.pageSize);
-
-        return pagedList.ToPagedList(dtos, parametrs.PageSize, parametrs.PageNumber);
-    }
-
-    public async Task<PagedList<TablesForGamersDTO>> GetPagedCategories(int pageSize, int pageNumber)
-    {
-        var dtos = await GetTablesForGamersAsync();
-        PagedList<TablesForGamersDTO> pagedList = new(dtos,
-                                                          dtos.Count(),
-                                                          pageNumber,
-                                                          pageSize);
-        return pagedList.ToPagedList(dtos, pageSize, pageNumber);
+        return monitors.Select(i => (TablesForGamersDTO)i).ToList();
     }
 
     public async Task<IEnumerable<TablesForGamersDTO>> GetTablesForGamersAsync()

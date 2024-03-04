@@ -16,7 +16,7 @@ public class UpdateTablesForGamersDTO
     public string I_or_O_panel { get; set; } = string.Empty;
     public string Table_adjustment { get; set; } = string.Empty;
     public string Max_load_up { get; set; } = string.Empty;
-    public string Backlight { get; set; } = string.Empty;
+    public bool Backlight { get; set; }
     public string Dimensions { get; set; } = string.Empty;
     public string Weight { get; set; } = string.Empty;
     public List<string> ImageUrls { get; set; } = new();
