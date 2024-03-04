@@ -7,6 +7,6 @@ public record MousePadsFilter
     string? brand,
     double? minPrice,
     double? maxPrice,
-    int pageSize = 10,
+    int pageSize = 10, 
     int pageNumber = 1
 );

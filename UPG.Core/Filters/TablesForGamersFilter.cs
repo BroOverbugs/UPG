@@ -9,6 +9,6 @@ public record TablesForGamersFilter
     bool? backlight,
     string? brand,
     double? minPrice,
-    double? maxPrice,
+    double? maxPrice, 
     int pageSize = 10,
     int pageNumber = 1);
