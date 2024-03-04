@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
 *,
 *::after,
@@ -10,9 +11,10 @@
 html {
     font-size: 10px;
 }
+
 body {
     height: 100vh;
-    background-color: var(--site-bg-);
+    background-color: #ffffff;
     font-size: 1.6rem;
     font-family: "Lato", sans-serif;
     display: flex;
@@ -20,8 +22,8 @@ body {
 }
 
 header {
-    background-color: var(--site-hd-bg-);
-    color: var(--site-font-);
+    background-color: #000000;
+    color: #ffffff;
     height: 7vh;
     display: flex;
     justify-content: space-between;
@@ -29,7 +31,7 @@ header {
     flex-grow: 0;
     flex-shrink: 0;
 }
- Site Upper side start 
+/* Site Upper side start */
 .upper-header {
     display: flex;
     justify-content: space-between;
@@ -51,10 +53,10 @@ header {
     width: 23rem;
 }
 
-.login-reg a {
-    color: white;
-    text-decoration: none;
-}
+    .login-reg a {
+        color: #ffffff;
+        text-decoration: none;
+    }
 
 .order-side {
     display: flex;
@@ -68,7 +70,7 @@ header {
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        color: var(--site-font-);
+        color: #ffffff;
         text-decoration: none;
     }
 
@@ -84,8 +86,8 @@ header {
     width: 2rem;
     height: 2rem;
 }
- Site Upper side end 
- Site Main header start 
+/* Site Upper side end */
+/* Site Main header start */
 
 .main-header {
     display: flex;
@@ -105,7 +107,7 @@ header {
     }
 
     .location a {
-        color: var(--site-main-color-);
+        color: #000000;
         text-decoration: none;
         font-size: 1.3rem;
     }
@@ -131,9 +133,9 @@ header {
 .login-reg a:hover,
 .order-side a:hover,
 .location a:hover {
-    color: var(--site-color-);
+    color: #ff0096;
 }
- search side start 
+/* search side start */
 .search-side {
     width: 100%;
     display: flex;
@@ -154,8 +156,8 @@ header {
     height: 6vh;
     width: 15%;
     border: none;
-    background-color: var(--site-color-);
-    color: var(--site-font-);
+    background-color: #ff0096;
+    color: #ffffff;
     border-radius: 0 1.2rem 1.2rem 0;
     font-size: 2rem;
     font-weight: 500;
@@ -163,20 +165,20 @@ header {
 }
 
 .search-side input:focus {
-    outline: 0.1rem solid var(--site-color-);
+    outline: 0.1rem solid #ff0096;
 }
 
 .site-btn:hover {
-    border: 2px solid var(--site-color-);
-    background: var(--site-bg-);
-    color: var(--site-color-);
+    border: 2px solid #ff0096;
+    background: #ffffff;
+    color: #ff0096;
 }
- search side end 
- footer side start 
+/* search side end */
+/* footer side start */
 footer {
     width: 100%;
-    background-color: var(--site-hd-bg-);
-    color: var(--site-font-);
+    background-color: #000000;
+    color: #ffffff;
     flex-grow: 0;
     flex-shrink: 0;
 }
@@ -202,7 +204,7 @@ footer {
     .footer-side-item a {
         font-size: 1.4rem;
         text-decoration: none;
-        color: var(--site-font-);
+        color: #ffffff;
     }
 
         .footer-side-item a:not(:last-child) {
@@ -227,9 +229,9 @@ footer {
 
 .footer-side-item ul li a:hover,
 .footer-side-item a:hover {
-    color: var(--site-color-);
+    color: #ff0096;
 }
- footer side end 
+/* footer side end */
 main {
     flex-grow: 1;
 }
