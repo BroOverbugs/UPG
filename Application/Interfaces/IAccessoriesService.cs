@@ -6,7 +6,8 @@ namespace Application.Interfaces
 {
     public interface IAccessoriesService
     {
-        Task<PagedList<AccessoriesDto>> Filter(FilterParameters parameters);
+
+  
         Task<PagedList<AccessoriesDto>> GetPagetAccessories(int pageSize, int pageNumber);
         Task<IEnumerable<AccessoriesDto>> GetAccessoriesAsync();
         Task<AccessoriesDto> GetAccessoriesByIdAsync(int id);

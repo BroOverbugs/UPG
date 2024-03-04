@@ -71,38 +71,6 @@ public async Task AddAccessoriesAsync(AddAccessoriesDto addAccessoriesDto)
     
     }
 
-    public async Task<PagedList<AccessoriesDto>> Filter(FilterParameters parameters)
-    {
-        var list = await _unitOfWork.Accessories.GetAllAsync();
-
-        // Filter by title
-        if(parameters.title is not "")
-        {
-            list = list.Where(book => book.Name.ToLower()
-                       .Contains(parameters.Title.ToLower()));
-        }
-
-        // Filter by Price
-        list = list.Where(book => book.Price >= parameters.minPrice &&
-                                      book.Price <= parameters.maxPrice);   
-        
-        var dtos = list.Select(book => _mapper.Map<AccessoriesDto>(book)).ToList();
-
-        // Order by title
-        if (parameters.orderByTitle)
-        {
-            dtos = dtos.OrderBy(book => book.Name).ToList();
-        }
-        else
-        {
-            dtos = dtos.OrderByDescending(book => book.Name).ToList();
-        }
-
-        PagedList<AccessoriesDto> pagedList = new(dtos, dtos.Count,
-                                                            parameters.PageNumber, parameters.pageSize);
-
-        return pagedList.ToPagedList(dtos, parameters.PageSize, parameters.PageNumber);
-    }
 
     public async Task<List<AccessoriesDto>> FilterAsync(AccessoriesFilter accessoriesFilter)
     {
