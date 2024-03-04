@@ -7,6 +7,7 @@ using DTOS.Tables_for_gamers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -109,27 +110,17 @@ public class TablesforgamersController : ControllerBase
         }
     }
     [HttpGet("paged")]
-    public async Task<IActionResult> GetPaged(int pageSize = 10, int pageNumber = 1)
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] TablesForGamersFilter filter)
     {
-        var paged = await _tables_for_gamersservice.GetPagedCategories(pageSize, pageNumber);
-
-        var metaData = new
+        try
         {
-            paged.TotalCount,
-            paged.PageSize,
-            paged.CurrentPage,
-            paged.HasNext,
-            paged.HasPrevious
-        };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData));
-
-        return Ok(paged.Data);
-    }
-    [HttpGet("filter")]
-    public async Task<IActionResult> Filter([FromQuery] FilterParameters parametrs)
-    {
-        var books = await _tables_for_gamersservice.Filter(parametrs);
-        return Ok(books);
+            var monitors = await _tables_for_gamersservice.Filter(filter);
+            return Ok(monitors);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Application.Common.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.Mouse_pads;
 using DTOS.Power_supplies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -13,17 +15,17 @@ namespace Web.Controllers;
 [ApiController]
 public class MousePadsController : ControllerBase
 {
-    private readonly IMousePadsService _power_SuppliesService;
-    public MousePadsController(IMousePadsService power_SuppliesService)
+    private readonly IMousePadsService _mousePadsService;
+    public MousePadsController(IMousePadsService mousePadsService)
     {
-        _power_SuppliesService = power_SuppliesService;
+        _mousePadsService = mousePadsService;
     }
     [HttpGet]
     public async Task<IActionResult> Get()
     {
         try
         {
-            var categories = await _power_SuppliesService.GetMousePadsAsync();
+            var categories = await _mousePadsService.GetMousePadsAsync();
             return Ok(categories);
         }
         catch (Exception ex)
@@ -37,7 +39,7 @@ public class MousePadsController : ControllerBase
     {
         try
         {
-            var category = await _power_SuppliesService.GetMousePadByIdAsync(id);
+            var category = await _mousePadsService.GetMousePadByIdAsync(id);
             return Ok(category);
         }
         catch (NotFoundException ex)
@@ -55,7 +57,7 @@ public class MousePadsController : ControllerBase
     {
         try
         {
-            await _power_SuppliesService.AddMousePadsAsync(dto);
+            await _mousePadsService.AddMousePadsAsync(dto);
             return Ok();
         }
         catch (ResponseErrors ex)
@@ -73,7 +75,7 @@ public class MousePadsController : ControllerBase
     {
         try
         {
-            await _power_SuppliesService.UpdateMousePadsAsync(dto);
+            await _mousePadsService.UpdateMousePadsAsync(dto);
             return Ok();
         }
         catch (NotFoundException ex)
@@ -95,7 +97,7 @@ public class MousePadsController : ControllerBase
     {
         try
         {
-            await _power_SuppliesService.DeleteMousePadsAsync(Id);
+            await _mousePadsService.DeleteMousePadsAsync(Id);
             return Ok();
         }
         catch (NotFoundException ex)
@@ -107,28 +109,17 @@ public class MousePadsController : ControllerBase
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }
-    [HttpGet("paged")]
-    public async Task<IActionResult> GetPaged(int pageSize = 10, int pageNumber = 1)
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] MousePadsFilter filter)
     {
-        var paged = await _power_SuppliesService.GetPagetMousePads(pageSize, pageNumber);
-
-        var metaData = new
+        try
         {
-            paged.TotalCount,
-            paged.PageSize,
-            paged.CurrentPage,
-            paged.HasNext,
-            paged.HasPrevious
-        };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData));
-
-        return Ok(paged.Data);
-    }
-    [HttpGet("filter")]
-    public async Task<IActionResult> Filter([FromQuery] FilterParameters parametrs)
-    {
-        var books = await _power_SuppliesService.Filter(parametrs);
-        return Ok(books);
+            var monitors = await _mousePadsService.Filter(filter);
+            return Ok(monitors);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

@@ -11,7 +11,7 @@ public class TablesForGamers : BaseEntity
     [Required]
     public string Max_load_up { get; set; } = string.Empty;
     [Required]
-    public string Backlight { get; set; } = string.Empty;
+    public bool Backlight { get; set; }
     [Required]
     public string Dimensions { get; set; } = string.Empty;
     [Required]

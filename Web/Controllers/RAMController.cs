@@ -1,11 +1,13 @@
 ﻿using Application.Common.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
+using Application.Services;
 using DTOS.Power_supplies;
 using DTOS.RAM;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -108,27 +110,17 @@ public class RAMController : ControllerBase
         }
     }
     [HttpGet("paged")]
-    public async Task<IActionResult> GetPaged(int pageSize = 10, int pageNumber = 1)
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] RAMFilter filter)
     {
-        var paged = await _ramservice.GetPagedRAMs(pageSize, pageNumber);
-
-        var metaData = new
+        try
         {
-            paged.TotalCount,
-            paged.PageSize,
-            paged.CurrentPage,
-            paged.HasNext,
-            paged.HasPrevious
-        };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData));
-
-        return Ok(paged.Data);
-    }
-    [HttpGet("filter")]
-    public async Task<IActionResult> Filter([FromQuery] FilterParameters parametrs)
-    {
-        var books = await _ramservice.Filter(parametrs);
-        return Ok(books);
+            var monitors = await _ramservice.Filter(filter);
+            return Ok(monitors);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }
