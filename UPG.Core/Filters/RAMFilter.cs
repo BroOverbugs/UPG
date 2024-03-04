@@ -10,6 +10,6 @@ public record RAMFilter
     string? memoryFrequency,
     double? minPrice,
     double? maxPrice,
-    int pageSize = 10,
+    int pageSize = 10, 
     int pageNumber = 1
 );
