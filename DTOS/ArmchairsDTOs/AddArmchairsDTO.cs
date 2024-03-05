@@ -7,7 +7,8 @@ public class AddArmchairsDTO
     public string Name { get; set; } = string.Empty;
     public double Price { get; set; }
     public string Description { get; set; } = string.Empty;
-    public string BrandName { get; set; } = "";
+    public string BrandName { get; set; } = ""; 
+    public List<string> ImageUrls { get; set; } = new();
     public string Type { get; set; } = string.Empty;
     public string Upholstery_material { get; set; } = string.Empty; //koja yoki boshqa narsalar
     public string Color_material { get; set; } = string.Empty;

@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
+using Application.Services;
 using DTOS.HeadphonesDTOs;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -23,12 +25,12 @@ public class HeadphonesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetArmchairById(int id)
+    public async Task<IActionResult> GetHeadphonesById(int id)
     {
         try
         {
-            var armchair = await _headphonesService.GetHeadphonesByIdAsync(id);
-            return Ok(armchair);
+            var headphones = await _headphonesService.GetHeadphonesByIdAsync(id);
+            return Ok(headphones);
         }
         catch (ArgumentNullException ex)
         {
@@ -37,20 +39,19 @@ public class HeadphonesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddArmchair(AddHeadphonesDTO dto)
+    public async Task<IActionResult> AddHeadphones(AddHeadphonesDTO dto)
     {
         await _headphonesService.AddHeadphonesAsync(dto);
-        return Ok("Armchair added successfully.");
+        return Ok("Headphones added successfully.");
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateArmchair(int id, UpdateHeadphonesDTO dto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateHeadphones(UpdateHeadphonesDTO dto)
     {
         try
         {
-            dto.ID = id; // Set the ID from the route parameter
             await _headphonesService.UpdateHeadphonesAsync(dto);
-            return Ok("Armchair updated successfully.");
+            return Ok("Headphones updated successfully.");
         }
         catch (ArgumentNullException ex)
         {
@@ -59,16 +60,30 @@ public class HeadphonesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteArmchair(int id)
+    public async Task<IActionResult> DeleteHeadphones(int id)
     {
         try
         {
             await _headphonesService.DeleteHeadphonesAsync(id);
-            return Ok("Armchair deleted successfully.");
+            return Ok("Headphones deleted successfully.");
         }
         catch (ArgumentNullException ex)
         {
             return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] HeadphonesFilter filter)
+    {
+        try
+        {
+            var dto = await _headphonesService.Filter(filter);
+            return Ok(dto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }
