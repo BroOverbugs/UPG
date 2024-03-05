@@ -10,6 +10,7 @@ using Infastructure.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using UPG.Core.Filters;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Services;
@@ -126,5 +127,11 @@ public class CoolerService(IUnitOfWork unitOfWork,
         _unitOfWork.Cooler.Update(model);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<CoolerDTO>> Filter(CoolerFilter filter)
+    {
+        var models = await _unitOfWork.Cooler.GetFilteredCoolersAsync(filter);
+        return _mapper.Map<List<CoolerDTO>>(models);
     }
 }

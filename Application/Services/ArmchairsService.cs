@@ -10,6 +10,7 @@ using Infastructure.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -118,5 +119,11 @@ public class ArmchairsService(IUnitOfWork unitOfWork,
         _unitOfWork.Armchairs.Update(model);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<ArmchairsDTO>> Filter(ArmchairsFilter filter)
+    {
+        var models = await _unitOfWork.Armchairs.GetFilteredArmchairsAsync(filter);
+        return _mapper.Map<List<ArmchairsDTO>>(models);
     }
 }

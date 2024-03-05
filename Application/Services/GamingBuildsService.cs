@@ -11,6 +11,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using DTOS.ArmchairsDTOs;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -120,5 +121,11 @@ public class GamingBuildsService(IUnitOfWork unitOfWork,
         _unitOfWork.GamingBuilds.Update(model);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<GamingBuildsDTO>> Filter(GamingBuildsFilter filter)
+    {
+        var models = await _unitOfWork.GamingBuilds.GetFilteredGamingBuildsAsync(filter);
+        return _mapper.Map<List<GamingBuildsDTO>>(models);
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using DTOS.ArmchairsDTOs;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -122,5 +123,11 @@ public class HeadphonesService(IUnitOfWork unitOfWork,
         _unitOfWork.Headphones.Update(model);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<HeadphonesDTO>> Filter(HeadphonesFilter filter)
+    {
+        var models = await _unitOfWork.Headphones.GetFilteredHeadphonesAsync(filter);
+        return _mapper.Map<List<HeadphonesDTO>>(models);  
     }
 }

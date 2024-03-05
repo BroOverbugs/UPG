@@ -12,6 +12,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using DTOS.ArmchairsDTOs;
 using FluentValidation;
+using UPG.Core.Filters;
 
 namespace Application.Services;
 
@@ -121,5 +122,11 @@ public class DrivesService(IUnitOfWork unitOfWork,
         _unitOfWork.Drives.Update(model);
         await _unitOfWork.SaveAsync();
         _distributed.Remove(CACHE_KEY);
+    }
+
+    public async Task<List<DrivesDTO>> Filter(DrivesFilter filter)
+    {
+        var models = await _unitOfWork.Drives.GetFilteredDrivesAsync(filter);
+        return _mapper.Map<List<DrivesDTO>>(models);
     }
 }
