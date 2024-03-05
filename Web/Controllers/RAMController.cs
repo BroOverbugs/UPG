@@ -109,7 +109,6 @@ public class RAMController : ControllerBase
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }
-    [HttpGet("paged")]
     [HttpGet("with-filter")]
     public async Task<IActionResult> GetByFilterAsync([FromQuery] RAMFilter filter)
     {
