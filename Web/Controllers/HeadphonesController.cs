@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
+using Application.Services;
 using DTOS.HeadphonesDTOs;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -69,6 +71,20 @@ public class HeadphonesController : ControllerBase
         catch (ArgumentNullException ex)
         {
             return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] HeadphonesFilter filter)
+    {
+        try
+        {
+            var dto = await _headphonesService.Filter(filter);
+            return Ok(dto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using DTOS.ArmchairsDTOs;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -69,6 +70,20 @@ public class ArmchairsController : ControllerBase
         catch (ArgumentNullException ex)
         {
             return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] ArmchairsFilter filter)
+    {
+        try
+        {
+            var dto = await _armchairsService.Filter(filter);
+            return Ok(dto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }

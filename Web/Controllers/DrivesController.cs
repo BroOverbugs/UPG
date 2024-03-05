@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
+using Application.Services;
 using DTOS.DrivesDTOs;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -69,6 +71,20 @@ public class DrivesController : ControllerBase
         catch (ArgumentNullException ex)
         {
             return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] DrivesFilter filter)
+    {
+        try
+        {
+            var dto = await _drivesService.Filter(filter);
+            return Ok(dto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }
