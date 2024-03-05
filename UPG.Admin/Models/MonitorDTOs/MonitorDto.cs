@@ -1,4 +1,4 @@
-﻿namespace DTOS.MonitorDTOs;
+﻿namespace UPG.Admin.Models.MonitorDTOs;
 
 public class MonitorDto
 {
@@ -22,30 +22,4 @@ public class MonitorDto
     public bool HDR { get; set; }
     public bool Guarantee_period { get; set; }
     public List<string> ImageUrls { get; set; } = new();
-
-
-    public static implicit operator MonitorDto(Domain.Entities.Monitor monitorDto)
-        => new()
-        {
-            Id = monitorDto.Id,
-            Name = monitorDto.Name,
-            Price = monitorDto.Price,
-            Description = monitorDto.Description,
-            BrandName = monitorDto.BrandName,
-            Diagonal = monitorDto.Diagonal,
-            Screen_type = monitorDto.Screen_type,
-            Matrix_type = monitorDto.Matrix_type,
-            Resolution_FHD = monitorDto.Resolution_FHD,
-            Aspect_ratio = monitorDto.Aspect_ratio,
-            Frame_rate = monitorDto.Frame_rate,
-            Response_time = monitorDto.Response_time,
-            Viewing_angle = monitorDto.Viewing_angle,
-            Interface = monitorDto.Interface,
-            VESA_Mount = monitorDto.VESA_Mount,
-            Technologies = monitorDto.Technologies,
-            Adjustment = monitorDto.Adjustment,
-            HDR = monitorDto.HDR,
-            Guarantee_period = monitorDto.Guarantee_period,
-            ImageUrls = monitorDto.ImageUrls
-        };
 }

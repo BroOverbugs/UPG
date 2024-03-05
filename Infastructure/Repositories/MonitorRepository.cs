@@ -1,7 +1,6 @@
 ﻿using Infastructure.Data;
 using Infastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using UPG.Core.Filters;
 
 namespace Infastructure.Repositories

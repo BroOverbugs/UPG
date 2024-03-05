@@ -1,6 +1,5 @@
 ﻿using Application.Common.Exceptions;
 using Application.Interfaces;
-using Application.Services;
 using DTOS.MonitorDTOs;
 using Microsoft.AspNetCore.Mvc;
 using UPG.Core.Filters;

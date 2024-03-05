@@ -1,0 +1,170 @@
+﻿@page "/monitors/add"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Monitor</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="monitor.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Diagonal" Label="Diagonal" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Screen_type" Label="Screen type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Matrix_type" Label="Matrix type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Resolution_FHD" Label="Resolution FHD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Aspect_ratio" Label="Aspect ratio" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Frame_rate" Label="Frame rate" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="monitor.Viewing_angle" Label="Viewing angle" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Interface" Label="Interface" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.VESA_Mount" Label="VESA Mount" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Technologies" Label="Technologies" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Adjustment" Label="Adjustment" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudItem Class="d-flex">
+                            <MudSwitch @bind-Value="monitor.HDR" ThumbIcon="@(monitor.HDR==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.HDR==true ? Color.Success : Color.Error)">HDR</MudSwitch>
+                            <MudSwitch Class="mx-10" @bind-Value="monitor.Guarantee_period" ThumbIcon="@(monitor.Guarantee_period==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.Guarantee_period==true ? Color.Success : Color.Error)">Guarantee period</MudSwitch>
+                        </MudItem>
+                        <MudStack Style="width: 100%">
+                            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                                           AppendMultipleFiles
+                                           OnFilesChanged="OnInputFileChanged"
+                                           Hidden="@false"
+                                           InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20"
+                                           InputStyle="opacity:0"
+                                           @ondragenter="@SetDragClass"
+                                           @ondragleave="@ClearDragClass"
+                                           @ondragend="@ClearDragClass">
+                                <ButtonTemplate>
+                                    <MudPaper Height="110px"
+                                              Outlined="true"
+                                              Class="@_dragClass">
+                                        <MudText style="font-size: 14px;">
+                                            We support drag and drop!
+                                        </MudText>
+                                        @foreach (var file in _fileNames)
+                                        {
+                                            <MudChip Color="Color.Dark" style="font-size: 12px;" Text="@file" />
+                                        }
+                                    </MudPaper>
+                                    <MudToolBar DisableGutters="true"
+                                                Class="relative d-flex justify-end gap-4 z-30">
+                                        <MudButton HtmlTag="label"
+                                                   Color="Color.Primary"
+                                                   for="@context.Id"
+                                                   Variant="Variant.Filled">
+                                            Open file picker
+                                        </MudButton>
+                                        <MudButton OnClick="@Upload"
+                                                   Color="Color.Primary"
+                                                   Disabled="@(!_fileNames.Any())"
+                                                   Variant="Variant.Filled">
+                                            Upload
+                                        </MudButton>
+                                        <MudButton OnClick="@Clear"
+                                                   Color="Color.Error"
+                                                   Disabled="@(!_fileNames.Any())"
+                                                   Variant="Variant.Filled">
+                                            Clear
+                                        </MudButton>
+                                    </MudToolBar>
+                                </ButtonTemplate>
+                            </MudFileUpload>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="monitor.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddMonitorDto monitor = new();
+    private HashSet<IBrowserFile> browserFiles;
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/monitors");
+    }
+
+    private void Save()
+    {
+        navigation.NavigateTo("/monitors");
+    }
+
+
+
+    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
+    private string _dragClass = DefaultDragClass;
+    private readonly List<string> _fileNames = new();
+    private List<string> responseUrls = new();
+
+    private async Task Clear()
+    {
+        _fileNames.Clear();
+        ClearDragClass();
+        await Task.Delay(100);
+    }
+
+    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        ClearDragClass();
+        var files = e.GetMultipleFiles();
+        foreach (var file in files)
+        {
+            _fileNames.Add(file.Name);
+            browserFiles.Add(file);
+        }
+    }
+
+    private async Task Upload()
+    {
+        var content = new MultipartFormDataContent();
+        foreach (var browserFile in browserFiles)
+        {
+            using( var myFile = browserFile.OpenReadStream(maxAllowedSize: 1024 * 30 * 1024))
+            {
+                content.Add(new StreamContent(myFile), "file", browserFile.Name);
+            }
+        }
+        try
+        {
+            var response = await httpClient.PostAsync(Helper.URL + "Images/MultiUpload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                responseUrls = await response.Content.ReadFromJsonAsync<List<string>>();
+                Snackbar.Add($"Upload successful: {responseUrls}", Severity.Success);
+                monitor.ImageUrls = responseUrls;
+                await Clear();
+            }
+            else
+            {
+                Snackbar.Add($"Upload failed. Status code: {response.StatusCode}", Severity.Error);
+                await Clear();
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error during file upload: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void SetDragClass()
+        => _dragClass = $"{DefaultDragClass} mud-border-primary";
+
+    private void ClearDragClass()
+        => _dragClass = DefaultDragClass;
+}
