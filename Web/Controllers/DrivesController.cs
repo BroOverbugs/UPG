@@ -25,12 +25,12 @@ public class DrivesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetArmchairById(int id)
+    public async Task<IActionResult> GetDrivesById(int id)
     {
         try
         {
-            var armchair = await _drivesService.GetDrivesByIdAsync(id);
-            return Ok(armchair);
+            var drives = await _drivesService.GetDrivesByIdAsync(id);
+            return Ok(drives);
         }
         catch (ArgumentNullException ex)
         {
@@ -39,20 +39,19 @@ public class DrivesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddArmchair(AddDrivesDTO dto)
+    public async Task<IActionResult> AddDrives(AddDrivesDTO dto)
     {
         await _drivesService.AddDrivesAsync(dto);
-        return Ok("Armchair added successfully.");
+        return Ok("Drives added successfully.");
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateArmchair(int id, UpdateDrivesDTO dto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateDrives(UpdateDrivesDTO dto)
     {
         try
         {
-            dto.ID = id; // Set the ID from the route parameter
             await _drivesService.UpdateDrivesAsync(dto);
-            return Ok("Armchair updated successfully.");
+            return Ok("Drives updated successfully.");
         }
         catch (ArgumentNullException ex)
         {
@@ -61,12 +60,12 @@ public class DrivesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteArmchair(int id)
+    public async Task<IActionResult> DeleteDrives(int id)
     {
         try
         {
             await _drivesService.DeleteDrivesAsync(id);
-            return Ok("Armchair deleted successfully.");
+            return Ok("Drives deleted successfully.");
         }
         catch (ArgumentNullException ex)
         {

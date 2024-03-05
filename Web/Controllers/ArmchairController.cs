@@ -44,12 +44,11 @@ public class ArmchairsController : ControllerBase
         return Ok("Armchair added successfully.");
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateArmchair(int id, UpdateArmchairsDTO dto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateArmchair(UpdateArmchairsDTO dto)
     {
         try
         {
-            dto.ID = id; // Set the ID from the route parameter
             await _armchairsService.UpdateArmchairsAsync(dto);
             return Ok("Armchair updated successfully.");
         }

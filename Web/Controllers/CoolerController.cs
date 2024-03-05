@@ -25,12 +25,12 @@ public class CoolerController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetArmchairById(int id)
+    public async Task<IActionResult> GetCoolerById(int id)
     {
         try
         {
-            var armchair = await _coolerService.GetCoolerByIdAsync(id);
-            return Ok(armchair);
+            var cooler = await _coolerService.GetCoolerByIdAsync(id);
+            return Ok(cooler);
         }
         catch (ArgumentNullException ex)
         {
@@ -39,20 +39,19 @@ public class CoolerController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddArmchair(AddCoolerDTO dto)
+    public async Task<IActionResult> AddCooler(AddCoolerDTO dto)
     {
         await _coolerService.AddCoolerAsync(dto);
-        return Ok("Armchair added successfully.");
+        return Ok("Cooler added successfully.");
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateArmchair(int id, UpdateCoolerDTO dto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateCooler(UpdateCoolerDTO dto)
     {
         try
         {
-            dto.ID = id; // Set the ID from the route parameter
             await _coolerService.UpdateCoolerAsync(dto);
-            return Ok("Armchair updated successfully.");
+            return Ok("Cooler updated successfully.");
         }
         catch (ArgumentNullException ex)
         {
@@ -61,12 +60,12 @@ public class CoolerController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteArmchair(int id)
+    public async Task<IActionResult> DeleteCooler(int id)
     {
         try
         {
             await _coolerService.DeleteCoolerAsync(id);
-            return Ok("Armchair deleted successfully.");
+            return Ok("Cooler deleted successfully.");
         }
         catch (ArgumentNullException ex)
         {
