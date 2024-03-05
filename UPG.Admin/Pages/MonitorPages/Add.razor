@@ -121,24 +121,41 @@
     private void OnInputFileChanged(InputFileChangeEventArgs e)
     {
         ClearDragClass();
-        var files = e.GetMultipleFiles();
-        foreach (var file in files)
+
+        if (e != null && e.GetMultipleFiles() != null)
         {
-            _fileNames.Add(file.Name);
-            browserFiles.Add(file);
+            var files = e.GetMultipleFiles();
+
+            foreach (var file in files)
+            {
+                _fileNames.Add(file.Name);
+
+                if (browserFiles == null)
+                {
+                    browserFiles = new HashSet<IBrowserFile>();
+                }
+
+                browserFiles.Add(file);
+            }
         }
     }
+
 
     private async Task Upload()
     {
         var content = new MultipartFormDataContent();
+
         foreach (var browserFile in browserFiles)
         {
-            using( var myFile = browserFile.OpenReadStream(maxAllowedSize: 1024 * 30 * 1024))
+            var buffer = new byte[1024 * 30 * 1024];
+            int bytes = 0;
+            using var myFile = browserFile.OpenReadStream(maxAllowedSize: 1024 * 30 * 1024) ;
+            while ((bytes = await myFile.ReadAsync(buffer)) != 0)
             {
-                content.Add(new StreamContent(myFile), "file", browserFile.Name);
+                content.Add(new StreamContent(new MemoryStream(buffer, 0, bytes)), "file", browserFile.Name);
             }
         }
+
         try
         {
             var response = await httpClient.PostAsync(Helper.URL + "Images/MultiUpload", content);
@@ -161,6 +178,7 @@
             Snackbar.Add($"Error during file upload: {ex.Message}", Severity.Error);
         }
     }
+
 
     private void SetDragClass()
         => _dragClass = $"{DefaultDragClass} mud-border-primary";
