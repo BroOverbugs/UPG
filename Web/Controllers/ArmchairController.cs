@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using DTOS.ArmchairsDTOs;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Filters;
 
 namespace Web.Controllers;
 
@@ -43,12 +44,11 @@ public class ArmchairsController : ControllerBase
         return Ok("Armchair added successfully.");
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateArmchair(int id, UpdateArmchairsDTO dto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateArmchair(UpdateArmchairsDTO dto)
     {
         try
         {
-            dto.ID = id; // Set the ID from the route parameter
             await _armchairsService.UpdateArmchairsAsync(dto);
             return Ok("Armchair updated successfully.");
         }
@@ -69,6 +69,20 @@ public class ArmchairsController : ControllerBase
         catch (ArgumentNullException ex)
         {
             return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("with-filter")]
+    public async Task<IActionResult> GetByFilterAsync([FromQuery] ArmchairsFilter filter)
+    {
+        try
+        {
+            var dto = await _armchairsService.Filter(filter);
+            return Ok(dto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 }
