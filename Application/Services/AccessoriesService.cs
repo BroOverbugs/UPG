@@ -38,7 +38,7 @@ public class AccessoriesService : IAccessoriesService
         _cache = new RedisService<Accessories>(distributed);
 }
 
-public async Task AddAccessoriesAsync(AddAccessoriesDto addAccessoriesDto)
+    public async Task AddAccessoriesAsync(AddAccessoriesDto addAccessoriesDto)
     {
         if (addAccessoriesDto == null) throw new ArgumentException("Accessoru was null!");
 
@@ -108,16 +108,6 @@ public async Task AddAccessoriesAsync(AddAccessoriesDto addAccessoriesDto)
         var accessory = accessories.FirstOrDefault(i => i.Id == id);
         if (accessory == null) throw new NotFoundException("Accessory not found!");
         return _mapper.Map<AccessoriesDto>(accessory);
-    }
-
-    public async Task<PagedList<AccessoriesDto>> GetPagetAccessories(int pageSize, int pageNumber)
-    {
-        var dtos = await GetAccessoriesAsync();
-        PagedList<AccessoriesDto> pagedList = new(dtos,
-                                                       dtos.Count(),
-                                                       pageNumber,
-                                                       pageSize);
-        return pagedList.ToPagedList(dtos, pageSize, pageNumber);
     }
 
     public async Task UpdateAccessoriesAsync(UpdateAccessoriesDto updateAccessoriesDto)
