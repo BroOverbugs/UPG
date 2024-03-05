@@ -86,25 +86,6 @@ public class AccessoriesController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("paged")]
-    public async Task<IActionResult> GetPaget(int pageSize = 10, int pageNumber = 1)
-    {
-        var paged = await _accessoriesService.GetPagetAccessories(pageSize, pageNumber);
-
-        var metaData = new
-        {
-            paged.TotalCount,
-            paged.PageSize,
-            paged.CurrentPage,
-            paged.HasNext,
-            paged.HasPrevious
-        };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData));
-
-        return Ok(paged.Data);
-    }
-
     [HttpGet("with-filter")]
     public async Task<IActionResult> GetByFilterAsync([FromQuery] AccessoriesFilter filter)
     {
