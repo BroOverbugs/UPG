@@ -5,12 +5,7 @@ using Application.Interfaces;
 using DTOS.IdentitiesDTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UPG.Core.Common;
 
 namespace Application.Services;
 
@@ -41,6 +36,24 @@ public class IdentityService(UserManager<ApplicationUser> userManager,
         }
     }
 
+    public async Task CreateAdminAsync(RegisterAdmin registerAdmin)
+    {
+        if (registerAdmin is null)
+        {
+            throw new ArgumentNullException(nameof(registerAdmin));
+        }
+
+        var user = registerAdmin.ToApplicationUserForAdmin();
+
+        var result = await _userManager.CreateAsync(user, registerAdmin.Password);
+        if (!result.Succeeded)
+        {
+            throw new CustomException($"User creation failed:\n{result.Errors.ToErrorString()}");
+        }
+
+        await _userManager.AddToRoleAsync(user, IdentityRoles.ADMIN);
+    }
+
     public async Task CreateAsync(RegisterUser registerUser)
     {
         if (registerUser is null)
@@ -56,10 +69,7 @@ public class IdentityService(UserManager<ApplicationUser> userManager,
             throw new CustomException($"User creation failed:\n{result.Errors.ToErrorString()}");
         }
 
-        foreach (var role in registerUser.Roles)
-        {
-            await _userManager.AddToRoleAsync(user, role);
-        }
+        await _userManager.AddToRoleAsync(user, IdentityRoles.USER);
     }
 
     public async Task DeleteAccountAsync(LoginUser loginUser)
@@ -109,6 +119,7 @@ public class IdentityService(UserManager<ApplicationUser> userManager,
 
         return new LoginResult
         {
+            Id = user.Id,
             FullName = $"{user.FirstName} {user.LastName}",
             Email = user.Email!,
             Token = token,

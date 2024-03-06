@@ -53,6 +53,7 @@ namespace MVCLayer.Controllers
         {
             return View();
         }
+
         public IActionResult Colons()
         {
             return View();
@@ -126,6 +127,10 @@ namespace MVCLayer.Controllers
             return View();
         }
         public IActionResult WiFiRouter()
+        {
+            return View();
+        }
+        public IActionResult Item()
         {
             return View();
         }

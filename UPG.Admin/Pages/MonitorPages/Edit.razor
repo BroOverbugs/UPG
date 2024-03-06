@@ -1,4 +1,4 @@
-﻿@page "/monitors/add"
+﻿@page "/monitors/edit/{Id}"
 
 <MudGrid>
     <MudItem xs="2"></MudItem>
@@ -40,7 +40,7 @@
                                 }
                             </ul>
                         }
-                        
+
                     </MudItem>
                 </MudGrid>
                 <MudTextField @bind-Value="monitor.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
@@ -55,6 +55,9 @@
 </MudGrid>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
+
     @inject NavigationManager navigation
     @inject HttpClient httpClient
     @inject ISnackbar Snackbar
@@ -63,7 +66,37 @@
     private long maxFileSize = 1024 * 5 * 1024;
     private List<string> errors = new();
 
-
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "monitors/" + Id);
+        if (response.IsSuccessStatusCode)
+        {
+            var monitor = await response.Content.ReadFromJsonAsync<MonitorDto>();
+            UpdateMonitorDto updateMonitor = new()
+                {
+                    Id = monitor!.Id,
+                    Name = monitor.Name,
+                    Price = monitor.Price,
+                    Description = monitor.Description,
+                    BrandName = monitor.BrandName,
+                    Diagonal = monitor.Diagonal,
+                    Screen_type = monitor.Screen_type,
+                    Matrix_type = monitor.Matrix_type,
+                    Resolution_FHD = monitor.Resolution_FHD,
+                    Aspect_ratio = monitor.Aspect_ratio,
+                    Frame_rate = monitor.Frame_rate,
+                    Response_time = monitor.Response_time,
+                    Viewing_angle = monitor.Viewing_angle,
+                    Interface = monitor.Interface,
+                    VESA_Mount = monitor.VESA_Mount,
+                    Technologies = monitor.Technologies,
+                    Adjustment = monitor.Adjustment,
+                    HDR = monitor.HDR,
+                    Guarantee_period = monitor.Guarantee_period,
+                    ImageUrls = monitor.ImageUrls
+                };
+        }
+    }
     private void Cancel()
     {
         navigation.NavigateTo("/monitors");
@@ -83,7 +116,7 @@
             errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
             return;
         }
-        
+
         using (var formData = new MultipartFormDataContent())
         {
             foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
