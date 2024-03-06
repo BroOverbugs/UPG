@@ -1,0 +1,62 @@
+﻿@page "/gamingBuilds"
+
+<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<GamingBuildsDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">GamingBuilds</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudButton OnClick="AddPage" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Success">Create</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Brand name</MudTh>
+        <MudTh>Price</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="id">@context.ID</MudTd>
+        <MudTd DataLabel="Brand name">@context.BrandName</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    @inject HttpClient httpClient
+    private string searchString1 = "";
+    private GamingBuildsDTO selectedItem1 = null;
+    @inject NavigationManager navigate;
+
+    private IEnumerable<GamingBuildsDTO> Elements = new List<GamingBuildsDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "GamingBuilds");
+        if (response.IsSuccessStatusCode)
+        {
+            Elements = await response.Content.ReadFromJsonAsync<List<GamingBuildsDTO>>();
+        }
+    }
+
+    private bool FilterFunc1(GamingBuildsDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(GamingBuildsDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.BrandName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void AddPage()
+    {
+        navigate.NavigateTo("gamingBuilds/add");
+    }
+}
