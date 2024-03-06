@@ -232,3 +232,25 @@ footer {
 main {
     flex-grow: 1;
 }
+
+
+.select-option {
+    display: flex;
+    flex-direction: column;
+}
+
+    .select-option form p {
+        font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    .select-option form select {
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.8rem;
+        font-size: 1.6rem;
+        outline: none;
+        border: none;
+        box-shadow: rgb(232, 232, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        padding: 0.6rem 1rem;
+    }
