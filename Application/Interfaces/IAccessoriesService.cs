@@ -3,7 +3,7 @@ using DTOS.AccessoriesDtos;
 using UPG.Core.Filters;
 
 namespace Application.Interfaces
-{
+{ 
     public interface IAccessoriesService
     {
         Task<IEnumerable<AccessoriesDto>> GetAccessoriesAsync();
