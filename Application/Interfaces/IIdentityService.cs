@@ -10,6 +10,7 @@ namespace Application.Interfaces;
 public interface IIdentityService
 {
     Task CreateAsync(RegisterUser registerUser);
+    Task CreateAdminAsync(RegisterAdmin registerAdmin);
     Task<LoginResult> LoginAsync(LoginUser loginUser);
     Task LogoutAsync(LogoutUser logoutUser);
 

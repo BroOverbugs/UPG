@@ -8,6 +8,4 @@ public class ApplicationUser : IdentityUser
     public string FirstName { get; set; } = string.Empty;
     [StringLength(50)]
     public string? LastName { get; set; }
-
-    // Your custom properties here
 }

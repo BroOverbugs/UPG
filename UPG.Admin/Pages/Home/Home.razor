@@ -1,13 +1,17 @@
 ﻿@page "/"
 
 
-<MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@_source" @bind-SelectedIndex="selectedIndex" Style="height:400px;" ShowArrows="true" ShowBullets="true" AutoCycle="false">
-	<ItemTemplate>
-		<div class="d-flex justify-center">
-			<MudImage ObjectFit="ObjectFit.Fill" Height="400" Width="800" Src="@context" Alt="Örebro Slott" Elevation="25" Class="rounded-lg" />
-		</div>
-	</ItemTemplate>
-</MudCarousel>
+<div class="page-content">
+	<h1>Welcome to Our Admin page</h1>
+	<MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@_source" @bind-SelectedIndex="selectedIndex" Style="height:400px;" ShowArrows="true" ShowBullets="true" AutoCycle="false">
+		<ItemTemplate>
+			<div class="d-flex justify-center">
+				<MudImage ObjectFit="ObjectFit.Fill" Height="400" Width="800" Src="@context" Alt="Örebro Slott" Elevation="25" Class="rounded-lg" />
+			</div>
+		</ItemTemplate>
+	</MudCarousel>
+</div>
+
 @code {
 	private MudCarousel<string> _carousel;
 	private IList<string> _source = new List<string>() { "https://upg.1kb.uz/api/Images/f8b316ab-72ba-4323-9435-b381142da335.jpg", "https://upg.1kb.uz/api/Images/d36256a2-e870-498d-9d12-4e643052bcbe.jpg", "https://upg.1kb.uz/api/Images/3ff36380-92d3-4838-b916-b5a426e9e90f.jpg", "https://upg.1kb.uz/api/Images/627df157-4b1e-4d51-bf65-4387fad57fa2.jpg" };

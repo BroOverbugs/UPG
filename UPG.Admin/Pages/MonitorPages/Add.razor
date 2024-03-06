@@ -28,52 +28,19 @@
                             <MudSwitch @bind-Value="monitor.HDR" ThumbIcon="@(monitor.HDR==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.HDR==true ? Color.Success : Color.Error)">HDR</MudSwitch>
                             <MudSwitch Class="mx-10" @bind-Value="monitor.Guarantee_period" ThumbIcon="@(monitor.Guarantee_period==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.Guarantee_period==true ? Color.Success : Color.Error)">Guarantee period</MudSwitch>
                         </MudItem>
-                        <MudStack Style="width: 100%">
-                            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
-                                           AppendMultipleFiles
-                                           OnFilesChanged="OnInputFileChanged"
-                                           Hidden="@false"
-                                           InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20"
-                                           InputStyle="opacity:0"
-                                           @ondragenter="@SetDragClass"
-                                           @ondragleave="@ClearDragClass"
-                                           @ondragend="@ClearDragClass">
-                                <ButtonTemplate>
-                                    <MudPaper Height="110px"
-                                              Outlined="true"
-                                              Class="@_dragClass">
-                                        <MudText style="font-size: 14px;">
-                                            We support drag and drop!
-                                        </MudText>
-                                        @foreach (var file in _fileNames)
-                                        {
-                                            <MudChip Color="Color.Dark" style="font-size: 12px;" Text="@file" />
-                                        }
-                                    </MudPaper>
-                                    <MudToolBar DisableGutters="true"
-                                                Class="relative d-flex justify-end gap-4 z-30">
-                                        <MudButton HtmlTag="label"
-                                                   Color="Color.Primary"
-                                                   for="@context.Id"
-                                                   Variant="Variant.Filled">
-                                            Open file picker
-                                        </MudButton>
-                                        <MudButton OnClick="@Upload"
-                                                   Color="Color.Primary"
-                                                   Disabled="@(!_fileNames.Any())"
-                                                   Variant="Variant.Filled">
-                                            Upload
-                                        </MudButton>
-                                        <MudButton OnClick="@Clear"
-                                                   Color="Color.Error"
-                                                   Disabled="@(!_fileNames.Any())"
-                                                   Variant="Variant.Filled">
-                                            Clear
-                                        </MudButton>
-                                    </MudToolBar>
-                                </ButtonTemplate>
-                            </MudFileUpload>
-                        </MudStack>
+                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
+                        @if (errors.Count > 0)
+                        {
+                            <ul class="text-danger">
+                                @foreach (var i in errors)
+                                {
+                                    <li>
+                                        @i
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        
                     </MudItem>
                 </MudGrid>
                 <MudTextField @bind-Value="monitor.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
@@ -92,7 +59,10 @@
     @inject HttpClient httpClient
     @inject ISnackbar Snackbar
     AddMonitorDto monitor = new();
-    private HashSet<IBrowserFile> browserFiles;
+    private int maxAllowedFiles = 5;
+    private long maxFileSize = 1024 * 5 * 1024;
+    private List<string> errors = new();
+
 
     private void Cancel()
     {
@@ -104,85 +74,36 @@
         navigation.NavigateTo("/monitors");
     }
 
-
-
-    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
-    private string _dragClass = DefaultDragClass;
-    private readonly List<string> _fileNames = new();
-    private List<string> responseUrls = new();
-
-    private async Task Clear()
+    private async Task LoadFile(InputFileChangeEventArgs e)
     {
-        _fileNames.Clear();
-        ClearDragClass();
-        await Task.Delay(100);
-    }
+        errors.Clear();
 
-    private void OnInputFileChanged(InputFileChangeEventArgs e)
-    {
-        ClearDragClass();
-
-        if (e != null && e.GetMultipleFiles() != null)
+        if (e.FileCount > maxAllowedFiles)
         {
-            var files = e.GetMultipleFiles();
-
-            foreach (var file in files)
-            {
-                _fileNames.Add(file.Name);
-
-                if (browserFiles == null)
-                {
-                    browserFiles = new HashSet<IBrowserFile>();
-                }
-
-                browserFiles.Add(file);
-            }
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
+            return;
         }
-    }
-
-
-    private async Task Upload()
-    {
-        var content = new MultipartFormDataContent();
-
-        foreach (var browserFile in browserFiles)
+        
+        using (var formData = new MultipartFormDataContent())
         {
-            var buffer = new byte[1024 * 30 * 1024];
-            int bytes = 0;
-            using var myFile = browserFile.OpenReadStream(maxAllowedSize: 1024 * 30 * 1024) ;
-            while ((bytes = await myFile.ReadAsync(buffer)) != 0)
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
             {
-                content.Add(new StreamContent(new MemoryStream(buffer, 0, bytes)), "file", browserFile.Name);
+                string newFileName = file.Name;
+                await using FileStream fs = new(newFileName, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                formData.Add(new StreamContent(fs), "file", newFileName);
             }
-        }
 
-        try
-        {
-            var response = await httpClient.PostAsync(Helper.URL + "Images/MultiUpload", content);
+            HttpResponseMessage response = await httpClient.PostAsync(Helper.URL + "Images/MultiUpload", formData);
 
             if (response.IsSuccessStatusCode)
             {
-                responseUrls = await response.Content.ReadFromJsonAsync<List<string>>();
-                Snackbar.Add($"Upload successful: {responseUrls}", Severity.Success);
-                monitor.ImageUrls = responseUrls;
-                await Clear();
+                Console.WriteLine("Fayl muvaffaqiyatli jo'natildi.");
             }
             else
             {
-                Snackbar.Add($"Upload failed. Status code: {response.StatusCode}", Severity.Error);
-                await Clear();
+                Console.WriteLine($"Xato: {response.StatusCode} - {response.ReasonPhrase}");
             }
         }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Error during file upload: {ex.Message}", Severity.Error);
-        }
     }
-
-
-    private void SetDragClass()
-        => _dragClass = $"{DefaultDragClass} mud-border-primary";
-
-    private void ClearDragClass()
-        => _dragClass = DefaultDragClass;
 }

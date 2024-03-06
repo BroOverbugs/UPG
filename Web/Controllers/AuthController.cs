@@ -2,8 +2,8 @@
 using Application.Interfaces;
 using DTOS.IdentitiesDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UPG.Core.Common;
 
 namespace Web.Controllers;
 
@@ -60,8 +60,30 @@ public class AuthController(IIdentityService identityService) : ControllerBase
         }
     }
 
+    [HttpPost("register-admin")]
+    [Authorize(Roles = IdentityRoles.SUPER_ADMIN)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Register(RegisterAdmin registerUser)
+    {
+        try
+        {
+            await _identityService.CreateAdminAsync(registerUser);
+            return Ok();
+        }
+        catch (CustomException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
     [HttpPatch("change-password")]
-    [Authorize]
+    [Authorize(Roles = IdentityRoles.USER)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
