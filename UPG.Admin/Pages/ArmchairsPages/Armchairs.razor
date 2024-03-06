@@ -1,0 +1,62 @@
+﻿@page "/armchairs"
+
+<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<ArmchairsDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Armchairss</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudButton OnClick="AddPage" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Success">Create</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Brand name</MudTh>
+        <MudTh>Price</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="id">@context.ID</MudTd>
+        <MudTd DataLabel="Brand name">@context.BrandName</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    @inject HttpClient httpClient
+    private string searchString1 = "";
+    private ArmchairsDTO selectedItem1 = null;
+    @inject NavigationManager navigate;
+
+    private IEnumerable<ArmchairsDTO> Elements = new List<ArmchairsDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "Armchairs");
+        if (response.IsSuccessStatusCode)
+        {
+            Elements = await response.Content.ReadFromJsonAsync<List<ArmchairsDTO>>();
+        }
+    }
+
+    private bool FilterFunc1(ArmchairsDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(ArmchairsDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.BrandName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void AddPage()
+    {
+        navigate.NavigateTo("armchairs/add");
+    }
+}

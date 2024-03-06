@@ -36,7 +36,7 @@ public class CoolerService(IUnitOfWork unitOfWork,
 
         var validateResult = new AddCoolerDTOValidator().Validate(coolerDTO);
 
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors.ToList() };
         }
@@ -110,7 +110,7 @@ public class CoolerService(IUnitOfWork unitOfWork,
         
         var validateResult = new UpdateCoolerDTOValidator().Validate(coolerDTO);
 
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors };
         }

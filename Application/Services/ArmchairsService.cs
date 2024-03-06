@@ -31,7 +31,7 @@ public class ArmchairsService(IUnitOfWork unitOfWork,
 
         var validateResult = new AddArmchairsDTOValidator().Validate(dto);
 
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors.ToList() };
         }
@@ -103,7 +103,7 @@ public class ArmchairsService(IUnitOfWork unitOfWork,
 
         var validateResult = new UpdateArmchairsDTOValidator().Validate(updateArmchairsDTO);
         
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors.ToList() };
         }
