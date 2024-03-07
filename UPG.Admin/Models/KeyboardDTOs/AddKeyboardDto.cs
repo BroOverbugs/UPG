@@ -1,27 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entities;
+namespace UPG.Admin.Models.KeyboardDTOs;
 
-public class Keyboard : BaseEntity
+public class AddKeyboardDto
 {
-    [Required]
+    public string Name { get; set; } = string.Empty;
+    public double Price { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string BrandName { get; set; } = "";
     public string Keyboard_type { get; set; } = string.Empty;
-    [Required]
     public string Switch_type { get; set; } = string.Empty;
-    [Required]
     public string Interface { get; set; } = string.Empty;
-    [Required]
     public string Backlight { get; set; } = string.Empty;
-    [Required]
     public string Internal_memory { get; set; } = string.Empty;
-    [Required]
     public bool Palm_rest { get; set; }
-    [Required]
     public bool Cable_laying { get; set; }
-    [Required]
     public int Number_of_keys { get; set; }
-    [Required]
     public string Dimensions { get; set; } = string.Empty;
-    [Required]
     public string Weight { get; set; } = string.Empty;
+    public List<string> ImageUrls { get; set; } = new();
 }

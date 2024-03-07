@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace DTOS.KeyboardDTOs
 {
@@ -14,8 +15,8 @@ namespace DTOS.KeyboardDTOs
         public string Interface { get; set; } = string.Empty;
         public string Backlight { get; set; } = string.Empty;
         public string Internal_memory { get; set; } = string.Empty;
-        public string Palm_rest { get; set; } = string.Empty;
-        public string Cable_laying { get; set; } = string.Empty;
+        public bool Palm_rest { get; set; }
+        public bool Cable_laying { get; set; }
         public int Number_of_keys { get; set; }
         public string Dimensions { get; set; } = string.Empty;
         public string Weight { get; set; } = string.Empty;

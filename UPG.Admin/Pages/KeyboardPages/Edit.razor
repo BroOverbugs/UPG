@@ -1,0 +1,111 @@
+﻿@page "/keyboards/edit/{Id}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Keyboard</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="keyboard.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Keyboard_type" Label="Keyboard type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Switch_type" Label="Switch type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Interface" Label="Interface" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Backlight" Label="Backlight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="keyboard.Internal_memory" Label="Internal memory" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Number_of_keys" Label="Number of keys" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Dimensions" Label="Dimensions" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="keyboard.Weight" Label="Weight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudItem Class="d-flex">
+                            <MudSwitch @bind-Value="keyboard.Palm_rest" ThumbIcon="@(keyboard.Palm_rest==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(keyboard.Palm_rest==true ? Color.Success : Color.Error)">Palm rest</MudSwitch>
+                            <MudSwitch Class="mx-10" @bind-Value="keyboard.Cable_laying" ThumbIcon="@(keyboard.Cable_laying==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(keyboard.Cable_laying==true ? Color.Success : Color.Error)">Cable laying</MudSwitch>
+                        </MudItem>
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="keyboard.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    UpdateKeyboardDto keyboard = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "keyboards/" + Id);
+        if (response.IsSuccessStatusCode)
+        {
+            var keyboardDto = await response.Content.ReadFromJsonAsync<KeyboardDto>();
+            keyboard = new()
+            {
+                Id = keyboardDto!.Id,
+                Name = keyboardDto.Name,
+                Price = keyboardDto.Price,
+                Description = keyboardDto.Description,
+                BrandName = keyboardDto.BrandName,
+                Keyboard_type = keyboardDto.Keyboard_type,
+                Switch_type = keyboardDto.Switch_type,
+                Interface = keyboardDto.Interface,
+                Backlight = keyboardDto.Backlight,
+                Internal_memory = keyboardDto.Internal_memory,
+                Palm_rest = keyboardDto.Palm_rest,
+                Cable_laying = keyboardDto.Cable_laying,
+                Number_of_keys = keyboardDto.Number_of_keys,
+                Dimensions = keyboardDto.Dimensions,
+                Weight = keyboardDto.Weight,
+                ImageUrls = keyboardDto.ImageUrls
+            };
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/keyboards");
+    }
+
+    private async void Save()
+    {
+        var updateLaptopJson = JsonConvert.SerializeObject(keyboard);
+        var request = new StringContent(updateLaptopJson, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PutAsync(Helper.URL + "keyboards", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Keyboard updated successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Snackbar.Add("Keyboard not found. Please try again!", Severity.Warning);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
+}
