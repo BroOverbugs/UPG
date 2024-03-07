@@ -1,0 +1,133 @@
+﻿@page "/GamingBuilds/edit/{Id:int}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Armchair</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="gamingBuilds.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.MotherBoard" Label="MotherBoard" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.CPU" Label="CPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.GPU" Label="GPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.RAM" Label="RAM" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.SSD" Label="SSD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="gamingBuilds.HDD" Label="HDD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.PSU" Label="PSU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.Cooler" Label="Cooler" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.Case" Label="Case" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+
+                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
+                        @if (errors.Count > 0)
+                        {
+                            <ul class="text-danger">
+                                @foreach (var i in errors)
+                                {
+                                    <li>
+                                        @i
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="gamingBuilds.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddGamingBuildsDTO gamingBuilds = new();
+    private int maxAllowedFiles = 5;
+    private long maxFileSize = 1024 * 5 * 1024;
+    private List<string> errors = new List<string>();
+    // private IMapper _mapper;
+
+    // // Inject IMapper
+    // public YourComponentName(IMapper mapper)
+    // {
+    //     _mapper = mapper;
+    // }
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync($"{Helper.URL}GamingBuilds/{Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            gamingBuilds = await response.Content.ReadFromJsonAsync<AddGamingBuildsDTO>();
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/GamingBuilds");
+    }
+
+    private async Task Save()
+    {
+        
+        var jsonContent = new StringContent(JsonConvert.SerializeObject(gamingBuilds), Encoding.UTF8, "application/json");
+        var response = await httpClient.PutAsync($"{Helper.URL}GamingBuilds", jsonContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Gaming build updated successfully!", Severity.Success);
+            navigation.NavigateTo("/GamingBuilds");
+        }
+        else
+        {
+            Snackbar.Add($"Failed to update gaming build. Status code: {response.StatusCode}", Severity.Error);
+        }
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
+            return;
+        }
+
+        using (var formData = new MultipartFormDataContent())
+        {
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                string newFileName = file.Name;
+                await using FileStream fs = new(newFileName, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                formData.Add(new StreamContent(fs), "file", newFileName);
+            }
+
+            HttpResponseMessage response = await httpClient.PostAsync($"{Helper.URL}Images/MultiUpload", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("File uploaded successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+    }
+}

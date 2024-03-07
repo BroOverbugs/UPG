@@ -13,12 +13,17 @@
         <MudTh>Name</MudTh>
         <MudTh>Brand name</MudTh>
         <MudTh>Price</MudTh>
+        <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="id">@context.ID</MudTd>
         <MudTd DataLabel="Brand name">@context.BrandName</MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="Action" style="display: flex; justify-content:center; gap: 10px">
+            <MudIconButton @onclick="() => OpenEditPage(context.ID)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" />
+            <MudIconButton @onclick="() => Delete(context.ID)" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" />
+        </MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager />
@@ -30,8 +35,10 @@
     private string searchString1 = "";
     private ArmchairsDTO selectedItem1 = null;
     @inject NavigationManager navigate;
+    @inject IDialogService DialogService
+    @inject ISnackbar Snackbar
 
-    private IEnumerable<ArmchairsDTO> Elements = new List<ArmchairsDTO>();
+    private List<ArmchairsDTO> Elements = new List<ArmchairsDTO>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,6 +46,42 @@
         if (response.IsSuccessStatusCode)
         {
             Elements = await response.Content.ReadFromJsonAsync<List<ArmchairsDTO>>();
+        }
+    }
+
+    private void OpenEditPage(int id)
+    {
+        navigate.NavigateTo($"Armchairs/edit/{id}");
+    }
+
+    private async void Delete(int id)
+    {
+        var parameters = new DialogParameters<YesNo>();
+        parameters.Add(x => x.ContentText, "Are you sure delete this?");
+        parameters.Add(x => x.ButtonText, "Yes");
+        parameters.Add(x => x.Color, Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialogResult = await DialogService.Show<YesNo>("Delete", parameters, options).Result!;
+        if (!dialogResult.Cancelled)
+        {
+            var response = await httpClient.DeleteAsync(Helper.URL + "Armchairs/" + id);
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Armchairs deleted successfully!", Severity.Success);
+                Elements.RemoveAll(x => x.ID == id);
+                StateHasChanged();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Snackbar.Add("Armchairs not found!", Severity.Error);
+                navigate.NavigateTo("/Armchairs");
+            }
+            else
+            {
+                Snackbar.Add("Something went wrong!", Severity.Error);
+            }
         }
     }
 

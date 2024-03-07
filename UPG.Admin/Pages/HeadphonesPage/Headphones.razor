@@ -1,8 +1,8 @@
-﻿@page "/gamingBuilds"
+﻿@page "/headphones"
 
-<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<GamingBuildsDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<HeadphonesDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">GamingBuilds</MudText>
+        <MudText Typo="Typo.h6">Headphones</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         <MudSpacer />
@@ -33,25 +33,25 @@
 @code {
     @inject HttpClient httpClient
     private string searchString1 = "";
-    private GamingBuildsDTO selectedItem1 = null;
+    private HeadphonesDTO selectedItem1 = null;
     @inject NavigationManager navigate;
     @inject IDialogService DialogService
     @inject ISnackbar Snackbar
 
-    private List<GamingBuildsDTO> Elements = new List<GamingBuildsDTO>();
+    private List<HeadphonesDTO> Elements = new List<HeadphonesDTO>();
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync(Helper.URL + "GamingBuilds");
+        var response = await httpClient.GetAsync(Helper.URL + "Headphones");
         if (response.IsSuccessStatusCode)
         {
-            Elements = await response.Content.ReadFromJsonAsync<List<GamingBuildsDTO>>();
+            Elements = await response.Content.ReadFromJsonAsync<List<HeadphonesDTO>>();
         }
     }
 
     private void OpenEditPage(int id)
     {
-        navigate.NavigateTo($"GamingBuilds/edit/{id}");
+        navigate.NavigateTo($"Headphones/edit/{id}");
     }
 
     private async void Delete(int id)
@@ -66,17 +66,17 @@
         var dialogResult = await DialogService.Show<YesNo>("Delete", parameters, options).Result!;
         if (!dialogResult.Cancelled)
         {
-            var response = await httpClient.DeleteAsync(Helper.URL + "GamingBuilds/" + id);
+            var response = await httpClient.DeleteAsync(Helper.URL + "Headphones/" + id);
             if (response.IsSuccessStatusCode)
             {
-                Snackbar.Add("GamingBuilds deleted successfully!", Severity.Success);
+                Snackbar.Add("Headphones deleted successfully!", Severity.Success);
                 Elements.RemoveAll(x => x.ID == id);
                 StateHasChanged();
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Snackbar.Add("GamingBuilds not found!", Severity.Error);
-                navigate.NavigateTo("/GamingBuilds");
+                Snackbar.Add("Headphones not found!", Severity.Error);
+                navigate.NavigateTo("/Headphones");
             }
             else
             {
@@ -85,9 +85,9 @@
         }
     }
 
-    private bool FilterFunc1(GamingBuildsDTO element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(HeadphonesDTO element) => FilterFunc(element, searchString1);
 
-    private bool FilterFunc(GamingBuildsDTO element, string searchString)
+    private bool FilterFunc(HeadphonesDTO element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -100,6 +100,6 @@
 
     private void AddPage()
     {
-        navigate.NavigateTo("gamingBuilds/add");
+        navigate.NavigateTo("headphones/add");
     }
 }

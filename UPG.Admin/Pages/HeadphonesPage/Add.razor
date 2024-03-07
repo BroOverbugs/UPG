@@ -1,4 +1,4 @@
-﻿@page "/gamingBuilds/add"
+﻿@page "/headphones/add"
 
 <MudGrid>
     <MudItem xs="2"></MudItem>
@@ -8,20 +8,23 @@
             <MudCardContent>
                 <MudGrid>
                     <MudItem xs="6">
-                        <MudTextField @bind-Value="gamingBuilds.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.MotherBoard" Label="MotherBoard" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.CPU" Label="CPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.GPU" Label="GPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.RAM" Label="RAM" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.SSD" Label="SSD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                    </MudItem>   
+                        <MudTextField @bind-Value="headphones.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Headphone_type" Label="Headphone_type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Operating_mode" Label="Operating_mode" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Sound_type" Label="Sound_type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Headphone_frequency_range" Label="Headphone_frequency_range" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Headphone_impedance" Label="Headphone_impedance" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
                     <MudItem xs="6">
-                        <MudTextField @bind-Value="gamingBuilds.HDD" Label="HDD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.PSU" Label="PSU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.Cooler" Label="Cooler" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.Case" Label="Case" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Headphone_sensitivity" Label="Headphone_sensitivity" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Microphone_frequency_range" Label="Microphone_frequency_range" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Connection_or_connectors" Label="Connection_or_connectors" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Sound_card" Label="Sound_card" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Wire_length" Label="Wire_length" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Backlight" Label="Backlight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Weight" Label="Weight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
 
                         <MudStack Style="width: 100%"> 
                             <MudFileUpload T="IReadOnlyList<IBrowserFile>"
@@ -71,7 +74,7 @@
                         </MudStack>
                     </MudItem>
                 </MudGrid>
-                <MudTextField @bind-Value="gamingBuilds.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="headphones.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
             </MudCardContent>
             <MudCardActions Class="d-flex justify-center">
                 <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
@@ -86,35 +89,35 @@
     @inject NavigationManager navigation
     @inject HttpClient httpClient
     @inject ISnackbar Snackbar
-    AddGamingBuildsDTO gamingBuilds = new();
+    AddHeadphonesDTO headphones = new();
     private HashSet<IBrowserFile> browserFiles;
 
     private void Cancel()
     {
-        navigation.NavigateTo("/gamingBuilds");
+        navigation.NavigateTo("/headphones");
     }
 
 private async Task Save()
     {
     try
     {
-        // Serialize the gamingBuilds object to JSON using Newtonsoft.Json
-        var jsonContent = JsonConvert.SerializeObject(gamingBuilds);
+        // Serialize the headphones object to JSON using Newtonsoft.Json
+        var jsonContent = JsonConvert.SerializeObject(headphones);
         Console.WriteLine($"Request JSON: {jsonContent}");
 
-        // Make an HTTP POST request to save the gamingBuilds data
-        var response = await httpClient.PostAsync(Helper.URL + "gamingBuilds", new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+        // Make an HTTP POST request to save the headphones data
+        var response = await httpClient.PostAsync(Helper.URL + "Headphones", new StringContent(jsonContent, Encoding.UTF8, "application/json"));
 
         if (response.IsSuccessStatusCode)
         {
             // Optionally, handle success scenario
             Snackbar.Add("Armchair saved successfully!", Severity.Success);
-            navigation.NavigateTo("/gamingBuilds");
+            navigation.NavigateTo("/headphones");
         }
         else
         {
             // Optionally, handle failure scenario
-            Snackbar.Add($"Failed to save gamingBuilds. Status code: {response.StatusCode}", Severity.Error);
+            Snackbar.Add($"Failed to save headphones. Status code: {response.StatusCode}", Severity.Error);
         }
     }
     catch (Exception ex)
@@ -186,7 +189,7 @@ private async Task Save()
             {
                 responseUrls = await response.Content.ReadFromJsonAsync<List<string>>();
                 Snackbar.Add($"Upload successful: {responseUrls}", Severity.Success);
-                gamingBuilds.ImageUrls = responseUrls;
+                headphones.ImageUrls = responseUrls;
                 await Clear();
             }
             else
