@@ -1,0 +1,62 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Title: @drives.Name</MudText>
+                <br />
+                <MudText>Author: @drives.BrandName</MudText>
+                <br />
+                <MudText>Price: @drives.Price</MudText>
+                <br />
+                <MudText>Interface: @drives.Interface</MudText>
+                <br />
+                <MudText>Reading_speed: @drives.Reading_speed</MudText>
+                <br />
+                <MudText>Write_type: @drives.Write_type</MudText>
+                <br />
+                <MudText>Drive_type: @drives.Drive_type</MudText>
+                <br />
+                <MudText>Volume: @drives.Volume</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in drives.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="drives.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    DrivesDTO drives = new DrivesDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "drives/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            drives = await response.Content.ReadFromJsonAsync<DrivesDTO>();
+        }
+    }
+}
