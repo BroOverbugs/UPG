@@ -1,0 +1,77 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Title: @headphones.Name</MudText>
+                <br />
+                <MudText>Author: @headphones.BrandName</MudText>
+                <br />
+                <MudText>Price: @headphones.Price</MudText>
+                <br />
+                <MudText>Price: @headphones.Headphone_type</MudText>
+                <br />
+                <MudText>Price: @headphones.Operating_mode</MudText>
+                <br />
+                <MudText>Price: @headphones.Sound_type</MudText>
+                <br />
+                <MudText>Price: @headphones.Headphone_frequency_range</MudText>
+                <br />
+                <MudText>Price: @headphones.Headphone_impedance</MudText>
+                <br />
+                <MudText>Price: @headphones.Headphone_sensitivity</MudText>
+                <br />
+                <MudText>Price: @headphones.Microphone_frequency_range</MudText>
+                <br />
+                <MudText>Price: @headphones.Connection_or_connectors</MudText>
+                <br />
+                <MudText>Price: @headphones.Sound_card</MudText>
+                <br />
+                <MudText>Price: @headphones.Wire_length</MudText>
+                <br />
+                <MudText>Price: @headphones.Backlight</MudText>
+                <br />
+                <MudText>Price: @headphones.Weight</MudText>
+                <br />
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in headphones.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="headphones.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    HeadphonesDTO headphones = new HeadphonesDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "headphones/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            headphones = await response.Content.ReadFromJsonAsync<HeadphonesDTO>();
+        }
+    }
+}

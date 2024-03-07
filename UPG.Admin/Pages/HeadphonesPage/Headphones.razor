@@ -1,8 +1,8 @@
-﻿@page "/cooler"
+﻿@page "/headphones"
 
-<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<CoolerDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<HeadphonesDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Cooler</MudText>
+        <MudText Typo="Typo.h6">Headphones</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         <MudSpacer />
@@ -33,25 +33,34 @@
 @code {
     @inject HttpClient httpClient
     private string searchString1 = "";
-    private CoolerDTO selectedItem1 = null;
+    private HeadphonesDTO selectedItem1 = null;
     @inject NavigationManager navigate;
     @inject IDialogService DialogService
     @inject ISnackbar Snackbar
 
-    private List<CoolerDTO> Elements = new List<CoolerDTO>();
+    private List<HeadphonesDTO> Elements = new List<HeadphonesDTO>();
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync(Helper.URL + "Cooler");
+        var response = await httpClient.GetAsync(Helper.URL + "Headphones");
         if (response.IsSuccessStatusCode)
         {
-            Elements = await response.Content.ReadFromJsonAsync<List<CoolerDTO>>();
+            Elements = await response.Content.ReadFromJsonAsync<List<HeadphonesDTO>>();
         }
     }
 
     private void OpenEditPage(int id)
     {
-        navigate.NavigateTo($"Cooler/edit/{id}");
+        navigate.NavigateTo($"Headphones/edit/{id}");
+    }
+
+    private void OpenView(int id)
+    {
+        var parameters = new DialogParameters<View>();
+        parameters.Add(x => x.Id, id.ToString());
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        DialogService.Show<View>("Monitor details", parameters, options);
     }
 
     private async void Delete(int id)
@@ -61,17 +70,17 @@
 
         if (!dialogResult.Cancelled)
         {
-            var response = await httpClient.DeleteAsync(Helper.URL + "Cooler/" + id);
+            var response = await httpClient.DeleteAsync(Helper.URL + "Headphones/" + id);
             if (response.IsSuccessStatusCode)
             {
-                Snackbar.Add("Cooler deleted successfully!", Severity.Success);
+                Snackbar.Add("Headphones deleted successfully!", Severity.Success);
                 Elements.RemoveAll(x => x.ID == id);
                 StateHasChanged();
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Snackbar.Add("Cooler not found!", Severity.Error);
-                navigate.NavigateTo("/Cooler");
+                Snackbar.Add("Headphones not found!", Severity.Error);
+                navigate.NavigateTo("/Headphones");
             }
             else
             {
@@ -80,9 +89,9 @@
         }
     }
 
-    private bool FilterFunc1(CoolerDTO element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(HeadphonesDTO element) => FilterFunc(element, searchString1);
 
-    private bool FilterFunc(CoolerDTO element, string searchString)
+    private bool FilterFunc(HeadphonesDTO element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -95,6 +104,6 @@
 
     private void AddPage()
     {
-        navigate.NavigateTo("cooler/add");
+        navigate.NavigateTo("headphones/add");
     }
 }

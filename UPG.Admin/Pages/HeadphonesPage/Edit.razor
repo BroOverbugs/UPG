@@ -1,0 +1,148 @@
+﻿@page "/Headphones/edit/{Id:int}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Armchair</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="headphones.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Headphone_type" Label="Headphone_type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Operating_mode" Label="Operating_mode" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Sound_type" Label="Sound_type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Headphone_frequency_range" Label="Headphone_frequency_range" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Headphone_impedance" Label="Headphone_impedance" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="headphones.Headphone_sensitivity" Label="Headphone_sensitivity" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Microphone_frequency_range" Label="Microphone_frequency_range" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Connection_or_connectors" Label="Connection_or_connectors" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Sound_card" Label="Sound_card" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Wire_length" Label="Wire_length" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Backlight" Label="Backlight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="headphones.Weight" Label="Weight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+
+                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
+                        @if (errors.Count > 0)
+                        {
+                            <ul class="text-danger">
+                                @foreach (var i in errors)
+                                {
+                                    <li>
+                                        @i
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="headphones.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddHeadphonesDTO headphones = new();
+    private int maxAllowedFiles = 5;
+    private long maxFileSize = 1024 * 5 * 1024;
+    private List<string> errors = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync($"{Helper.URL}Headphones/{Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            headphones = await response.Content.ReadFromJsonAsync<AddHeadphonesDTO>();
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/Headphones");
+    }
+
+    private async Task Save()
+    {
+        UpdateHeadphonesDTO update = new()
+            {
+                ID = Id,
+                Name = headphones.Name,
+                BrandName = headphones.BrandName,
+                Price = headphones.Price,
+                Description = headphones.Description,
+                Headphone_type = headphones.Headphone_type,
+                Operating_mode = headphones.Operating_mode,
+                Sound_type = headphones.Sound_type,
+                Headphone_frequency_range = headphones.Headphone_frequency_range,
+                Headphone_impedance = headphones.Headphone_impedance,
+                Headphone_sensitivity = headphones.Headphone_sensitivity,
+                Microphone_frequency_range = headphones.Microphone_frequency_range,
+                Connection_or_connectors = headphones.Connection_or_connectors,
+                Sound_card = headphones.Sound_card,
+                Wire_length = headphones.Wire_length,
+                Backlight = headphones.Backlight,
+                Weight = headphones.Weight
+            };
+        var jsonContent = new StringContent(JsonConvert.SerializeObject(update), Encoding.UTF8, "application/json");
+        var response = await httpClient.PutAsync($"{Helper.URL}Headphones", jsonContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Gaming build updated successfully!", Severity.Success);
+            navigation.NavigateTo("/Headphones");
+        }
+        else
+        {
+            Snackbar.Add($"Failed to update gaming build. Status code: {response.StatusCode}", Severity.Error);
+        }
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
+            return;
+        }
+
+        using (var formData = new MultipartFormDataContent())
+        {
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                string newFileName = file.Name;
+                await using FileStream fs = new(newFileName, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                formData.Add(new StreamContent(fs), "file", newFileName);
+            }
+
+            HttpResponseMessage response = await httpClient.PostAsync($"{Helper.URL}Images/MultiUpload", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("File uploaded successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+    }
+}

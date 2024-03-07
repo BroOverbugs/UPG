@@ -1,0 +1,138 @@
+﻿@page "/Cooler/edit/{Id:int}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Armchair</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="cooler.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Type" Label="Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Socket" Label="Socket" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Power_dissipation" Label="Power dissipation" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Dimensions" Label="Dimensions" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="cooler.Dimensions_of_complete_fans" Label="Dimensions of complete fans" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Bearing_type" Label="Bearing type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Rotational_speed" Label="Rotational speed" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+
+                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
+                        @if (errors.Count > 0)
+                        {
+                            <ul class="text-danger">
+                                @foreach (var i in errors)
+                                {
+                                    <li>
+                                        @i
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="cooler.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddCoolerDTO cooler = new();
+    private int maxAllowedFiles = 5;
+    private long maxFileSize = 1024 * 5 * 1024;
+    private List<string> errors = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync($"{Helper.URL}Cooler/{Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            cooler = await response.Content.ReadFromJsonAsync<AddCoolerDTO>();
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/Cooler");
+    }
+
+    private async Task Save()
+    {
+        UpdateCoolerDTO update = new()
+            {
+                ID = Id,
+                Name = cooler.Name,
+                BrandName = cooler.BrandName,
+                Price = cooler.Price,
+                Description = cooler.Description,
+                Type = cooler.Type,
+                Socket = cooler.Socket,
+                Power_dissipation = cooler.Power_dissipation,
+                Dimensions = cooler.Dimensions,
+                Dimensions_of_complete_fans = cooler.Dimensions_of_complete_fans,
+                Bearing_type = cooler.Bearing_type,
+                Rotational_speed = cooler.Rotational_speed
+            };
+        var jsonContent = new StringContent(JsonConvert.SerializeObject(update), Encoding.UTF8, "application/json");
+        var response = await httpClient.PutAsync($"{Helper.URL}Cooler", jsonContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Gaming build updated successfully!", Severity.Success);
+            navigation.NavigateTo("/Cooler");
+        }
+        else
+        {
+            Snackbar.Add($"Failed to update gaming build. Status code: {response.StatusCode}", Severity.Error);
+        }
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
+            return;
+        }
+
+        using (var formData = new MultipartFormDataContent())
+        {
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                string newFileName = file.Name;
+                await using FileStream fs = new(newFileName, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                formData.Add(new StreamContent(fs), "file", newFileName);
+            }
+
+            HttpResponseMessage response = await httpClient.PostAsync($"{Helper.URL}Images/MultiUpload", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("File uploaded successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+    }
+}
