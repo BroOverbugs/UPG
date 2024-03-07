@@ -1,8 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Interfaces;
-using Application.Services;
 using DTOS.KeyboardDTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UPG.Core.Filters;
 
@@ -19,7 +17,7 @@ public class KeyboardsController : ControllerBase
         _keyboardService = keyboardService;
     }
 
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] AddKeyboardDto keyboardDto)
     {
         try
