@@ -54,6 +54,15 @@
         navigate.NavigateTo($"Headphones/edit/{id}");
     }
 
+    private void OpenView(int id)
+    {
+        var parameters = new DialogParameters<View>();
+        parameters.Add(x => x.Id, id.ToString());
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        DialogService.Show<View>("Monitor details", parameters, options);
+    }
+
     private async void Delete(int id)
     {
         var options = new DialogOptions { ClassBackground = "body" };
