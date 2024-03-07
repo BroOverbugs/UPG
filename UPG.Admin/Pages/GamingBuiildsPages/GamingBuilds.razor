@@ -16,10 +16,10 @@
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="id">@context.ID</MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Brand name">@context.BrandName</MudTd>
-        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd @onclick="() => OpenView(context.ID)" DataLabel="id">@context.ID</MudTd>
+        <MudTd @onclick="() => OpenView(context.ID)" DataLabel="Name">@context.Name</MudTd>
+        <MudTd @onclick="() => OpenView(context.ID)" DataLabel="Brand name">@context.BrandName</MudTd>
+        <MudTd @onclick="() => OpenView(context.ID)" DataLabel="Price">@context.Price</MudTd>
         <MudTd DataLabel="Action" style="display: flex; justify-content:center; gap: 10px">
             <MudIconButton @onclick="() => OpenEditPage(context.ID)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" />
             <MudIconButton @onclick="() => Delete(context.ID)" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" />
@@ -48,7 +48,14 @@
             Elements = await response.Content.ReadFromJsonAsync<List<GamingBuildsDTO>>();
         }
     }
+    private void OpenView(int id)
+    {
+        var parameters = new DialogParameters<View>();
+        parameters.Add(x => x.Id, id.ToString());
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 
+        DialogService.Show<View>("GamingBuilds details", parameters, options);
+    }
     private void OpenEditPage(int id)
     {
         navigate.NavigateTo($"GamingBuilds/edit/{id}");
