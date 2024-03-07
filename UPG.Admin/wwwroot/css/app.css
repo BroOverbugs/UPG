@@ -121,5 +121,5 @@ code {
     background: url(https://upg.uz/images/image/data/catalog/catalog-icons.png) no-repeat;
     display: inline-block;
     background-size: auto 60px;
-    vertical-align: middle;
+    margin: 0px 10px 0px -5px;
 }
