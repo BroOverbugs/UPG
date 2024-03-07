@@ -4,7 +4,7 @@
     <MudItem xs="2"></MudItem>
     <MudItem xs="8">
         <MudCard Class="mt-4">
-            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Monitor</h3> </MudCardHeader>
+            <MudCardHeader Class="d-flex justify-center"> <h3>Edit this Monitor</h3> </MudCardHeader>
             <MudCardContent>
                 <MudGrid>
                     <MudItem xs="6">
@@ -28,19 +28,6 @@
                             <MudSwitch @bind-Value="monitor.HDR" ThumbIcon="@(monitor.HDR==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.HDR==true ? Color.Success : Color.Error)">HDR</MudSwitch>
                             <MudSwitch Class="mx-10" @bind-Value="monitor.Guarantee_period" ThumbIcon="@(monitor.Guarantee_period==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.Guarantee_period==true ? Color.Success : Color.Error)">Guarantee period</MudSwitch>
                         </MudItem>
-                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
-                        @if (errors.Count > 0)
-                        {
-                            <ul class="text-danger">
-                                @foreach (var i in errors)
-                                {
-                                    <li>
-                                        @i
-                                    </li>
-                                }
-                            </ul>
-                        }
-
                     </MudItem>
                 </MudGrid>
                 <MudTextField @bind-Value="monitor.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
@@ -56,87 +43,76 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     @inject NavigationManager navigation
     @inject HttpClient httpClient
     @inject ISnackbar Snackbar
-    AddMonitorDto monitor = new();
-    private int maxAllowedFiles = 5;
-    private long maxFileSize = 1024 * 5 * 1024;
-    private List<string> errors = new();
+    UpdateMonitorDto monitor = new();
 
     protected override async Task OnInitializedAsync()
     {
         var response = await httpClient.GetAsync(Helper.URL + "monitors/" + Id);
         if (response.IsSuccessStatusCode)
         {
-            var monitor = await response.Content.ReadFromJsonAsync<MonitorDto>();
-            UpdateMonitorDto updateMonitor = new()
-                {
-                    Id = monitor!.Id,
-                    Name = monitor.Name,
-                    Price = monitor.Price,
-                    Description = monitor.Description,
-                    BrandName = monitor.BrandName,
-                    Diagonal = monitor.Diagonal,
-                    Screen_type = monitor.Screen_type,
-                    Matrix_type = monitor.Matrix_type,
-                    Resolution_FHD = monitor.Resolution_FHD,
-                    Aspect_ratio = monitor.Aspect_ratio,
-                    Frame_rate = monitor.Frame_rate,
-                    Response_time = monitor.Response_time,
-                    Viewing_angle = monitor.Viewing_angle,
-                    Interface = monitor.Interface,
-                    VESA_Mount = monitor.VESA_Mount,
-                    Technologies = monitor.Technologies,
-                    Adjustment = monitor.Adjustment,
-                    HDR = monitor.HDR,
-                    Guarantee_period = monitor.Guarantee_period,
-                    ImageUrls = monitor.ImageUrls
-                };
+            var monitorDto = await response.Content.ReadFromJsonAsync<MonitorDto>();
+            monitor = new()
+            {
+                Id = monitorDto!.Id,
+                Name = monitorDto.Name,
+                Price = monitorDto.Price,
+                Description = monitorDto.Description,
+                BrandName = monitorDto.BrandName,
+                Diagonal = monitorDto.Diagonal,
+                Screen_type = monitorDto.Screen_type,
+                Matrix_type = monitorDto.Matrix_type,
+                Resolution_FHD = monitorDto.Resolution_FHD,
+                Aspect_ratio = monitorDto.Aspect_ratio,
+                Frame_rate = monitorDto.Frame_rate,
+                Response_time = monitorDto.Response_time,
+                Viewing_angle = monitorDto.Viewing_angle,
+                Interface = monitorDto.Interface,
+                VESA_Mount = monitorDto.VESA_Mount,
+                Technologies = monitorDto.Technologies,
+                Adjustment = monitorDto.Adjustment,
+                HDR = monitorDto.HDR,
+                Guarantee_period = monitorDto.Guarantee_period,
+                ImageUrls = monitorDto.ImageUrls
+            };
         }
     }
+
     private void Cancel()
     {
         navigation.NavigateTo("/monitors");
     }
 
-    private void Save()
+    private async void Save()
     {
-        navigation.NavigateTo("/monitors");
-    }
+        var updateMonitorJson = JsonConvert.SerializeObject(monitor);
+        var request = new StringContent(updateMonitorJson, Encoding.UTF8, "application/json");
 
-    private async Task LoadFile(InputFileChangeEventArgs e)
-    {
-        errors.Clear();
+        var response = await httpClient.PutAsync(Helper.URL + "monitors", request);
 
-        if (e.FileCount > maxAllowedFiles)
+        if (response.IsSuccessStatusCode)
         {
-            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
-            return;
+            Snackbar.Add("Monitor updated successfully!", Severity.Success);
+            Cancel();
         }
-
-        using (var formData = new MultipartFormDataContent())
+        else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
-            {
-                string newFileName = file.Name;
-                await using FileStream fs = new(newFileName, FileMode.Create);
-                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
-                formData.Add(new StreamContent(fs), "file", newFileName);
-            }
-
-            HttpResponseMessage response = await httpClient.PostAsync(Helper.URL + "Images/MultiUpload", formData);
-
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Fayl muvaffaqiyatli jo'natildi.");
-            }
-            else
-            {
-                Console.WriteLine($"Xato: {response.StatusCode} - {response.ReasonPhrase}");
-            }
+            Snackbar.Add("Monitor not found. Please try again!", Severity.Warning);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
         }
     }
 }

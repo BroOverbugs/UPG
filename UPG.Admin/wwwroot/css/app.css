@@ -109,3 +109,7 @@ code {
 .f-link {
     font-size: 14px;
 }
+
+.body {
+    backdrop-filter: blur(10px);
+}
