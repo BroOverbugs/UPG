@@ -1,0 +1,66 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Title: @cooler.Name</MudText>
+                <br />
+                <MudText>Author: @cooler.BrandName</MudText>
+                <br />
+                <MudText>Price: @cooler.Price</MudText>
+                <br />
+                <MudText>Type: @cooler.Type</MudText>
+                <br />
+                <MudText>Socket: @cooler.Socket</MudText>
+                <br />
+                <MudText>Power_dissipation: @cooler.Power_dissipation</MudText>
+                <br />
+                <MudText>Dimensions: @cooler.Dimensions</MudText>
+                <br />
+                <MudText>Dimensions_of_complete_fans: @cooler.Dimensions_of_complete_fans</MudText>
+                <br />
+                <MudText>Bearing_type: @cooler.Bearing_type</MudText>
+                <br />
+                <MudText>Rotational_speed: @cooler.Rotational_speed</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in cooler.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="cooler.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    CoolerDTO cooler = new CoolerDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "cooler/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            cooler = await response.Content.ReadFromJsonAsync<CoolerDTO>();
+        }
+    }
+}

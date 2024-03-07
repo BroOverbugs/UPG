@@ -1,0 +1,71 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Title: @armchairs.Name</MudText>
+                <br />
+                <MudText>Author: @armchairs.BrandName</MudText>
+                <br />
+                <MudText>Price: @armchairs.Price</MudText>
+                <br />
+                <MudText>Type: @armchairs.Type</MudText>
+                <br />
+                <MudText>Upholstery_material: @armchairs.Upholstery_material</MudText>
+                <br />
+                <MudText>Color_material: @armchairs.Color_material</MudText>
+                <br />
+                <MudText>Armrests: @armchairs.Armrests</MudText>
+                <br />
+                <MudText>Cross_material: @armchairs.Cross_material</MudText>
+                <br />
+                <MudText>Armrests: @armchairs.Armrests</MudText>
+                <br />
+                <MudText>Reclining: @armchairs.Reclining</MudText>
+                <br />
+                <MudText>Rocking_mechanism: @armchairs.Rocking_mechanism</MudText>
+                <br />
+                <MudText>Permissible_load: @armchairs.Permissible_load</MudText>
+                <br />
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in armchairs.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="armchairs.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    ArmchairsDTO armchairs = new ArmchairsDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "armchairs/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            armchairs = await response.Content.ReadFromJsonAsync<ArmchairsDTO>();
+        }
+    }
+}
