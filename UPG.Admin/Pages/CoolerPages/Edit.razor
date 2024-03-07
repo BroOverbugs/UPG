@@ -1,4 +1,4 @@
-﻿@page "/GamingBuilds/edit/{Id:int}"
+﻿@page "/Cooler/edit/{Id:int}"
 
 <MudGrid>
     <MudItem xs="2"></MudItem>
@@ -8,20 +8,18 @@
             <MudCardContent>
                 <MudGrid>
                     <MudItem xs="6">
-                        <MudTextField @bind-Value="gamingBuilds.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.MotherBoard" Label="MotherBoard" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.CPU" Label="CPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.GPU" Label="GPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.RAM" Label="RAM" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.SSD" Label="SSD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Type" Label="Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Socket" Label="Socket" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Power_dissipation" Label="Power dissipation" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Dimensions" Label="Dimensions" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
                     </MudItem>
                     <MudItem xs="6">
-                        <MudTextField @bind-Value="gamingBuilds.HDD" Label="HDD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.PSU" Label="PSU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.Cooler" Label="Cooler" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-                        <MudTextField @bind-Value="gamingBuilds.Case" Label="Case" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Dimensions_of_complete_fans" Label="Dimensions of complete fans" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Bearing_type" Label="Bearing type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="cooler.Rotational_speed" Label="Rotational speed" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
 
                         <InputFile OnChange="@LoadFile" class="form-control" multiple />
                         @if (errors.Count > 0)
@@ -37,7 +35,7 @@
                         }
                     </MudItem>
                 </MudGrid>
-                <MudTextField @bind-Value="gamingBuilds.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="cooler.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
             </MudCardContent>
             <MudCardActions Class="d-flex justify-center">
                 <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
@@ -56,50 +54,48 @@
     @inject NavigationManager navigation
     @inject HttpClient httpClient
     @inject ISnackbar Snackbar
-    AddGamingBuildsDTO gamingBuilds = new();
+    AddCoolerDTO cooler = new();
     private int maxAllowedFiles = 5;
     private long maxFileSize = 1024 * 5 * 1024;
     private List<string> errors = new List<string>();
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync($"{Helper.URL}GamingBuilds/{Id}");
+        var response = await httpClient.GetAsync($"{Helper.URL}Cooler/{Id}");
         if (response.IsSuccessStatusCode)
         {
-            gamingBuilds = await response.Content.ReadFromJsonAsync<AddGamingBuildsDTO>();
+            cooler = await response.Content.ReadFromJsonAsync<AddCoolerDTO>();
         }
     }
 
     private void Cancel()
     {
-        navigation.NavigateTo("/GamingBuilds");
+        navigation.NavigateTo("/Cooler");
     }
 
     private async Task Save()
     {
-        UpdateGamingBuildsDTO update = new()
-        {
-            ID = Id,
-            Name = gamingBuilds.Name,
-            BrandName = gamingBuilds.BrandName,
-            Price = gamingBuilds.Price,
-            Description = gamingBuilds.Description,
-            MotherBoard = gamingBuilds.MotherBoard,
-            CPU = gamingBuilds.CPU,
-            Cooler = gamingBuilds.Cooler,
-            RAM = gamingBuilds.RAM,
-            SSD = gamingBuilds.SSD,
-            HDD = gamingBuilds.HDD,
-            GPU = gamingBuilds.GPU,
-            PSU = gamingBuilds.PSU,
-            Case = gamingBuilds.Case
-        };
+        UpdateCoolerDTO update = new()
+            {
+                ID = Id,
+                Name = cooler.Name,
+                BrandName = cooler.BrandName,
+                Price = cooler.Price,
+                Description = cooler.Description,
+                Type = cooler.Type,
+                Socket = cooler.Socket,
+                Power_dissipation = cooler.Power_dissipation,
+                Dimensions = cooler.Dimensions,
+                Dimensions_of_complete_fans = cooler.Dimensions_of_complete_fans,
+                Bearing_type = cooler.Bearing_type,
+                Rotational_speed = cooler.Rotational_speed
+            };
         var jsonContent = new StringContent(JsonConvert.SerializeObject(update), Encoding.UTF8, "application/json");
-        var response = await httpClient.PutAsync($"{Helper.URL}GamingBuilds", jsonContent);
+        var response = await httpClient.PutAsync($"{Helper.URL}Cooler", jsonContent);
 
         if (response.IsSuccessStatusCode)
         {
             Snackbar.Add("Gaming build updated successfully!", Severity.Success);
-            navigation.NavigateTo("/GamingBuilds");
+            navigation.NavigateTo("/Cooler");
         }
         else
         {

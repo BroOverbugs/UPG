@@ -16,7 +16,8 @@
                         <MudTextField @bind-Value="drives.Write_type" Label="Write type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
                         <MudTextField @bind-Value="drives.Drive_type" Label="Drive type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
                         <MudTextField @bind-Value="drives.Volume" Label="Volume" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
-
+                    </MudItem>
+                    <MudItem xs="6">
                         <MudStack Style="width: 100%"> 
                             <MudFileUpload T="IReadOnlyList<IBrowserFile>"
                                            AppendMultipleFiles
