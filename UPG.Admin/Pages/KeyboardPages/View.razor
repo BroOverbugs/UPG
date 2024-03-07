@@ -1,0 +1,72 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Name: @keyboard.Name</MudText>
+                <br />
+                <MudText>Brand name: @keyboard.BrandName</MudText>
+                <br />
+                <MudText>Price: @keyboard.Price</MudText>
+                <br />
+                <MudText>Keyboard type: @keyboard.Keyboard_type</MudText>
+                <br />
+                <MudText>Switch type: @keyboard.Switch_type</MudText>
+                <br />
+                <MudText>Interface: @keyboard.Interface</MudText>
+                <br />
+                <MudText>Backlight: @keyboard.Backlight</MudText>
+                <br />
+                <MudText>Internal memory: @keyboard.Internal_memory</MudText>
+                <br />
+                <MudText>Number of keys: @keyboard.Number_of_keys</MudText>
+                <br />
+                <MudText>Dimensions: @keyboard.Dimensions</MudText>
+                <br />
+                <MudText>Weight: @keyboard.Weight</MudText>
+                <br />
+                <MudText>Cable laying: @(keyboard.Cable_laying == true ? "Yes" : "No")</MudText>
+                <br />
+                <MudText>Palm rest: @(keyboard.Palm_rest == true ? "Yes" : "No")</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in keyboard.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="keyboard.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    KeyboardDto keyboard = new KeyboardDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "keyboards/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            keyboard = await response.Content.ReadFromJsonAsync<KeyboardDto>();
+        }
+    }
+}
