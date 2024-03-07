@@ -1,0 +1,70 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Title: @gamingBuilds.Name</MudText>
+                <br />
+                <MudText>Author: @gamingBuilds.BrandName</MudText>
+                <br />
+                <MudText>Price: @gamingBuilds.Price</MudText>
+                <br />
+                <MudText>MotherBoard: @gamingBuilds.MotherBoard</MudText>
+                <br />
+                <MudText>CPU: @gamingBuilds.CPU</MudText>
+                <br />
+                <MudText>Cooler: @gamingBuilds.Cooler</MudText>
+                <br />
+                <MudText>RAM: @gamingBuilds.RAM</MudText>
+                <br />
+                <MudText>SSD: @gamingBuilds.SSD</MudText>
+                <br />
+                <MudText>HDD: @gamingBuilds.HDD</MudText>
+                <br />
+                <MudText>GPU: @gamingBuilds.GPU</MudText>
+                <br />
+                <MudText>PSU: @gamingBuilds.PSU</MudText>
+                <br />
+                <MudText>Case: @gamingBuilds.Case</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in gamingBuilds.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="gamingBuilds.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    GamingBuildsDTO gamingBuilds = new GamingBuildsDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "gamingBuilds/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            gamingBuilds = await response.Content.ReadFromJsonAsync<GamingBuildsDTO>();
+        }
+    }
+}

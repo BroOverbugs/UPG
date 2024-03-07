@@ -1,3 +1,6 @@
+using Application.Interfaces;
+using Domain.Entities;
+using Infastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using MVCLayer.Models;
 using System.Diagnostics;
@@ -7,10 +10,13 @@ namespace MVCLayer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IMonitorService _monitorService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+                              IMonitorService monitorService)
         {
             _logger = logger;
+            _monitorService = monitorService;
         }
 
         public IActionResult Index()
@@ -64,6 +70,7 @@ namespace MVCLayer.Controllers
         }
         public IActionResult Cases()
         {
+            
             return View();
         }
         public IActionResult MousePads()
@@ -90,9 +97,11 @@ namespace MVCLayer.Controllers
         {
             return View();
         }
-        public IActionResult Monitors()
+        public async Task<IActionResult> Monitors()
         {
-            return View();
+            var monitors = await _monitorService.GetAllAsync();
+            return View(monitors);
+            //return View();
         }
         public IActionResult SSDorHDD()
         {
