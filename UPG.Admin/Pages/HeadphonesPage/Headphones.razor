@@ -1,0 +1,105 @@
+﻿@page "/headphones"
+
+<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<HeadphonesDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Headphones</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudButton OnClick="AddPage" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Success">Create</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Brand name</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="id">@context.ID</MudTd>
+        <MudTd DataLabel="Brand name">@context.BrandName</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="Action" style="display: flex; justify-content:center; gap: 10px">
+            <MudIconButton @onclick="() => OpenEditPage(context.ID)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" />
+            <MudIconButton @onclick="() => Delete(context.ID)" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    @inject HttpClient httpClient
+    private string searchString1 = "";
+    private HeadphonesDTO selectedItem1 = null;
+    @inject NavigationManager navigate;
+    @inject IDialogService DialogService
+    @inject ISnackbar Snackbar
+
+    private List<HeadphonesDTO> Elements = new List<HeadphonesDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "Headphones");
+        if (response.IsSuccessStatusCode)
+        {
+            Elements = await response.Content.ReadFromJsonAsync<List<HeadphonesDTO>>();
+        }
+    }
+
+    private void OpenEditPage(int id)
+    {
+        navigate.NavigateTo($"Headphones/edit/{id}");
+    }
+
+    private async void Delete(int id)
+    {
+        var parameters = new DialogParameters<YesNo>();
+        parameters.Add(x => x.ContentText, "Are you sure delete this?");
+        parameters.Add(x => x.ButtonText, "Yes");
+        parameters.Add(x => x.Color, Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialogResult = await DialogService.Show<YesNo>("Delete", parameters, options).Result!;
+        if (!dialogResult.Cancelled)
+        {
+            var response = await httpClient.DeleteAsync(Helper.URL + "Headphones/" + id);
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Headphones deleted successfully!", Severity.Success);
+                Elements.RemoveAll(x => x.ID == id);
+                StateHasChanged();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Snackbar.Add("Headphones not found!", Severity.Error);
+                navigate.NavigateTo("/Headphones");
+            }
+            else
+            {
+                Snackbar.Add("Something went wrong!", Severity.Error);
+            }
+        }
+    }
+
+    private bool FilterFunc1(HeadphonesDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(HeadphonesDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.BrandName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void AddPage()
+    {
+        navigate.NavigateTo("headphones/add");
+    }
+}
