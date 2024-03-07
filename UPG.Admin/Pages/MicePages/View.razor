@@ -1,0 +1,79 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Name: @mice.Name</MudText>
+                <br />
+                <MudText>Brand name: @mice.BrandName</MudText>
+                <br />
+                <MudText>Price: @mice.Price</MudText>
+                <br />
+                <MudText>Sensor type: @mice.Sensor_type</MudText>
+                <br />
+                <MudText>Maximum resolution DPI or CPI: @mice.Maximum_resolution_DPI_or_CPI</MudText>
+                <br />
+                <MudText>Number of button: @mice.Number_of_buttons</MudText>
+                <br />
+                <MudText>Polling rate: @mice.Polling_rate</MudText>
+                <br />
+                <MudText>Acceleration max acceleration: @mice.Acceleration_max_acceleration</MudText>
+                <br />
+                <MudText>Backlight: @(mice.Backlight == true ? "Yes" : "No")</MudText>
+                <br />
+                <MudText>Internal memory: @(mice.Internal_memory == true ? "Yes" : "No")</MudText>
+                <br />
+                <MudText>Operating mode: @mice.Operating_mode</MudText>
+                <br />
+                <MudText>Wire type: @mice.Wire_type</MudText>
+                <br />
+                <MudText>Wire length: @mice.Wire_length</MudText>
+                <br />
+                <MudText>Weight with cable: @mice.Weight_with_cable</MudText>
+                <br />
+                <MudText>Weight without cable: @mice.Weight_without_cable</MudText>
+                <br />
+                <MudText>Dimensions: @mice.Dimensions</MudText>
+                <br />
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in mice.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="mice.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    MiceDto mice = new MiceDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "mices/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            mice = await response.Content.ReadFromJsonAsync<MiceDto>();
+        }
+    }
+}
