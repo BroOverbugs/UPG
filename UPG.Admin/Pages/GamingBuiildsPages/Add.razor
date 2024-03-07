@@ -1,0 +1,210 @@
+﻿@page "/gamingBuilds/add"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Armchair</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="gamingBuilds.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.MotherBoard" Label="MotherBoard" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.CPU" Label="CPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.GPU" Label="GPU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.RAM" Label="RAM" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.SSD" Label="SSD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>   
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="gamingBuilds.HDD" Label="HDD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.PSU" Label="PSU" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.Cooler" Label="Cooler" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="gamingBuilds.Case" Label="Case" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+
+                        <MudStack Style="width: 100%"> 
+                            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                                           AppendMultipleFiles
+                                           OnFilesChanged="OnInputFileChanged"
+                                           Hidden="@false"
+                                           InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20"
+                                           InputStyle="opacity:0"
+                                           @ondragenter="@SetDragClass"
+                                           @ondragleave="@ClearDragClass"
+                                           @ondragend="@ClearDragClass">
+                                <ButtonTemplate>
+                                    <MudPaper Height="110px"
+                                              Outlined="true"
+                                              Class="@_dragClass">
+                                        <MudText style="font-size: 14px;">
+                                            We support drag and drop!
+                                        </MudText>
+                                        @foreach (var file in _fileNames)
+                                        {
+                                            <MudChip Color="Color.Dark" style="font-size: 12px;" Text="@file" />
+                                        }
+                                    </MudPaper>
+                                    <MudToolBar DisableGutters="true"
+                                                Class="relative d-flex justify-end gap-4 z-30">
+                                        <MudButton HtmlTag="label"
+                                                   Color="Color.Primary"
+                                                   for="@context.Id"
+                                                   Variant="Variant.Filled">
+                                            Open file picker
+                                        </MudButton>
+                                        <MudButton OnClick="@Upload"
+                                                   Color="Color.Primary"
+                                                   Disabled="@(!_fileNames.Any())"
+                                                   Variant="Variant.Filled">
+                                            Upload
+                                        </MudButton>
+                                        <MudButton OnClick="@Clear"
+                                                   Color="Color.Error"
+                                                   Disabled="@(!_fileNames.Any())"
+                                                   Variant="Variant.Filled">
+                                            Clear
+                                        </MudButton>
+                                    </MudToolBar>
+                                </ButtonTemplate>
+                            </MudFileUpload>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="gamingBuilds.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddGamingBuildsDTO gamingBuilds = new();
+    private HashSet<IBrowserFile> browserFiles;
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/gamingBuilds");
+    }
+
+private async Task Save()
+    {
+    try
+    {
+        // Serialize the gamingBuilds object to JSON using Newtonsoft.Json
+        var jsonContent = JsonConvert.SerializeObject(gamingBuilds);
+        Console.WriteLine($"Request JSON: {jsonContent}");
+
+        // Make an HTTP POST request to save the gamingBuilds data
+        var response = await httpClient.PostAsync(Helper.URL + "gamingBuilds", new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Optionally, handle success scenario
+            Snackbar.Add("Armchair saved successfully!", Severity.Success);
+            navigation.NavigateTo("/gamingBuilds");
+        }
+        else
+        {
+            // Optionally, handle failure scenario
+            Snackbar.Add($"Failed to save gamingBuilds. Status code: {response.StatusCode}", Severity.Error);
+        }
+    }
+    catch (Exception ex)
+    {
+        // Handle any exceptions that occur during the request
+        Snackbar.Add($"An error occurred: {ex.Message}", Severity.Error);
+    }
+    }
+
+
+
+
+
+    private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
+    private string _dragClass = DefaultDragClass;
+    private readonly List<string> _fileNames = new();
+    private List<string> responseUrls = new();
+
+    private async Task Clear()
+    {
+        _fileNames.Clear();
+        ClearDragClass();
+        await Task.Delay(100);
+    }
+
+    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        ClearDragClass();
+
+        if (e != null && e.GetMultipleFiles() != null)
+        {
+            var files = e.GetMultipleFiles();
+
+            foreach (var file in files)
+            {
+                _fileNames.Add(file.Name);
+
+                if (browserFiles == null)
+                {
+                    browserFiles = new HashSet<IBrowserFile>();
+                }
+
+                browserFiles.Add(file);
+            }
+        }
+    }
+
+
+    private async Task Upload()
+    {
+        var content = new MultipartFormDataContent();
+
+        foreach (var browserFile in browserFiles)
+        {
+            var buffer = new byte[1024 * 30 * 1024];
+            int bytes = 0;
+            using var myFile = browserFile.OpenReadStream(maxAllowedSize: 1024 * 30 * 1024) ;
+            while ((bytes = await myFile.ReadAsync(buffer)) != 0)
+            {
+                content.Add(new StreamContent(new MemoryStream(buffer, 0, bytes)), "file", browserFile.Name);
+            }
+        }
+
+        try
+        {
+            var response = await httpClient.PostAsync(Helper.URL + "Images/MultiUpload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                responseUrls = await response.Content.ReadFromJsonAsync<List<string>>();
+                Snackbar.Add($"Upload successful: {responseUrls}", Severity.Success);
+                gamingBuilds.ImageUrls = responseUrls;
+                await Clear();
+            }
+            else
+            {
+                Snackbar.Add($"Upload failed. Status code: {response.StatusCode}", Severity.Error);
+                await Clear();
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error during file upload: {ex.Message}", Severity.Error);
+        }
+    }
+
+
+    private void SetDragClass()
+        => _dragClass = $"{DefaultDragClass} mud-border-primary";
+
+    private void ClearDragClass()
+        => _dragClass = DefaultDragClass;
+}

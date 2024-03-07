@@ -34,7 +34,7 @@ public class DrivesService(IUnitOfWork unitOfWork,
 
         var validateResult = new AddDrivesDTOValidator().Validate(drivesDTO);
 
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors.ToList() };
         }
@@ -106,7 +106,7 @@ public class DrivesService(IUnitOfWork unitOfWork,
 
         var validateResult = new UpdateDrivesDTOValidator().Validate(drivesDTO);
 
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors.ToList() };
         }

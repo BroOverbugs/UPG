@@ -1,0 +1,142 @@
+﻿@page "/Armchairs/edit/{Id:int}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Armchair</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="armchairs.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Type" Label="Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Upholstery_material" Label="Upholstery_material" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Color_material" Label="Color_material" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Armrests" Label="Armsets" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Cross_material" Label="Cross_material" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Reclining" Label="Reclining" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="armchairs.Rocking_mechanism" Label="Rocking_mechanism" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Permissible_load" Label="Permissible_load" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="armchairs.Frame_material" Label="Frame_material" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                                                           
+                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
+                        @if (errors.Count > 0)
+                        {
+                            <ul class="text-danger">
+                                @foreach (var i in errors)
+                                {
+                                    <li>
+                                        @i
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="armchairs.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddArmchairsDTO armchairs = new();
+    private int maxAllowedFiles = 5;
+    private long maxFileSize = 1024 * 5 * 1024;
+    private List<string> errors = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync($"{Helper.URL}Armchairs/{Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            armchairs = await response.Content.ReadFromJsonAsync<AddArmchairsDTO>();
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/Armchairs");
+    }
+
+    private async Task Save()
+    {
+        UpdateArmchairsDTO update = new()
+        {
+            ID = Id,
+            Name = armchairs.Name,
+            BrandName = armchairs.BrandName,
+            Price = armchairs.Price,
+            Description = armchairs.Description,
+            Type = armchairs.Type,
+            Upholstery_material = armchairs.Upholstery_material,
+            Color_material = armchairs.Color_material,
+            Armrests = armchairs.Armrests,
+            Cross_material = armchairs.Cross_material,
+            Reclining = armchairs.Reclining,
+            Rocking_mechanism = armchairs.Rocking_mechanism,
+            Permissible_load = armchairs.Permissible_load,
+            Frame_material = armchairs.Frame_material
+        };
+        var jsonContent = new StringContent(JsonConvert.SerializeObject(armchairs), Encoding.UTF8, "application/json");
+        var response = await httpClient.PutAsync($"{Helper.URL}Armchairs", jsonContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Gaming build updated successfully!", Severity.Success);
+            navigation.NavigateTo("/Armchairs");
+        }
+        else
+        {
+            Snackbar.Add($"Failed to update gaming build. Status code: {response.StatusCode}", Severity.Error);
+        }
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
+            return;
+        }
+
+        using (var formData = new MultipartFormDataContent())
+        {
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                string newFileName = file.Name;
+                await using FileStream fs = new(newFileName, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                formData.Add(new StreamContent(fs), "file", newFileName);
+            }
+
+            HttpResponseMessage response = await httpClient.PostAsync($"{Helper.URL}Images/MultiUpload", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("File uploaded successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+    }
+}

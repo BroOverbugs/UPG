@@ -14,8 +14,8 @@ namespace DTOS.MiceDTOs
         public int Number_of_buttons { get; set; }
         public string Polling_rate { get; set; } = string.Empty;
         public string Acceleration_max_acceleration { get; set; } = string.Empty;
-        public string Prism { get; set; } = string.Empty;
-        public string Internal_memory { get; set; } = string.Empty;
+        public bool Backlight { get; set; }
+        public bool Internal_memory { get; set; }
         public string Operating_mode { get; set; } = string.Empty;
         public string Wire_type { get; set; } = string.Empty;
         public string Wire_length { get; set; } = string.Empty;
@@ -38,7 +38,7 @@ namespace DTOS.MiceDTOs
                 Number_of_buttons = miceDto.Number_of_buttons,
                 Polling_rate = miceDto.Polling_rate,
                 Acceleration_max_acceleration = miceDto.Acceleration_max_acceleration,
-                Prism = miceDto.Prism,
+                Backlight = miceDto.Backlight,
                 Internal_memory = miceDto.Internal_memory,
                 Operating_mode = miceDto.Operating_mode,
                 Wire_type = miceDto.Wire_type,
@@ -46,7 +46,7 @@ namespace DTOS.MiceDTOs
                 Weight_without_cable = miceDto.Weight_without_cable,
                 Weight_with_cable = miceDto.Weight_with_cable,
                 Dimensions = miceDto.Dimensions,
-                ImageUrls = miceDto.ImageUrls,
+                ImageUrls = miceDto.ImageUrls
             };
     }
 }

@@ -1,0 +1,106 @@
+﻿@page "/laptops/edit/{Id}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Edit this Laptop</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="laptop.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.Processor" Label="Processor" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.RAM" Label="RAM" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.Storage" Label="Storage" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="laptop.Video_card" Label="Video card" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.Screen" Label="Screen" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.Extra" Label="Extra" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.Wi_Fi" Label="Wi-fi" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="laptop.RTX_or_AMD" Label="RTX or AMD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="laptop.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    UpdateLaptopDto laptop = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "laptops/" + Id);
+        if (response.IsSuccessStatusCode)
+        {
+            var laptopDto = await response.Content.ReadFromJsonAsync<LaptopDto>();
+            laptop = new()
+            {
+                Id = laptopDto!.Id,
+                Name = laptopDto.Name,
+                Price = laptopDto.Price,
+                Description = laptopDto.Description,
+                BrandName = laptopDto.BrandName,
+                Processor = laptopDto.Processor,
+                RAM = laptopDto.RAM,
+                Storage = laptopDto.Storage,
+                Video_card = laptopDto.Video_card,
+                Screen = laptopDto.Screen,
+                Extra = laptopDto.Extra,
+                Wi_Fi = laptopDto.Wi_Fi,
+                RTX_or_AMD = laptopDto.RTX_or_AMD,
+                ImageUrls = laptopDto.ImageUrls
+            };
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/laptops");
+    }
+
+    private async void Save()
+    {
+        var updateLaptopJson = JsonConvert.SerializeObject(laptop);
+        var request = new StringContent(updateLaptopJson, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PutAsync(Helper.URL + "laptops", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Laptop updated successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Snackbar.Add("Laptop not found. Please try again!", Severity.Warning);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
+}

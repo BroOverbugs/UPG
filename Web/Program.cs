@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.Text;
+using Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,6 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 #region Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    // Password requirements settings
     options.Password.RequiredLength = 6;
     options.Password.RequireDigit = true;
     options.Password.RequireNonAlphanumeric = false;
@@ -177,5 +177,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Config.SeedDatabase(app);
 
 app.Run();

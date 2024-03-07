@@ -1,0 +1,100 @@
+﻿@page "/drives"
+
+<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<DrivesDTO,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Drives</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudButton OnClick="AddPage" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Color="Color.Success">Create</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Brand name</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="id">@context.ID</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Brand name">@context.BrandName</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="Action" style="display: flex; justify-content:center; gap: 10px">
+            <MudIconButton @onclick="() => OpenEditPage(context.ID)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" />
+            <MudIconButton @onclick="() => Delete(context.ID)" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    @inject HttpClient httpClient
+    private string searchString1 = "";
+    private DrivesDTO selectedItem1 = null;
+    @inject NavigationManager navigate;
+    @inject IDialogService DialogService
+    @inject ISnackbar Snackbar
+
+    private List<DrivesDTO> Elements = new List<DrivesDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "Drives");
+        if (response.IsSuccessStatusCode)
+        {
+            Elements = await response.Content.ReadFromJsonAsync<List<DrivesDTO>>();
+        }
+    }
+
+    private void OpenEditPage(int id)
+    {
+        navigate.NavigateTo($"Drives/edit/{id}");
+    }
+
+    private async void Delete(int id)
+    {
+        var options = new DialogOptions { ClassBackground = "body" };
+        var dialogResult = await DialogService.Show<YesNo>("Delete", options).Result;
+
+        if (!dialogResult.Cancelled)
+        {
+            var response = await httpClient.DeleteAsync(Helper.URL + "Drives/" + id);
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Drives deleted successfully!", Severity.Success);
+                Elements.RemoveAll(x => x.ID == id);
+                StateHasChanged();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Snackbar.Add("Drives not found!", Severity.Error);
+                navigate.NavigateTo("/Drives");
+            }
+            else
+            {
+                Snackbar.Add("Something went wrong!", Severity.Error);
+            }
+        }
+    }
+
+    private bool FilterFunc1(DrivesDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(DrivesDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.BrandName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void AddPage()
+    {
+        navigate.NavigateTo("drives/add");
+    }
+}

@@ -1,0 +1,133 @@
+﻿@page "/Drives/edit/{Id:int}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Armchair</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="drives.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="drives.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="drives.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="drives.Interface" Label="Interface" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="drives.Reading_speed" Label="Reading_speed" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="drives.Write_type" Label="Write type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="drives.Drive_type" Label="Drive type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="drives.Volume" Label="Volume" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
+                        @if (errors.Count > 0)
+                        {
+                            <ul class="text-danger">
+                                @foreach (var i in errors)
+                                {
+                                    <li>
+                                        @i
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="drives.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddDrivesDTO drives = new();
+    private int maxAllowedFiles = 5;
+    private long maxFileSize = 1024 * 5 * 1024;
+    private List<string> errors = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync($"{Helper.URL}Drives/{Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            drives = await response.Content.ReadFromJsonAsync<AddDrivesDTO>();
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/Drives");
+    }
+
+    private async Task Save()
+    {
+        UpdateDrivesDTO update = new()
+        {
+            ID = Id,
+            Name = drives.Name,
+            BrandName = drives.BrandName,
+            Description = drives.Description,
+            Interface = drives.Interface,
+            Reading_speed = drives.Reading_speed,
+            Write_type = drives.Write_type,
+            Drive_type  = drives.Drive_type,
+            Volume = drives.Volume
+        };
+
+        var jsonContent = new StringContent(JsonConvert.SerializeObject(drives), Encoding.UTF8, "application/json");
+        var response = await httpClient.PutAsync($"{Helper.URL}Drives", jsonContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Gaming build updated successfully!", Severity.Success);
+            navigation.NavigateTo("/Drives");
+        }
+        else
+        {
+            Snackbar.Add($"Failed to update gaming build. Status code: {response.StatusCode}", Severity.Error);
+        }
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
+            return;
+        }
+
+        using (var formData = new MultipartFormDataContent())
+        {
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                string newFileName = file.Name;
+                await using FileStream fs = new(newFileName, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                formData.Add(new StreamContent(fs), "file", newFileName);
+            }
+
+            HttpResponseMessage response = await httpClient.PostAsync($"{Helper.URL}Images/MultiUpload", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("File uploaded successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+    }
+}

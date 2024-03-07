@@ -33,7 +33,7 @@ public class HeadphonesService(IUnitOfWork unitOfWork,
 
         var validateResult = new AddHeadphonesDTOValidator().Validate(dto);
 
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors.ToList() };
         }
@@ -107,7 +107,7 @@ public class HeadphonesService(IUnitOfWork unitOfWork,
 
         var validateResult = new UpdateHeadphonesDTOValidator().Validate(dto);
 
-        if (validateResult.IsValid)
+        if (!validateResult.IsValid)
         {
             throw new ResponseErrors() { Errors = validateResult.Errors };
         }

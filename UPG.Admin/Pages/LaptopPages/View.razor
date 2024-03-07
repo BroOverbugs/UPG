@@ -1,0 +1,68 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Name: @laptop.Name</MudText>
+                <br />
+                <MudText>Brand name: @laptop.BrandName</MudText>
+                <br />
+                <MudText>Price: @laptop.Price</MudText>
+                <br />
+                <MudText>Processor: @laptop.Processor</MudText>
+                <br />
+                <MudText>RAM: @laptop.RAM</MudText>
+                <br />
+                <MudText>Storage: @laptop.Storage</MudText>
+                <br />
+                <MudText>Video card: @laptop.Video_card</MudText>
+                <br />
+                <MudText>Screen: @laptop.Screen</MudText>
+                <br />
+                <MudText>Extra: @laptop.Extra</MudText>
+                <br />
+                <MudText>Wi-fi: @laptop.Wi_Fi</MudText>
+                <br />
+                <MudText>RTX or AMD: @laptop.RTX_or_AMD</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in laptop.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="laptop.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    LaptopDto laptop = new LaptopDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "laptops/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            laptop = await response.Content.ReadFromJsonAsync<LaptopDto>();
+        }
+    }
+}
