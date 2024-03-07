@@ -1,0 +1,81 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Title: @monitor.Name</MudText>
+                <br />
+                <MudText>Author: @monitor.BrandName</MudText>
+                <br />
+                <MudText>Price: @monitor.Price</MudText>
+                <br />
+                <MudText>Language: @monitor.Diagonal</MudText>
+                <br />
+                <MudText>Barcode: @monitor.Matrix_type</MudText>
+                <br />
+                <MudText>Pages: @monitor.Screen_type</MudText>
+                <br />
+                <MudText>Published: @monitor.Resolution_FHD</MudText>
+                <br />
+                <MudText>Published: @monitor.Aspect_ratio</MudText>
+                <br />
+                <MudText>Published: @monitor.Frame_rate</MudText>
+                <br />
+                <MudText>Published: @monitor.Response_time</MudText>
+                <br />
+                <MudText>Published: @monitor.Interface</MudText>
+                <br />
+                <MudText>Published: @monitor.Viewing_angle</MudText>
+                <br />
+                <MudText>Published: @monitor.VESA_Mount</MudText>
+                <br />
+                <MudText>Published: @monitor.Technologies</MudText>
+                <br />
+                <MudText>Published: @monitor.Adjustment</MudText>
+                <br />
+                <MudText>Published: @monitor.HDR</MudText>
+                <br />
+                <MudText>Published: @monitor.Guarantee_period</MudText>
+                <br />
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in monitor.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="monitor.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    MonitorDto monitor = new MonitorDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "monitors/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            monitor = await response.Content.ReadFromJsonAsync<MonitorDto>();
+        }
+    }
+}

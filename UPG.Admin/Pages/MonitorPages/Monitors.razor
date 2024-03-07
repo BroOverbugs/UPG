@@ -1,5 +1,6 @@
 ﻿@page "/monitors"
 
+
 <MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<MonitorDto,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Monitors</MudText>
@@ -16,11 +17,11 @@
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="id">@context.Id</MudTd>
-        <MudTd DataLabel="Brand name">@context.BrandName</MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Price">@context.Price</MudTd>
-        <MudTd DataLabel="Action" style="display: flex; justify-content:center; gap: 10px">
+        <MudTd @onclick="() => OpenView(context.Id)" DataLabel="id">@context.Id</MudTd>
+        <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Brand name">@context.BrandName</MudTd>
+        <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Name">@context.Name</MudTd>
+        <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Price">@context.Price</MudTd>
+        <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Action" style="display: flex; justify-content:center; gap: 10px">
             <MudIconButton @onclick="() => OpenEditPage(context.Id)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" />
             <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" />
         </MudTd>
@@ -66,6 +67,14 @@
     {
         navigate.NavigateTo("monitors/add");
     }
+    private void OpenView(int id)
+    {
+        var parameters = new DialogParameters<View>();
+        parameters.Add(x => x.Id, id.ToString());
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        DialogService.Show<View>("Monitor details", parameters, options);
+    }
 
     private void OpenEditPage(int id)
     {
@@ -74,31 +83,27 @@
 
     private async void Delete(int id)
     {
-        var parameters = new DialogParameters<YesNo>();
-        parameters.Add(x => x.ContentText, "Are you sure delete this?");
-        parameters.Add(x => x.ButtonText, "Yes");
-        parameters.Add(x => x.Color, Color.Error);
+        var options = new DialogOptions { ClassBackground = "body" };
+        var dialogResult = await DialogService.Show<YesNo>("Delete", options).Result;
 
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-
-        var dialogResult = await DialogService.Show<YesNo>("Delete", parameters, options).Result!;
         if (!dialogResult.Cancelled)
         {
             var response = await httpClient.DeleteAsync(Helper.URL + "monitors/" + id);
             if (response.IsSuccessStatusCode)
             {
-                Snackbar.Add("Monitor deleted successfully!", Severity.Success);
-                Elements.RemoveAll(x => x.Id == id);
+                Snackbar.Add("Monitor successfully deleted!", Severity.Success);
+                Elements.RemoveAll(i => i.Id == id);
                 StateHasChanged();
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Snackbar.Add("Monitor not found!", Severity.Error);
+                Snackbar.Add("Monitor not found!", Severity.Warning);
                 navigate.NavigateTo("/monitors");
             }
             else
             {
-                Snackbar.Add("Something went wrong!", Severity.Error);
+                Snackbar.Add("Some problem with the server", Severity.Error);
+                navigate.NavigateTo("/monitors");
             }
         }
     }

@@ -69,9 +69,29 @@
         navigation.NavigateTo("/monitors");
     }
 
-    private void Save()
+    private async void Save()
     {
-        navigation.NavigateTo("/monitors");
+        var json = JsonConvert.SerializeObject(monitor);
+
+        var request = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PostAsync(Helper.URL + "monitors", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Monitor added successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
     }
 
     private async Task LoadFile(InputFileChangeEventArgs e)
