@@ -1,7 +1,7 @@
 using Application.Interfaces;
-using Domain.Entities;
-using Infastructure.Data;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using MVCLayer.Models;
 using System.Diagnostics;
 
@@ -10,13 +10,56 @@ namespace MVCLayer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IAccessoriesService _accessoriesService;
+        private readonly IArmchairsService _armchairsService;
+        private readonly ICoolerService _coolerService;
+        private readonly IDrivesService _drivesService;
+        private readonly IGamingBuildsService _gamingBuildsService;
+        private readonly IHeadphonesService _headphonesService;
+        private readonly IHousingService _housingService;
+        private readonly IKeyboardService _keyboardService;
+        private readonly ILaptopService _laptopService;
+        private readonly IMiceService _miceService;
         private readonly IMonitorService _monitorService;
+        private readonly IMousePadsService _mousePadsService;
+        private readonly IPowerSuppliesService _powerSuppliesService;
+        private readonly IRAMService _ramservice;
+        private readonly ITablesForGamersService _tablesForGamersService;
 
         public HomeController(ILogger<HomeController> logger,
-                              IMonitorService monitorService)
+                                IAccessoriesService accessoriesService,
+                                IArmchairsService armchairsService,
+                                ICoolerService coolerService,
+                                IDrivesService drivesService,
+                                IGamingBuildsService gamingBuildsService,
+                                IHeadphonesService headphonesService,
+                                IHousingService housingService,
+                                IKeyboardService keyboardService,
+                                ILaptopService laptopService,
+                                IMiceService miceService,
+                                IMonitorService monitorService,
+                                IMousePadsService mousePadsService,
+                                IPowerSuppliesService powerSuppliesService,
+                                IRAMService ramservice,
+                                ITablesForGamersService tablesForGamersService
+                                )
         {
             _logger = logger;
+            _accessoriesService = accessoriesService;
+            _armchairsService = armchairsService;
+            _coolerService = coolerService;
+            _drivesService = drivesService;
+            _gamingBuildsService = gamingBuildsService;
+            _headphonesService = headphonesService;
+            _housingService = housingService;
+            _keyboardService = keyboardService;
+            _laptopService = laptopService;
+            _miceService = miceService;
             _monitorService = monitorService;
+            _mousePadsService = mousePadsService;
+            _powerSuppliesService = powerSuppliesService;
+            _ramservice = ramservice;
+            _tablesForGamersService = tablesForGamersService;
         }
 
         public IActionResult Index()
@@ -27,117 +70,142 @@ namespace MVCLayer.Controllers
         {
             return View();
         }
-        public IActionResult Acsessories()
+        public async Task<IActionResult> Acsessories()
         {
-            return View();
+            var accessories = await _accessoriesService.GetAccessoriesAsync();
+            return View(accessories);
         }
-        public IActionResult AppleProducts()
+        public async Task<IActionResult> AppleProducts()
         {
-            return View();
+            var appleProducts = await _accessoriesService.GetAccessoriesAsync();
+            return View(appleProducts);
         }
-        public IActionResult PowerSupplies()
+        public async Task<IActionResult> PowerSupplies()
         {
-            return View();
+            var powerSupplies = await _powerSuppliesService.GetPowerSuppliesAsync();
+            return View(powerSupplies);
         }
-        public IActionResult Decor()
+        public async Task<IActionResult> Decor()
         {
-            return View();
+            var decors = await _accessoriesService.GetAccessoriesAsync();
+            return View(decors);
         }
-        public IActionResult GamingConsoles()
+        public async Task<IActionResult> GamingConsoles()
         {
-            return View();
+            var gamingConsoles = await _accessoriesService.GetAccessoriesAsync();
+            return View(gamingConsoles);
         }
-        public IActionResult Gamepads()
+        public async Task<IActionResult> Gamepads()
         {
-            return View();
+            var gamePads = await _accessoriesService.GetAccessoriesAsync();
+            return View(gamePads);
         }
-        public IActionResult Sborka()
+        public async Task<IActionResult> Sborka()
         {
-            return View();
+            var sborka = await _gamingBuildsService.GetGamingBuildsAsync();
+            return View(sborka);
         }
-        public IActionResult Keyboards()
+        public async Task<IActionResult> Keyboards()
         {
-            return View();
+            var keyboards = await _keyboardService.GetAllAsync();
+            return View(keyboards);
         }
 
-        public IActionResult Colons()
+        public async Task<IActionResult> Colons()
         {
-            return View();
+            var colons = await _accessoriesService.GetAccessoriesAsync();
+            return View(colons);
         }
-        public IActionResult Kits()
+        public async Task<IActionResult> Kits()
         {
-            return View();
+            var kits = await _accessoriesService.GetAccessoriesAsync();
+            return View(kits);
         }
-        public IActionResult Cases()
+        public async Task<IActionResult> Cases()
         {
-            
-            return View();
+            var cases = await _housingService.GetAllAsync();
+            return View(cases);
         }
-        public IActionResult MousePads()
+        public async Task<IActionResult> MousePads()
         {
-            return View();
+            var mousePads = await _mousePadsService.GetMousePadsAsync();
+            return View(mousePads);
         }
-        public IActionResult Armchairs()
+        public async Task<IActionResult> Armchairs()
         {
-            return View();
+            var armchair = await _armchairsService.GetArmchairsAsync();
+            return View(armchair);
         }
-        public IActionResult Kronshteyns()
+        public async Task<IActionResult> Kronshteyns()
         {
-            return View();
+            var kronshteyn = await _accessoriesService.GetAccessoriesAsync();
+            return View(kronshteyn);
         }
-        public IActionResult Coolers()
+        public async Task<IActionResult> Coolers()
         {
-            return View();
+            var coolers = await _coolerService.GetCoolersAsync();
+            return View(coolers);
         }
-        public IActionResult Microfones()
+        public async Task<IActionResult> Microfones()
         {
-            return View();
+            var microphones = await _accessoriesService.GetAccessoriesAsync();
+            return View(microphones);
         }
-        public IActionResult Mouses()
+        public async Task<IActionResult> Mouses()
         {
-            return View();
+            var mouses = await _miceService.GetAllAsync();
+            return View(mouses);
         }
         public async Task<IActionResult> Monitors()
         {
             var monitors = await _monitorService.GetAllAsync();
             return View(monitors);
-            //return View();
+            
         }
-        public IActionResult SSDorHDD()
+        public async Task<IActionResult> SSDorHDD()
         {
-            return View();
+            var drives = await _drivesService.GetDrivesAllAsync();
+            return View(drives);
         }
-        public IActionResult Headphones()
+        public async Task<IActionResult> Headphones()
         {
-            return View();
+            var headphones = await _headphonesService.GetHeadphonesAsync();
+            return View(headphones);
         }
-        public IActionResult Laptops()
+        public async Task<IActionResult> Laptops()
         {
-            return View();
+            var laptops = await _laptopService.GetAllAsync();
+            return View(laptops);
         }
-        public IActionResult Glasses()
+        public async Task<IActionResult> Glasses()
         {
-            return View();
+            var glasses = await _accessoriesService.GetAccessoriesAsync();
+            return View(glasses);
         }
-        public IActionResult RAM()
+        public async Task<IActionResult> RAM()
         {
-            return View();
+            var ram = await _ramservice.GetRAMAsync();
+            return View(ram);
         }
-        public IActionResult Tables()
+        public async Task<IActionResult> Tables()
         {
-            return View();
+            var tables = await _tablesForGamersService.GetTablesForGamersAsync();
+            return View(tables);
         }
-        public IActionResult UPS()
+        public async Task<IActionResult> UPS()
         {
-            return View();
+            var ups = await _accessoriesService.GetAccessoriesAsync();
+            return View(ups);
         }
-        public IActionResult WebCam()
+        public async Task<IActionResult> WebCam()
         {
-            return View();
+            var webcameras = await _accessoriesService.GetAccessoriesAsync();
+            return View(webcameras);
         }
-        public IActionResult WiFiRouter()
+        public async Task<IActionResult> WiFiRouter()
         {
-            return View();
+            var wifiRouter = await _accessoriesService.GetAccessoriesAsync();
+            return View(wifiRouter);
         }
         public IActionResult Item()
         {

@@ -1,0 +1,72 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Name: @housing.Name</MudText>
+                <br />
+                <MudText>Brand name: @housing.BrandName</MudText>
+                <br />
+                <MudText>Price: @housing.Price</MudText>
+                <br />
+                <MudText>Housing type: @housing.Motherboard_form_factor</MudText>
+                <br />
+                <MudText>Switch type: @housing.Size</MudText>
+                <br />
+                <MudText>Interface: @housing.Maximum_cooler_height</MudText>
+                <br />
+                <MudText>Backlight: @housing.Maximum_video_card_length</MudText>
+                <br />
+                <MudText>Internal memory: @housing.Dimensions</MudText>
+                <br />
+                <MudText>Number of keys: @housing.Spaces_for_additional_coolers</MudText>
+                <br />
+                <MudText>Dimensions: @housing.Possibility_of_installing_liquid_cooling</MudText>
+                <br />
+                <MudText>Weight: @housing.Connectors_on_the_front_panel</MudText>
+                <br />
+                <MudText>Cable laying: @housing.Case_color</MudText>
+                <br />
+                <MudText>Palm rest: @(housing.Built_in_fans == true ? "Yes" : "No")</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in housing.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="housing.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    HousingDto housing = new HousingDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "housings/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            housing = await response.Content.ReadFromJsonAsync<HousingDto>();
+        }
+    }
+}
