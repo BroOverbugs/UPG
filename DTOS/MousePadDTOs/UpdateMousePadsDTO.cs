@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace DTOS.MousePadDTOs;
 
-namespace DTOS.Mouse_pads;
-
-public class AddMousePadsDTO
+public class UpdateMousePadsDTO
 {
+    public int ID { get; set; }
     public string Name { get; set; } = string.Empty;
     public double Price { get; set; }
     public string Description { get; set; } = string.Empty;

@@ -6,7 +6,7 @@ using DTOS.CoolerDTOs;
 using DTOS.DrivesDTOs;
 using DTOS.GamingBuildsDTOs;
 using DTOS.HeadphonesDTOs;
-using DTOS.Mouse_pads;
+using DTOS.MousePadDTOs;
 using DTOS.Power_supplies;
 using DTOS.RAM;
 using DTOS.Tables_for_gamers;

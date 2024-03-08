@@ -1,4 +1,4 @@
-﻿namespace DTOS.Mouse_pads;
+﻿namespace UPG.Admin.Models.MousePadDTOs;
 
 public class UpdateMousePadsDTO
 {
