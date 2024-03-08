@@ -1,0 +1,129 @@
+﻿@page "/rams/add"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Monitor</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="monitor.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Diagonal" Label="Diagonal" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Screen_type" Label="Screen type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Matrix_type" Label="Matrix type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Resolution_FHD" Label="Resolution FHD" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Aspect_ratio" Label="Aspect ratio" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Frame_rate" Label="Frame rate" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="monitor.Viewing_angle" Label="Viewing angle" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Interface" Label="Interface" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.VESA_Mount" Label="VESA Mount" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Technologies" Label="Technologies" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="monitor.Adjustment" Label="Adjustment" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudItem Class="d-flex">
+                            <MudSwitch @bind-Value="monitor.HDR" ThumbIcon="@(monitor.HDR==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.HDR==true ? Color.Success : Color.Error)">HDR</MudSwitch>
+                            <MudSwitch Class="mx-10" @bind-Value="monitor.Guarantee_period" ThumbIcon="@(monitor.Guarantee_period==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(monitor.Guarantee_period==true ? Color.Success : Color.Error)">Guarantee period</MudSwitch>
+                        </MudItem>
+                        <InputFile OnChange="@LoadFile" class="form-control" multiple />
+                        @if (errors.Count > 0)
+                        {
+                            <ul class="text-danger">
+                                @foreach (var i in errors)
+                                {
+                                    <li>
+                                        @i
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="monitor.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddMonitorDto monitor = new();
+    private int maxAllowedFiles = 5;
+    private long maxFileSize = 1024 * 5 * 1024;
+    private List<string> errors = new();
+
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/monitors");
+    }
+
+    private async void Save()
+    {
+        var json = JsonConvert.SerializeObject(monitor);
+
+        var request = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PostAsync(Helper.URL + "monitors", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Monitor added successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} are allowed!");
+            return;
+        }
+
+        using (var formData = new MultipartFormDataContent())
+        {
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                string newFileName = file.Name;
+                await using FileStream fs = new(newFileName, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                formData.Add(new StreamContent(fs), "file", newFileName);
+            }
+
+            HttpResponseMessage response = await httpClient.PostAsync(Helper.URL + "Images/MultiUpload", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Fayl muvaffaqiyatli jo'natildi.");
+            }
+            else
+            {
+                Console.WriteLine($"Xato: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+    }
+}
