@@ -1,13 +1,6 @@
 ﻿using Domain.Entities;
-using DTOS.MonitorDTOs;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DTOS.Mouse_pads;
+namespace DTOS.MousePadDTOs;
 
 public class MousePadsDTO
 {

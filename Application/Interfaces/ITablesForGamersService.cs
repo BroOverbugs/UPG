@@ -1,7 +1,4 @@
-﻿using Application.Helpers;
-using Domain.Entities;
-using DTOS.Mouse_pads;
-using DTOS.Tables_for_gamers;
+﻿using DTOS.Tables_for_gamers;
 using UPG.Core.Filters;
 
 namespace Application.Interfaces;

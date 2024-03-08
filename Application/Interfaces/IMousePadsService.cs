@@ -1,6 +1,4 @@
-﻿using Application.Helpers;
-using DTOS.Mouse_pads;
-using DTOS.Power_supplies;
+﻿using DTOS.MousePadDTOs;
 using UPG.Core.Filters;
 
 namespace Application.Interfaces;

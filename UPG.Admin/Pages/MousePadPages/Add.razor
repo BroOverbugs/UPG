@@ -1,0 +1,64 @@
+﻿@page "/mousePads/add"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new MousePad</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudTextField @bind-Value="mousePad.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="mousePad.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="mousePad.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="mousePad.Dimensions" Label="Dimensions" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="mousePad.Material" Label="Material" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="mousePad.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddMousePadsDTO mousePad = new();
+    private List<string> errors = new();
+
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/mousePads");
+    }
+
+    private async void Save()
+    {
+        var json = JsonConvert.SerializeObject(mousePad);
+
+        var request = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PostAsync(Helper.URL + "mousePads", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("MousePad added successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
+
+    
+}
