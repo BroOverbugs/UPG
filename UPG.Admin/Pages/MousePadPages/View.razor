@@ -1,0 +1,56 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Name: @mousepad.Name</MudText>
+                <br />
+                <MudText>Brand name: @mousepad.BrandName</MudText>
+                <br />
+                <MudText>Price: @mousepad.Price</MudText>
+                <br />
+                <MudText>Dimensions: @mousepad.Dimensions</MudText>
+                <br />
+                <MudText>Material: @mousepad.Material</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in mousepad.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="mousepad.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    MousePadsDTO mousepad = new MousePadsDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "mousepads/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            mousepad = await response.Content.ReadFromJsonAsync<MousePadsDTO>();
+        }
+    }
+}

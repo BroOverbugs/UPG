@@ -1,7 +1,4 @@
-﻿using Application.Helpers;
-using Domain.Entities;
-using DTOS.Mouse_pads;
-using DTOS.Power_supplies;
+﻿using DTOS.Power_supplies;
 using UPG.Core.Filters;
 
 namespace Application.Interfaces;

@@ -3,8 +3,7 @@ using Application.Common.Validators.ElyorbekModels.MousePadsValidators;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using DTOS.MonitorDTOs;
-using DTOS.Mouse_pads;
+using DTOS.MousePadDTOs;
 using Infastructure.Interfaces;
 using UPG.Core.Filters;
 

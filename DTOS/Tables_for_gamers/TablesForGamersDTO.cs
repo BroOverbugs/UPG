@@ -1,11 +1,4 @@
 ﻿using Domain.Entities;
-using DTOS.Mouse_pads;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTOS.Tables_for_gamers;
 

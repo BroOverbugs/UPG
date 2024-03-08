@@ -1,12 +1,7 @@
 ﻿using Application.Common.Exceptions;
-using Application.Helpers;
 using Application.Interfaces;
-using Application.Services;
-using DTOS.Mouse_pads;
-using DTOS.Power_supplies;
-using Microsoft.AspNetCore.Http;
+using DTOS.MousePadDTOs;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using UPG.Core.Filters;
 
 namespace Web.Controllers;
