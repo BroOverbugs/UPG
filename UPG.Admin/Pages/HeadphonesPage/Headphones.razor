@@ -60,7 +60,7 @@
         parameters.Add(x => x.Id, id.ToString());
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 
-        DialogService.Show<View>("Monitor details", parameters, options);
+        DialogService.Show<View>("Headphones details", parameters, options);
     }
 
     private async void Delete(int id)

@@ -113,3 +113,13 @@ code {
 .body {
     backdrop-filter: blur(10px);
 }
+
+.catalog-icon {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    background: url(https://upg.uz/images/image/data/catalog/catalog-icons.png) no-repeat;
+    display: inline-block;
+    background-size: auto 60px;
+    margin: 0px 10px 0px -5px;
+}

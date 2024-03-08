@@ -14,7 +14,7 @@ public class HousingDto
     public string Maximum_cooler_height { get; set; } = string.Empty;
     public string Maximum_video_card_length { get; set; } = string.Empty;
     public string Dimensions { get; set; } = string.Empty;
-    public string Built_in_fans { get; set; } = string.Empty;
+    public bool Built_in_fans { get; set; }
     public string Spaces_for_additional_coolers { get; set; } = string.Empty;
     public string Possibility_of_installing_liquid_cooling { get; set; } = string.Empty;
     public string Connectors_on_the_front_panel { get; set; } = string.Empty;
