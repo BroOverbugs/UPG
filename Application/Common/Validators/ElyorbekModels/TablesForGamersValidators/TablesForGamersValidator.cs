@@ -56,8 +56,6 @@ public class UpdateTablesForGamersDTOValidator : AbstractValidator<UpdateTablesF
 
         RuleFor(dto => dto.I_or_O_panel).NotEmpty().WithMessage("I or O panel is required");
 
-        RuleFor(dto => dto.Backlight).NotEmpty().WithMessage("Backlight is required");
-
         RuleFor(dto => dto.Max_load_up).NotEmpty().WithMessage("Max load up is required");
 
         RuleFor(dto => dto.Table_adjustment).NotEmpty().WithMessage("Table adjustment is required");

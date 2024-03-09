@@ -1,24 +1,26 @@
-﻿<MudDialog>
+﻿
+<MudDialog>
     <DialogContent>
         <MudGrid>
             <MudItem xs="6">
-                <MudText>Name: @ram.Name</MudText>
+                <MudText>Name: @powersupply.Name</MudText>
                 <br />
-                <MudText>BrandName: @ram.BrandName</MudText>
+                <MudText>Brand name: @powersupply.BrandName</MudText>
                 <br />
-                <MudText>Price: @ram.Price</MudText>
+                <MudText>Price: @powersupply.Price</MudText>
                 <br />
-                <MudText>Capacity: @ram.Capacity</MudText>
+                <MudText>Dimensions: @powersupply.Dimensions</MudText>
                 <br />
-                <MudText>Memory Frequency: @ram.Memory_frequency</MudText>
+                <MudText>Power: @powersupply.Power</MudText>
                 <br />
-                <MudText>Technologies: @ram.Technologies</MudText>
+                <MudText>Certificate: @powersupply.Certificate</MudText>
                 <br />
-                <MudText>Backlight: @ram.Backlight</MudText>
+                <MudText>Form Factor: @powersupply.Form_factor</MudText>
                 <br />
+                <MudText>Security Technologies: @powersupply.Security_technologies</MudText>
             </MudItem>
             <MudItem xs="6">
-                @foreach (var img in ram.ImageUrls)
+                @foreach (var img in powersupply.ImageUrls)
                 {
                     <MudImage ObjectFit="ObjectFit.Contain"
                               Src="img"
@@ -33,7 +35,7 @@
 
         <MudSpacer />
         <MudText Typo="Typo.subtitle1" Class="my-5">
-            <MudTextField ReadOnly="true" @bind-Value="ram.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            <MudTextField ReadOnly="true" @bind-Value="powersupply.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
         </MudText>
     </DialogContent>
 </MudDialog>
@@ -46,15 +48,15 @@
     [Parameter]
     public string Id { get; set; }
 
-    RAMDto ram = new RAMDto();
+    PowerSuppliesDto powersupply = new PowerSuppliesDto();
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync(Helper.URL + "ram/" + Id);
+        var response = await httpClient.GetAsync(Helper.URL + "powersupplies/" + Id);
 
         if (response.IsSuccessStatusCode)
         {
-            ram = await response.Content.ReadFromJsonAsync<RAMDto>();
+            powersupply = await response.Content.ReadFromJsonAsync<PowerSuppliesDto>();
         }
     }
 }

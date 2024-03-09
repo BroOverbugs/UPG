@@ -1,9 +1,9 @@
-﻿@page "/rams"
+﻿@page "/powersupplies"
 
 
-<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<RAMDto,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="@Elements" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<PowerSuppliesDto,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">RAMs</MudText>
+        <MudText Typo="Typo.h6">PowerSupplies</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         <MudSpacer />
@@ -18,8 +18,8 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd @onclick="() => OpenView(context.Id)" DataLabel="id">@context.Id</MudTd>
-        <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Brand name">@context.BrandName</MudTd>
         <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Name">@context.Name</MudTd>
+        <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Brand name">@context.BrandName</MudTd>
         <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Price">@context.Price</MudTd>
         <MudTd @onclick="() => OpenView(context.Id)" DataLabel="Action" style="display: flex; justify-content:center; gap: 10px">
             <MudIconButton @onclick="() => OpenEditPage(context.Id)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" />
@@ -34,25 +34,25 @@
 @code {
     @inject HttpClient httpClient
     private string searchString1 = "";
-    private RAMDto selectedItem1 = null;
+    private PowerSuppliesDto selectedItem1 = null;
     @inject NavigationManager navigate
     @inject IDialogService DialogService
     @inject ISnackbar Snackbar
 
-    private List<RAMDto> Elements = new List<RAMDto>();
+    private List<PowerSuppliesDto> Elements = new List<PowerSuppliesDto>();
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync(Helper.URL + "ram");
+        var response = await httpClient.GetAsync(Helper.URL + "powersupplies");
         if (response.IsSuccessStatusCode)
         {
-            Elements = await response.Content.ReadFromJsonAsync<List<RAMDto>>();
+            Elements = await response.Content.ReadFromJsonAsync<List<PowerSuppliesDto>>();
         }
     }
 
-    private bool FilterFunc1(RAMDto element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(PowerSuppliesDto element) => FilterFunc(element, searchString1);
 
-    private bool FilterFunc(RAMDto element, string searchString)
+    private bool FilterFunc(PowerSuppliesDto element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -65,7 +65,7 @@
 
     private void AddPage()
     {
-        navigate.NavigateTo("rams/add");
+        navigate.NavigateTo("powersupplies/add");
     }
     private void OpenView(int id)
     {
@@ -73,12 +73,12 @@
         parameters.Add(x => x.Id, id.ToString());
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 
-        DialogService.Show<View>("RAM details", parameters, options);
+        DialogService.Show<View>("power supplies details", parameters, options);
     }
 
     private void OpenEditPage(int id)
     {
-        navigate.NavigateTo($"rams/edit/{id}");
+        navigate.NavigateTo($"powersupplies/edit/{id}");
     }
 
     private async void Delete(int id)
@@ -88,22 +88,22 @@
 
         if (!dialogResult.Cancelled)
         {
-            var response = await httpClient.DeleteAsync(Helper.URL + "ram/" + id);
+            var response = await httpClient.DeleteAsync(Helper.URL + "powersupplies/" + id);
             if (response.IsSuccessStatusCode)
             {
-                Snackbar.Add("RAM successfully deleted!", Severity.Success);
+                Snackbar.Add("power supply successfully deleted!", Severity.Success);
                 Elements.RemoveAll(i => i.Id == id);
                 StateHasChanged();
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Snackbar.Add("RAM not found!", Severity.Warning);
-                navigate.NavigateTo("/rams");
+                Snackbar.Add("power supply not found!", Severity.Warning);
+                navigate.NavigateTo("/powersupplies");
             }
             else
             {
                 Snackbar.Add("Some problem with the server", Severity.Error);
-                navigate.NavigateTo("/rams");
+                navigate.NavigateTo("/powersupplies");
             }
         }
     }

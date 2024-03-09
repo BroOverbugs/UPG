@@ -1,0 +1,97 @@
+﻿@page "/powersupplies/edit/{Id}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Edit this Power Supply</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem>
+                        <MudTextField @bind-Value="powersupplies.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="powersupplies.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="powersupplies.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="powersupplies.Dimensions" Label="Dimensions" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="powersupplies.Form_factor" Label="Form Factor" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="powersupplies.Security_technologies" Label="Security Technologies" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="powersupplies.Certificate" Label="Certificate" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="powersupplies.Power" Label="Power" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+
+                </MudGrid>
+                <MudTextField @bind-Value="powersupplies.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    UpdatePowerSuppliesDto powersupplies = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "powersupplies/" + Id);
+        if (response.IsSuccessStatusCode)
+        {
+            var powerSuppliesDto = await response.Content.ReadFromJsonAsync<PowerSuppliesDto>();
+            powersupplies = new()
+            {
+                    Id = powerSuppliesDto!.Id,
+                    Name = powerSuppliesDto.Name,
+                    BrandName = powerSuppliesDto.BrandName,
+                    Price = powerSuppliesDto.Price,
+                    Dimensions = powerSuppliesDto.Dimensions,
+                    Certificate = powerSuppliesDto.Certificate,
+                    Form_factor = powerSuppliesDto.Form_factor,
+                    Power = powerSuppliesDto.Power,
+                    Security_technologies = powerSuppliesDto.Security_technologies,
+                    Description = powerSuppliesDto.Description
+            };
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/powersupplies");
+    }
+
+    private async void Save()
+    {
+        var updateMousePadJson = JsonConvert.SerializeObject(powersupplies);
+        var request = new StringContent(updateMousePadJson, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PutAsync(Helper.URL + "powersupplies", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("power supply updated successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Snackbar.Add("power supply not found. Please try again!", Severity.Warning);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
+}

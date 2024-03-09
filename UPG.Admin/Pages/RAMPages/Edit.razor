@@ -1,5 +1,95 @@
-﻿<h3>Edit</h3>
+﻿@page "/rams/edit/{Id}"
+
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new RAM</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="ram.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="ram.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="ram.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="ram.Capacity" Label="Capacity" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="ram.Memory_frequency" Label="Memory Frequency" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="ram.Technologies" Label="Technologies" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="ram.Timings" Label="Timings" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="ram.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
 
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    UpdateRAMDto ram = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "ram/" + Id);
+        if (response.IsSuccessStatusCode)
+        {
+            var ramDto = await response.Content.ReadFromJsonAsync<RAMDto>();
+            ram = new()
+                {
+                    Id = ramDto.Id,
+                    Name = ramDto.Name,
+                    Price = ramDto.Price,
+                    Description = ramDto.Description,
+                    BrandName = ramDto.BrandName,
+                    Capacity = ramDto.Capacity,
+                    Memory_frequency = ramDto.Memory_frequency,
+                    Technologies = ramDto.Technologies,
+                    Timings = ramDto.Timings
+                };
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/rams");
+    }
+
+    private async void Save()
+    {
+        var updateMonitorJson = JsonConvert.SerializeObject(ram);
+        var request = new StringContent(updateMonitorJson, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PutAsync(Helper.URL + "ram", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("RAM updated successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Snackbar.Add("RAM not found. Please try again!", Severity.Warning);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
 }
