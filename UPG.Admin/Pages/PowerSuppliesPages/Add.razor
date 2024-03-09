@@ -1,0 +1,67 @@
+﻿@page "/powersupplies/add"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Add new Power Supply</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudTextField @bind-Value="powersupplies.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.Dimensions" Label="Dimensions" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.Form_factor" Label="Form Factor" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.Security_technologies" Label="Security Technologies" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.Certificate" Label="Certificate" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.Power" Label="Power" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                <MudTextField @bind-Value="powersupplies.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    AddPowerSuppliesDto powersupplies = new();
+    private List<string> errors = new();
+
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/powersupplies");
+    }
+
+    private async void Save()
+    {
+        var json = JsonConvert.SerializeObject(powersupplies);
+
+        var request = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PostAsync(Helper.URL + "powersupplies", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("power supply added successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
+
+    
+}

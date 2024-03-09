@@ -1,0 +1,65 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Title: @tables.Name</MudText>
+                <br />
+                <MudText>Author: @tables.BrandName</MudText>
+                <br />
+                <MudText>Price: @tables.Price</MudText>
+                <br />
+                <MudText>Table Adjustment: @tables.Table_adjustment</MudText>
+                <br />
+                <MudText>Dimensions: @tables.Dimensions</MudText>
+                <br />
+                <MudText>I or O Panel: @tables.I_or_O_panel</MudText>
+                <br />
+                <MudText>Max Load up: @tables.Max_load_up</MudText>
+                <br />
+                <MudText>Weight: @tables.Weight</MudText>
+                <br />
+                <MudText>Backlight: @tables.Backlight</MudText>
+                <br />
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in tables.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="tables.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    TablesForGamersDto tables = new TablesForGamersDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "tablesforgamers/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            tables = await response.Content.ReadFromJsonAsync<TablesForGamersDto>();
+        }
+    }
+}

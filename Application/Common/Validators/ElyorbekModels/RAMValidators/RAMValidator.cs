@@ -55,7 +55,7 @@ public class UpdateRAMDTOValidator : AbstractValidator<UpdateRAMDTO>
 
         RuleFor(dto => dto.Memory_frequency).NotEmpty().WithMessage("Memory Frequency is required");
 
-        RuleFor(dto => dto.Backlight).NotEmpty().WithMessage("Backlight is required");
+        //RuleFor(dto => dto.Backlight).NotEmpty().WithMessage("Backlight is required");
 
         RuleFor(dto => dto.Timings).NotEmpty().WithMessage("Timings is required");
     }

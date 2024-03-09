@@ -1,0 +1,60 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Name: @ram.Name</MudText>
+                <br />
+                <MudText>BrandName: @ram.BrandName</MudText>
+                <br />
+                <MudText>Price: @ram.Price</MudText>
+                <br />
+                <MudText>Capacity: @ram.Capacity</MudText>
+                <br />
+                <MudText>Memory Frequency: @ram.Memory_frequency</MudText>
+                <br />
+                <MudText>Technologies: @ram.Technologies</MudText>
+                <br />
+                <MudText>Backlight: @ram.Backlight</MudText>
+                <br />
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in ram.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="ram.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    RAMDto ram = new RAMDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "ram/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            ram = await response.Content.ReadFromJsonAsync<RAMDto>();
+        }
+    }
+}

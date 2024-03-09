@@ -1,0 +1,62 @@
+﻿
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudText>Name: @powersupply.Name</MudText>
+                <br />
+                <MudText>Brand name: @powersupply.BrandName</MudText>
+                <br />
+                <MudText>Price: @powersupply.Price</MudText>
+                <br />
+                <MudText>Dimensions: @powersupply.Dimensions</MudText>
+                <br />
+                <MudText>Power: @powersupply.Power</MudText>
+                <br />
+                <MudText>Certificate: @powersupply.Certificate</MudText>
+                <br />
+                <MudText>Form Factor: @powersupply.Form_factor</MudText>
+                <br />
+                <MudText>Security Technologies: @powersupply.Security_technologies</MudText>
+            </MudItem>
+            <MudItem xs="6">
+                @foreach (var img in powersupply.ImageUrls)
+                {
+                    <MudImage ObjectFit="ObjectFit.Contain"
+                              Src="img"
+                              Alt=""
+                              Elevation="25"
+                              Class="rounded-lg"
+                              Width="300"
+                              Height="300" />
+                }
+            </MudItem>
+        </MudGrid>
+
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle1" Class="my-5">
+            <MudTextField ReadOnly="true" @bind-Value="powersupply.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    @inject HttpClient httpClient
+    [Parameter]
+    public string Id { get; set; }
+
+    PowerSuppliesDto powersupply = new PowerSuppliesDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "powersupplies/" + Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            powersupply = await response.Content.ReadFromJsonAsync<PowerSuppliesDto>();
+        }
+    }
+}

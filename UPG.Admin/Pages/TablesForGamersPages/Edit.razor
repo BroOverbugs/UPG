@@ -1,0 +1,97 @@
+﻿@page "/tablesforgamers/edit/{Id}"
+
+<MudGrid>
+    <MudItem xs="2"></MudItem>
+    <MudItem xs="8">
+        <MudCard Class="mt-4">
+            <MudCardHeader Class="d-flex justify-center"> <h3>Edit this Monitor</h3> </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="tables.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="tables.BrandName" Label="Brand name" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="tables.Price" Label="Price" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="tables.Max_load_up" Label="Max Load up" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="tables.Dimensions" Label="Dimensions" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="tables.I_or_O_panel" Label="I or O Panel" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="tables.Weight" Label="Weight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                        <MudTextField @bind-Value="tables.Table_adjustment" Label="Table Adjustment" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+                    </MudItem>
+                </MudGrid>
+                <MudTextField @bind-Value="tables.Description" Lines="5" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4"></MudTextField>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-center">
+                <MudButton @onclick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+                <MudButton @onclick="Save" Class="ms-2" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="2"></MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    @inject NavigationManager navigation
+    @inject HttpClient httpClient
+    @inject ISnackbar Snackbar
+    UpdateTablesForGamersDto tables = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync(Helper.URL + "tablesforgamers/" + Id);
+        if (response.IsSuccessStatusCode)
+        {
+            var tablesDto = await response.Content.ReadFromJsonAsync<TablesForGamersDto>();
+            tables = new()
+            {
+                    Id = tablesDto!.Id,
+                    Name = tablesDto.Name,
+                    Price = tablesDto.Price,
+                    Description = tablesDto.Description,
+                    BrandName = tablesDto.BrandName,
+                    Dimensions = tablesDto.Dimensions,
+                    I_or_O_panel = tablesDto.I_or_O_panel,
+                    Max_load_up = tablesDto.Max_load_up,
+                    Table_adjustment = tablesDto.Table_adjustment,
+                    Weight = tablesDto.Weight,
+                    ImageUrls = tablesDto.ImageUrls
+            };
+        }
+    }
+
+    private void Cancel()
+    {
+        navigation.NavigateTo("/tablesforgamers");
+    }
+
+    private async void Save()
+    {
+        var updateMonitorJson = JsonConvert.SerializeObject(tables);
+        var request = new StringContent(updateMonitorJson, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PutAsync(Helper.URL + "tablesforgamers", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Table updated successfully!", Severity.Success);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Snackbar.Add("Table not found. Please try again!", Severity.Warning);
+            Cancel();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            Snackbar.Add("Informations isn't valid", Severity.Warning);
+            Cancel();
+        }
+        else
+        {
+            Snackbar.Add("Some problem with the server", Severity.Error);
+            Cancel();
+        }
+    }
+}
