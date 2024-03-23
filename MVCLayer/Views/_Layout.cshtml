@@ -1,0 +1,376 @@
+﻿﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/root.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MVCLayer.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/main.css"/>
+    <link rel="stylesheet" href="~/css/shared.css"/>
+    <link rel="stylesheet" href="~/css/laptop.css" />
+</head>
+<body>
+    <form>
+    <header>
+        <!-- /* Site Upper side start */ -->
+        <div class="container upper-header">
+            <div class="login-reg">
+                <a href="#">Вход/Pегистрация</a>
+                <a href="#">UZ/RU</a>
+            </div>
+            <div class="order-side">
+                <a href="#">
+                    <i class="fa-regular fa-heart"></i>
+                    <h4>Закладки</h4>
+                    <p class="added">0</p>
+                </a>
+                <a href="#">
+                    <i class="fa-solid fa-list"></i>
+                    <h4>Сравнение товаров</h4>
+                    <p class="added">0</p>
+                </a>
+                <a href="#">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <h4>Корзина</h4>
+                    <p class="added">0</p>
+                </a>
+            </div>
+        </div>
+        <!-- /* Site Upper side end */ -->
+    </header>
+    <div class="container main-header">
+        <div class="site-logo">
+            <input type="image" width="315"
+                 height="70"
+                 src="~/images/site_logo.png" 
+                 asp-controller="Home" asp-action="Index"
+                 alt="This is for site logo" />
+        </div>
+        <div class="location">
+            <i class="fa-solid fa-location-dot"></i>
+            <a href="#">
+                Расположение Улица Наваи 37 <br />
+                Расположение Трц. Малика магазин Б-24 <br />
+                Режим работы: ПН, ВТ, СР, ЧТ, СБ, ВС | с 10:00 - 20:00 <br />
+                Выходной: ПТ
+            </a>
+        </div>
+        <div class="phone-number">
+            <i class="fa-solid fa-phone"></i>
+            <span class="numbers">
+                <span>
+                    <h3>(99) 124-24-24</h3>
+                    <p>(ул. Навои 37)</p>
+                </span>
+                <span>
+                    <h3>(97) 124-24-24</h3>
+                    <p>(Трц. Малика B24)</p>
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="search-side">
+            <input type="text" placeholder="Найти, например, HyperX Cloud Alpha" />
+            <button class="site-btn">Найти</button>
+        </div>
+    </div>
+
+    <main>
+        
+        <div class="container">
+                @RenderBody()
+            <div class="brends-title">
+                <div class="title-of-brend">
+                    <h2>Обзоры</h2>
+                    <a href="#">Показать все</a>
+                </div>
+                <div id="brends">
+                    <a target="_blank" href="https://www.1stplayer.com/">
+                        <img width="100"
+                             src="~/images/Brend/1stplayer.png"
+                             alt="https://www.1stplayer.com/" />
+                    </a>
+                    <a target="_blank" href="https://2egaming.com/en/">
+                        <img width="100"
+                             src="~/images/Brend/2egaming.png"
+                             alt="https://2egaming.com/en/" />
+                    </a>
+                    <a target="_blank" href="https://www.acer.com/ru-ru">
+                        <img width="100"
+                             src="~/images/Brend/acer.png"
+                             alt="https://www.acer.com/ru-ru" />
+                    </a>
+                    <a target="_blank" href="https://www.ocpcgaming.com/">
+                        <img width="100"
+                             src="~/images/Brend/acpc.png"
+                             alt="https://www.ocpcgaming.com/" />
+                    </a>
+                    <a target="_blank" href="https://aerocool.io/ru/">
+                        <img width="100"
+                             src="~/images/Brend/aerocool.png"
+                             alt="https://aerocool.io/ru/" />
+                    </a>
+                    <a target="_blank" href="http://www.aigo.com/">
+                        <img width="100"
+                             src="~/images/Brend/aigo.png"
+                             alt="http://www.aigo.com/" />
+                    </a>
+                    <a target="_blank" href="https://en.akkogear.com/">
+                        <img width="100"
+                             src="~/images/Brend/akko.png"
+                             alt="https://en.akkogear.com/" />
+                    </a>
+                    <a target="_blank" href="https://us.dahuasecurity.com/">
+                        <img width="100"
+                             src="~/images/Brend/alhua.png"
+                             alt="https://us.dahuasecurity.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.alseyecorp.com/">
+                        <img width="100"
+                             src="~/images/Brend/alseye.png"
+                             alt="https://www.alseyecorp.com/" />
+                    </a>
+                    <a target="_blank" href="https://anbernic.com/">
+                        <img width="100"
+                             src="~/images/Brend/anbernic.png"
+                             alt="https://anbernic.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.andaseat.com/">
+                        <img width="100"
+                             src="~/images/Brend/andaseat.png"
+                             alt="https://www.andaseat.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.antec.com/">
+                        <img width="100"
+                             src="~/images/Brend/antec.png"
+                             alt="https://www.antec.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.apple.com/">
+                        <img width="100"
+                             src="~/images/Brend/apple.png"
+                             alt="https://www.apple.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.asus.com/">
+                        <img width="100"
+                             src="~/images/Brend/asus.png"
+                             alt="https://www.asus.com/" />
+                    </a>
+                    <a target="_blank" href="http://microlab.com/">
+                        <img width="100"
+                             src="~/images/Brend/microlab.png"
+                             alt="http://microlab.com/" />
+                    </a>
+                    <a target="_blank" href="http://immer.uz/">
+                        <img width="100"
+                             src="~/images/Brend/immer.png"
+                             alt="http://immer.uz/" />
+                    </a>
+                    <a target="_blank" href="https://www.benq.com/ru-ru/index.html">
+                        <img width="100"
+                             src="~/images/Brend/benq.png"
+                             alt="https://www.benq.com/ru-ru/index.html" />
+                    </a>
+                    <a target="_blank" href="https://ziffler.uz/">
+                        <img width="100"
+                             src="~/images/Brend/ziffler.png"
+                             alt="https://ziffler.uz/" />
+                    </a>
+                    <a target="_blank" href="https://bloodyusa.ecwid.com/">
+                        <img width="100"
+                             src="~/images/Brend/bloody.png"
+                             alt="https://bloodyusa.ecwid.com/" />
+                    </a>
+                    <a target="_blank" href="https://ru.canyon.eu/">
+                        <img width="100"
+                             src="~/images/Brend/canyon.png"
+                             alt="https://ru.canyon.eu/" />
+                    </a>
+                    <a target="_blank" href="https://www.coolermaster.com/">
+                        <img width="100"
+                             src="~/images/Brend/coolermaster.png"
+                             alt="https://www.coolermaster.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.corsair.com/us/en">
+                        <img width="100"
+                             src="~/images/Brend/corsair.png"
+                             alt="https://www.corsair.com/us/en" />
+                    </a>
+                    <a target="_blank" href="https://www.crucial.com/">
+                        <img width="100"
+                             src="~/images/Brend/crucial.png"
+                             alt="https://www.crucial.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.kingston.com/ru">
+                        <img width="100"
+                             src="~/images/Brend/kingston.png"
+                             alt="https://www.kingston.com/ru" />
+                    </a>
+                    <a target="_blank" href="https://www.deepcool.com/">
+                        <img width="100"
+                             src="~/images/Brend/deepcool.png "
+                             alt="https://www.deepcool.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.dell.com/en-uk">
+                        <img width="100"
+                             src="~/images/Brend/dell.png"
+                             alt="https://www.dell.com/en-uk" />
+                    </a>
+                    <a target="_blank" href="https://www.kzzistore.com/">
+                        <img width="100"
+                             src="~/images/Brend/kzzi.png"
+                             alt="https://www.kzzistore.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.duckychannel.com.tw/en">
+                        <img width="100"
+                             src="~/images/Brend/ducky.png"
+                             alt="https://www.duckychannel.com.tw/en" />
+                    </a>
+                    <a target="_blank" href="https://www.lenovo.com.cn/">
+                        <img width="100"
+                             src="~/images/Brend/lenovo.png"
+                             alt="https://www.lenovo.com.cn/" />
+                    </a>
+                    <a target="_blank" href="https://www.lg.com/ru">
+                        <img width="100"
+                             src="~/images/Brend/lg.png"
+                             alt="https://www.lg.com/ru" />
+                    </a>
+                    <a target="_blank" href="https://lian-li.com/ru/">
+                        <img width="100"
+                             src="~/images/Brend/lianli.png"
+                             alt="https://lian-li.com/ru/" />
+                    </a>
+                    <a target="_blank" href="https://aoc.com/us">
+                        <img width="100"
+                             src="~/images/Brend/loc.png"
+                             alt="https://aoc.com/us" />
+                    </a>
+                    <a target="_blank" href="https://www.logitech.com/">
+                        <img width="100"
+                             src="~/images/Brend/logitech.png"
+                             alt="https://www.logitech.com/" />
+                    </a>
+                    <a target="_blank" href="https://about.meta.com/">
+                        <img width="100"
+                             src="~/images/Brend/meta.png"
+                             alt="https://about.meta.com/" />
+                    </a>
+                    <a target="_blank" href="https://www.mi.com/global/">
+                        <img width="100"
+                             src="~/images/Brend/mi.png"
+                             alt="https://www.mi.com/global/" />
+                    </a>
+                    <a target="_blank" href="https://www.msi.com/index.php">
+                        <img width="100"
+                             src="~/images/Brend/msi.png"
+                             alt="https://www.msi.com/index.php" />
+                    </a>
+                    <a target="_blank" href="https://www.nintendo.com/us/">
+                        <img width="100"
+                             src="~/images/Brend/nintendo.png"
+                             alt="https://www.nintendo.com/us/" />
+                    </a>
+                    <a target="_blank" href="https://www.playstation.com/ru-ua/">
+                        <img width="100"
+                             src="~/images/Brend/playstation.png"
+                             alt="https://www.playstation.com/ru-ua/" />
+                    </a>
+                    <a target="_blank" href="https://www.rampage.com.tr/en/">
+                        <img width="100" src="~/images/Brend/rampage.png" alt="" />
+                    </a>
+                    <a target="_blank" href="https://www.vivo.com/en">
+                        <img width="100" src="~/images/Brend/vivo.png" alt="" />
+                    </a>
+                    <a target="_blank" href="https://varmilo.com/">
+                        <img width="100"
+                             src="~/images/Brend/varmilo.png"
+                             alt="https://varmilo.com/" />
+                    </a>
+                    <a target="_blank"
+                       href="https://www.asus.com/ru/laptops/for-gaming/tuf-gaming/">
+                        <img width="100"
+                             src="~/images/Brend/tufgaming.png"
+                             alt="https://www.asus.com/ru/laptops/for-gaming/tuf-gaming/" />
+                    </a>
+                    <a target="_blank" href="https://ca.hyperx.com/" target="_blank">
+                        <img width="100"
+                             src="~/images/Brend/hyperX.png"
+                             alt="https://ca.hyperx.com/" />
+                    </a>
+                    <a target="_blank" href="https://steelseries.com/" target="_blank">
+                        <img width="100"
+                             src="~/images/Brend/steelserias.png"
+                             alt="https://steelseries.com/" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+   
+
+    <footer>
+            <div class="container main-footer">
+                <div class="footer-side-item">
+                    <h2>Информация</h2>
+                    <ul>
+                        <li>
+                            <a href="#">О компании</a>
+                        </li>
+                        <li>
+                            <a href="#">Контактная информация</a>
+                        </li>
+                        <li>
+                            <a href="#">Наши магазины</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-side-item">
+                    <h2>Поддержка</h2>
+                    <a href="#">Сервисные центры</a>
+                </div>
+                <div class="footer-side-item">
+                    <h2>Покупателям</h2>
+                    <a href="#">Акции</a>
+                </div>
+                <div class="footer-side-item">
+                    <h2>Мы принимаем к оплате</h2>
+                    <ul>
+                        <li>
+                            <a href="#">Наличные</a>
+                        </li>
+                        <li>
+                            <a href="#">PayMe</a>
+                        </li>
+                        <li>
+                            <a href="#">Click</a>
+                        </li>
+                        <li>
+                            <a href="#">UzCard</a>
+                        </li>
+                        <li>
+                            <a href="#">Apelsin</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-side-item">
+                    <h2>Мы в социальных сетях</h2>
+                    <a href=""><i class="fa-brands fa-instagram"></i></a>
+                    <a href=""><i class="fa-brands fa-telegram"></i></a>
+                    <a href=""><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    </form>
+</body>
+</html>
