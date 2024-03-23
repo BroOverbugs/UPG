@@ -178,7 +178,7 @@
                         @foreach(var item in Model)
                         {
                            <a class="discount-item" href="../item.html">
-                            <img src="@item.ImageUrls[0]" alt="armchair" />
+                            <img src="@($"https://localhost:7010/{item.ImageUrls.FirstOrDefault()}")" alt=@($"https://localhost:7010/{item.ImageUrls.FirstOrDefault()}") />
                             <p>@item.Name</p>
                             <span>
                                 <i class="fa-solid fa-star"></i>
