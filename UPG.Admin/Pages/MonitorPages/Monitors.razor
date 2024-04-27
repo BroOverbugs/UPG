@@ -44,6 +44,7 @@
     protected override async Task OnInitializedAsync()
     {
         var response = await httpClient.GetAsync(Helper.URL + "monitors");
+
         if (response.IsSuccessStatusCode)
         {
             Elements = await response.Content.ReadFromJsonAsync<List<MonitorDto>>();
